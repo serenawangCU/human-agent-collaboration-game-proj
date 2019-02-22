@@ -12,7 +12,8 @@ module.exports = {
     'webpack-dev-server/client?http://localhost:8008',
   ],
   output: {
-    path: path.resolve(__dirname, BUILD_DIR),
+    //path: path.resolve(__dirname, BUILD_DIR),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/dist/',
   },
@@ -38,6 +39,9 @@ module.exports = {
   devServer: {
     inline: true,
     port: 8008,
+    //publicPath: "/",
+    contentBase: "./dist",
+    hot: true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
