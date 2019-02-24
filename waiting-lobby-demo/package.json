@@ -1,0 +1,18 @@
+{
+  "name": "waiting-lobby-demo",
+  "version": "1.0.0",
+  "description": "The first draft of the waiting lobby, serving as a separate application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Waiting",
+    "Lobby"
+  ],
+  "author": "yw",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
