@@ -13,8 +13,9 @@
   "dependencies": {
     "konva": "^1.0.3",
     "material-ui": "^0.15.3",
-    "react": "^15.2.0",
-    "react-dom": "^15.2.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
     "react-konva": "^1.0.5",
     "react-redux": "^4.4.5",
     "react-tap-event-plugin": "^2.0.0",
