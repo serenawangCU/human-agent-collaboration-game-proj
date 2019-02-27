@@ -1,0 +1,155 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('tetris5150:server');
+var http = require('http');
+var socketIo = require('socket.io');
+const uuidv1 = require('uuid/v1');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '8000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+var io = socketIo.listen(server);
+
+let idleUser = null;
+io.on('connection', (socket) => {
+  console.log('client connected');
+
+  socket.on('add_user', (userName) => {
+    socket.userName = userName;
+
+    console.log('Client\'s name: ' + userName);
+
+    // Use the same event for pairing no matter it's successful or not
+    if (idleUser == null) {
+      // If there's no available user
+      // Set the current user as the idle user
+      idleUser = socket;
+      socket.emit('paired', {
+        result: false,
+        userName: null
+      });
+    } else {
+      // Pairing succeed
+      // Send the event to both of the clients
+      let roomId = uuidv1();
+      idleUser.join(roomId);
+      socket.join(roomId);
+
+      idleUser.emit('paired', {
+        result: true,
+        userName: socket.userName,
+        roomId: roomId
+      });
+      socket.emit('paired', {
+        result: true,
+        userName: idleUser.userName,
+        roomId: roomId
+      });
+
+      // Reset the idle user
+      idleUser = null;
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnect');
+
+    // If the idle user leaves the lobby
+    // Reset the global idle user id
+    if (idleUser == socket) {
+      idleUser = null;
+    }
+  });
+
+  socket.on("user_join", (data) => {
+    this.username = data;
+    socket.broadcast.emit("user_join", data);
+  });
+
+  socket.on("chat_message", (data) => {
+    data.username = this.username;
+    socket.broadcast.emit("chat_message", data);
+  });
+
+})
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
