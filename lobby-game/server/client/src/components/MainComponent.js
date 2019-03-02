@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Home from './HomeComponent';
 import TetrisGame from './TetrisGame';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+const reload = () => window.location.reload();
 
 class Main extends Component {
 
@@ -30,15 +31,16 @@ class Main extends Component {
 
     return (
       <div>
-        {/* <Switch>
+        <Switch>
           <Route path="/home" component={HomePage} />
-          <Route path="/game" component={TetrisGame} />
-          <Route exact path="/menu" component={() => <Menu dishes={this.props.dishes}/>} />
+          {/* link to tetris not in used: */}
+          <Route path="/Tetris/index.html" onEnter={reload} />
+          {/*<Route exact path="/menu" component={() => <Menu dishes={this.props.dishes}/>} />
           <Route path="/menu/:dishId" component={DishWithId} />
-          <Route exact path="/contactus" component={Contact} />
+          <Route exact path="/contactus" component={Contact} /> */}
           <Redirect to="/home" />
-        </Switch> */}
-        <TetrisGame />
+        </Switch>
+        {/* <TetrisGame /> */}
       </div>
     );
   }

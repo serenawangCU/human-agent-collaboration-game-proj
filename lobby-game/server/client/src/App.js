@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Main from './components/MainComponent';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/index';
 import './App.css';
@@ -21,11 +21,13 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        {/* <BrowserRouter> */}
+        <BrowserRouter>
+        {/* <HashRouter> */}
           <div className="App">
             <Main socket={this.props.socket}/>
           </div>
-        {/* </BrowserRouter> */}
+        {/* </HashRouter> */}
+        </BrowserRouter>
       </Provider>
     );
   }

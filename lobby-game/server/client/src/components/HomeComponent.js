@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { Link } from 'react-router-dom';
 // import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap'
 
@@ -57,6 +57,7 @@ class Home extends Component {
 
     handleConfirm(event) {
         event.preventDefault();
+        window.location.href = "/Tetris/index.html";
     }
 
     renderForm(name, pairing) {
@@ -66,28 +67,29 @@ class Home extends Component {
 
         if (name == null && pairing) {
             return (
-                <Form>
-                    <FormGroup row>
-                        <Col md={{size:6, offset: 3}}>
-                            <Label type="text" id="unpair">Waiting for pairing...</Label>
-                        </Col>
-                    </FormGroup>
-                </Form>
+                <Col md={{size:4, offset: 4}}>
+                    <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
+                </Col>
             );
         }
 
         return (
-            <Form onSubmit={this.handleConfirm}>
+            <Form>
                 <FormGroup row>
-                    <Col md={{size:6, offset: 3}}>
-                        <Label type="text" id="unpair">You've paired with {name}</Label>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="success" type="text" id="unpair">You've paired with {name}</Alert>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
                     <Col md={{size: 6, offset: 3}}>
-                        <Button type="submit" color="primary">
-                            Start Game
-                        </Button>
+                        {/* <a href="/Tetris/index.html"> */}
+                        {/* link to tetris is not in used */}
+                        <Link to={`/Tetris/index.html`} >
+                            <Button type="submit" color="primary" onClick={this.handleConfirm}>
+                                Start Game
+                            </Button>
+                        </Link>
+                        {/* </a> */}
                     </Col>
                 </FormGroup>
             </Form>
