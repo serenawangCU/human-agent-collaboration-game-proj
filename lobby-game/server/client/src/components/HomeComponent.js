@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
 // import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap'
 
 // function RenderCard({item}) {
@@ -15,6 +15,16 @@ import { Link } from 'react-router-dom';
 //         </Card>
 //     );
 // } 
+
+const state = {
+    INITIAL: 'initial',
+    PAIRING: 'pairing',
+    PAIRED: 'paired',
+    READY: 'ready',
+    GAMING: 'gaming',
+    FINISHED: 'finished'
+}
+
 class Home extends Component {
 
     constructor(props) {
@@ -23,7 +33,7 @@ class Home extends Component {
         this.state = {
             nickname: '',
             opponent: null,
-            pairing: false
+            currentState: state.INITIAL
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -31,13 +41,23 @@ class Home extends Component {
         this.handleConfirm = this.handleConfirm.bind(this);
         this.onOpponentPaired = this.onOpponentPaired.bind(this);
         this.props.socket.on('paired', (data) => {
-            this.onOpponentPaired(data.userName);
-        })
+            if (data.result == true) {
+                this.onOpponentPaired(data.userName);
+            }
+        });
+
+        this.props.socket.on('gaming', (data) => {
+            console.log('gaming');
+
+            if (data.result == true) {
+                this.setState({currentState: state.GAMING});
+            }
+        });
     }
 
     onOpponentPaired(name) {
         this.setState({opponent: name});
-        this.setState({pairing: true});
+        this.setState({currentState: state.PAIRED});
     }
 
     handleInputChange(event) {
@@ -52,19 +72,31 @@ class Home extends Component {
 
     handlePair(event) {
         event.preventDefault();
+        this.setState({currentState: state.PAIRING});
         this.props.socket.emit('add_user', this.state.nickname);
     }
 
     handleConfirm(event) {
-        // event.preventDefault();
+        this.setState({currentState: state.READY});
+        this.props.socket.emit('ready');
     }
 
-    renderForm(name, pairing) {
-        if (name == null && !pairing) {
-            return <div></div>
+    renderStart(currentState) {
+        if (currentState == state.READY) {
+            return (
+                <Col md={{size:4, offset: 4}}>
+                    <Alert color="info" type="text" id="ungaming">Waiting for your opponent...</Alert>
+                </Col>
+            );
         }
 
-        if (name == null && pairing) {
+        if (currentState == state.GAMING) {
+            return <Redirect push to={`/tetris`} />;
+        }
+    }
+
+    renderPair(name, currentState) {
+        if (currentState == state.PAIRING) {
             return (
                 <Col md={{size:4, offset: 4}}>
                     <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
@@ -72,25 +104,26 @@ class Home extends Component {
             );
         }
 
-        return (
-            <Form>
-                <FormGroup row>
-                    <Col md={{size:4, offset: 4}}>
-                        <Alert color="success" type="text" id="unpair">You've paired with {name}</Alert>
-                    </Col>
-                </FormGroup>
-                <FormGroup row>
-                    <Col md={{size: 6, offset: 3}}>
-                        {/* link to tetris is not in used */}
-                        <Link to={`/tetris`} >
+        if (currentState == state.PAIRED) {
+            return (
+                <Form>
+                    <FormGroup row>
+                        <Col md={{size:4, offset: 4}}>
+                            <Alert color="success" type="text" id="unpair">You've paired with {name}</Alert>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Col md={{size: 6, offset: 3}}>
                             <Button type="submit" color="primary" onClick={this.handleConfirm}>
                                 Start Game
                             </Button>
-                        </Link>
-                    </Col>
-                </FormGroup>
-            </Form>
-        );
+                        </Col>
+                    </FormGroup>
+                </Form>
+            );
+        }
+
+        return <div></div>;
     }
 
     render(){
@@ -111,13 +144,14 @@ class Home extends Component {
                         </FormGroup>
                         <FormGroup row>
                             <Col md={{size: 6, offset: 3}}>
-                                <Button type="submit" color="primary" disabled={this.state.pairing}>
+                                <Button type="submit" color="primary" disabled={this.state.currentState != state.INITIAL}>
                                     Try Pair
                                 </Button>
                             </Col>
                         </FormGroup>
                     </Form>
-                    {this.renderForm(this.state.opponent, this.state.pairing)}
+                    {this.renderPair(this.state.opponent, this.state.currentState)}
+                    {this.renderStart(this.state.currentState)}
                 </div>
             </div>
         );

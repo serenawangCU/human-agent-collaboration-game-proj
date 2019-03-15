@@ -54,23 +54,43 @@ io.on('connection', (socket) => {
       // Pairing succeed
       // Send the event to both of the clients
       let roomId = uuidv1();
+
+      // Join the room
       idleUser.join(roomId);
       socket.join(roomId);
 
+      // Set fields
+      idleUser.roomId = roomId;
+      socket.roomId = roomId;
+      idleUser.opponent = socket;
+      socket.opponent = idleUser;
+      idleUser.status = 'paired';
+      socket.status = 'paired';
+
+      // Emit the pairing result
       idleUser.emit('paired', {
         result: true,
-        userName: socket.userName,
-        roomId: roomId
-      });
+        userName: socket.userName
+      })
+
       socket.emit('paired', {
         result: true,
-        userName: idleUser.userName,
-        roomId: roomId
-      });
+        userName: idleUser.userName
+      })
 
       // Reset the idle user
       idleUser = null;
     }
+  });
+
+  socket.on('ready', () => {
+    socket.status = 'ready';
+    
+    console.log('ready');
+
+    io.in(socket.roomId).emit('gaming', {
+      result: socket.opponent.status == 'ready'
+    });
   });
 
   socket.on('disconnect', () => {
@@ -81,18 +101,9 @@ io.on('connection', (socket) => {
     if (idleUser == socket) {
       idleUser = null;
     }
-  });
 
-  socket.on("user_join", (data) => {
-    this.username = data;
-    socket.broadcast.emit("user_join", data);
+    // TODO: notify teammate the leaving
   });
-
-  socket.on("chat_message", (data) => {
-    data.username = this.username;
-    socket.broadcast.emit("chat_message", data);
-  });
-
 })
 /**
  * Normalize a port into a number, string, or false.
