@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Row from './Row'
+import Row1 from './Row'
 import Next from './Next'
 import Shapes from "./Shapes";
 import './GameGrid.css'
+import { Container, Row, Col } from 'reactstrap';
 
 // const GameGrid = () => (
 //     <h1>This is a game grid</h1>
@@ -270,20 +271,29 @@ class GameGrid extends Component {
         })
     }
 
+    // reactstrap, adjust the place of grid
     render() {
         return (
+            <Container>
             <div className="wrapper">
-                <div className="field">
-                    {this.state.field.map((row, i) =>
-                        <Row key={i} row={row}/>
-                    )}
-                </div>
-                <div className="aside">
-                    <div className="status">{this.state.gameOver ? 'Game over' : ''}</div>
-                    <div className="score">{this.state.score}</div>
-                    <Next figure={this.state.nextFigure} shift={this.state.fieldWidth / 2 - 2}/>
-                </div>
+                <Row>
+                    <Col xs="auto">.col-auto
+                        <div className="field">  
+                            {this.state.field.map((row, i) =>
+                                <Row1 key={i} row={row}/>
+                            )} 
+                        </div>
+                    </Col>
+                    <Col xs="auto">.col-auto
+                        <div className="aside">
+                            <div className="status">{this.state.gameOver ? 'Game over' : ''}</div>
+                            <div className="score">{this.state.score}</div>
+                            <Next figure={this.state.nextFigure} shift={this.state.fieldWidth / 2 - 2}/>
+                        </div>
+                    </Col>
+                </Row>
             </div>
+            </Container>
         )
     }
 }
