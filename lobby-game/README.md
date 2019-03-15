@@ -11,7 +11,7 @@
 1. change directory to 'client' ('client' folder is in the 'server' folder) <br>
 2. In a bash ternimal, type `yarn install` that will install required packages
 
-# You need start both both server and client application
+# You need start both server and client application
 # Server Part
 Go to 'server' folder<br>
 In a bash ternimal, type `npm start` that will install required packages<br>
