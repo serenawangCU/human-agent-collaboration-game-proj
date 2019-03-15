@@ -22,11 +22,9 @@ class App extends Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-        {/* <HashRouter> */}
           <div className="App">
             <Main socket={this.props.socket}/>
           </div>
-        {/* </HashRouter> */}
         </BrowserRouter>
       </Provider>
     );

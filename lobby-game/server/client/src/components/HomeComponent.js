@@ -56,8 +56,7 @@ class Home extends Component {
     }
 
     handleConfirm(event) {
-        event.preventDefault();
-        window.location.href = "/Tetris/index.html";
+        // event.preventDefault();
     }
 
     renderForm(name, pairing) {
@@ -82,14 +81,12 @@ class Home extends Component {
                 </FormGroup>
                 <FormGroup row>
                     <Col md={{size: 6, offset: 3}}>
-                        {/* <a href="/Tetris/index.html"> */}
                         {/* link to tetris is not in used */}
-                        <Link to={`/Tetris/index.html`} >
+                        <Link to={`/tetris`} >
                             <Button type="submit" color="primary" onClick={this.handleConfirm}>
                                 Start Game
                             </Button>
                         </Link>
-                        {/* </a> */}
                     </Col>
                 </FormGroup>
             </Form>
