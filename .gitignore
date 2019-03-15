@@ -1,3 +1,4 @@
 waiting-lobby-demo/node_modules/
 waiting-lobby-demo/package-lock.json
 node_modules
+lobby-game/server/package-lock.json
