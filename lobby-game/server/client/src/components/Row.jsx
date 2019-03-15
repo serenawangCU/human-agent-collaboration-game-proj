@@ -1,7 +1,7 @@
 import React from 'react'
 import Cell from './Cell'
 
-function Row(props) {
+function Row1(props) {
     return (
         <div className="row">
             {props.row.map((cell, i) =>
@@ -11,4 +11,4 @@ function Row(props) {
     )
 }
 
-export default Row
+export default Row1
