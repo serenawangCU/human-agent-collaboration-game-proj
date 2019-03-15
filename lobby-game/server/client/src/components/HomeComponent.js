@@ -1,29 +1,9 @@
 import React, {Component} from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
-// import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap'
+import Constant from '../constants/constants';
 
-// function RenderCard({item}) {
-//     return (
-//         <Card>
-//             <CardImg src={item.image} alt={item.name} />
-//             <CardBody>
-//                 <CardTitle>{item.name}</CardTitle>
-//                 {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle> : null}
-//                 <CardText>{item.description}</CardText>
-//             </CardBody>
-//         </Card>
-//     );
-// } 
-
-const state = {
-    INITIAL: 'initial',
-    PAIRING: 'pairing',
-    PAIRED: 'paired',
-    READY: 'ready',
-    GAMING: 'gaming',
-    FINISHED: 'finished'
-}
+const state = Constant.state;
 
 class Home extends Component {
 
