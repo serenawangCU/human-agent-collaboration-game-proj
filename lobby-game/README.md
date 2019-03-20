@@ -1,23 +1,23 @@
-#Install Dependencies
-##Install node.js, npm, and yarn
-1. node.js@11.6.0 and npm@6.5.0<br>
+# Install Dependencies
+## Install node.js, npm, and yarn
+1. node.js@11.6.0 and npm@6.5.0 <br>
 2. yarn@1.13.0
 
-##Install node packages on server side
-1. change directory to 'server'<br>
+## Install node packages on server side
+1. change directory to 'server' <br>
 2. In a bash ternimal, type `npm install` that will install required packages
 
-##Install node packages on client side
-1. change directory to 'client' ('client' folder is in the 'server' folder)<br>
+## Install node packages on client side
+1. change directory to 'client' ('client' folder is in the 'server' folder) <br>
 2. In a bash ternimal, type `yarn install` that will install required packages
 
-#You need start both both server and client application
-#Server Part
+# You need start both server and client application
+# Server Part
 Go to 'server' folder<br>
 In a bash ternimal, type `npm start` that will install required packages<br>
 It will run on http:\\localhost:8000.
 
-#Client Part
+# Client Part
 Go to 'server/client' folder<br>
 In a bash ternimal, type `yarn start` that will install required packages<br>
 It will run on http:\\localhost:3000. You may copy paste this address to a browser to test our application.
