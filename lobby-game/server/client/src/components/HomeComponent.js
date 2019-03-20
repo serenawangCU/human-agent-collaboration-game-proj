@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 
-const state = Constant.state;
+const status = Constant.state;
 
 class Home extends Component {
 
@@ -13,13 +13,14 @@ class Home extends Component {
         this.state = {
             nickname: '',
             opponent: null,
-            currentState: state.INITIAL
+            currentStatus: status.INITIAL
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handlePair = this.handlePair.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
         this.onOpponentPaired = this.onOpponentPaired.bind(this);
+        
         this.props.socket.on('paired', (data) => {
             if (data.result == true) {
                 this.onOpponentPaired(data.userName);
@@ -30,14 +31,15 @@ class Home extends Component {
             console.log('gaming');
 
             if (data.result == true) {
-                this.setState({currentState: state.GAMING});
+                this.setState({currentStatus: status.GAMING});
+                this.props.socket.emit('start');
             }
         });
     }
 
     onOpponentPaired(name) {
         this.setState({opponent: name});
-        this.setState({currentState: state.PAIRED});
+        this.setState({currentStatus: status.PAIRED});
     }
 
     handleInputChange(event) {
@@ -52,31 +54,31 @@ class Home extends Component {
 
     handlePair(event) {
         event.preventDefault();
-        this.setState({currentState: state.PAIRING});
+        this.setState({currentStatus: status.PAIRING});
         this.props.socket.emit('add_user', this.state.nickname);
     }
 
     handleConfirm(event) {
-        this.setState({currentState: state.READY});
+        this.setState({currentStatus: status.READY});
         this.props.socket.emit('ready');
     }
 
-    renderStart(currentState) {
-        if (currentState == state.READY) {
+    renderStart(currentStatus) {
+        if (currentStatus == status.READY) {
             return (
                 <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="ungaming">Waiting for your opponent...</Alert>
+                    <Alert color="info" type="text" id="ungaming">Ready! Waiting for your opponent...</Alert>
                 </Col>
             );
         }
 
-        if (currentState == state.GAMING) {
+        if (currentStatus == status.GAMING) {
             return <Redirect push to={`/tetris`} />;
         }
     }
 
-    renderPair(name, currentState) {
-        if (currentState == state.PAIRING) {
+    renderPair(name, currentStatus) {
+        if (currentStatus == status.PAIRING) {
             return (
                 <Col md={{size:4, offset: 4}}>
                     <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
@@ -84,7 +86,7 @@ class Home extends Component {
             );
         }
 
-        if (currentState == state.PAIRED) {
+        if (currentStatus == status.PAIRED) {
             return (
                 <Form>
                     <FormGroup row>
@@ -124,14 +126,14 @@ class Home extends Component {
                         </FormGroup>
                         <FormGroup row>
                             <Col md={{size: 6, offset: 3}}>
-                                <Button type="submit" color="primary" disabled={this.state.currentState != state.INITIAL}>
+                                <Button type="submit" color="primary" disabled={this.state.currentStatus != status.INITIAL}>
                                     Try Pair
                                 </Button>
                             </Col>
                         </FormGroup>
                     </Form>
-                    {this.renderPair(this.state.opponent, this.state.currentState)}
-                    {this.renderStart(this.state.currentState)}
+                    {this.renderPair(this.state.opponent, this.state.currentStatus)}
+                    {this.renderStart(this.state.currentStatus)}
                 </div>
             </div>
         );

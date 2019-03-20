@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Home from './HomeComponent';
-import TetrisGame from './TetrisGame';
+// import NewTetris from '../newSrc/containers'
 import Tetris from './Tetris';
 import Header from './HeaderComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
@@ -13,14 +13,21 @@ class Main extends Component {
 
   }
 
-  onDishSelect(dishId) {
-    this.setState({selectedDish: dishId});
-  }
+  // onDishSelect(dishId) {
+  //   this.setState({selectedDish: dishId});
+  // }
 
   render() {
     const HomePage = () => {
       return (
         <Home socket={this.props.socket}/>
+      );
+    }
+
+    const TetrisPage = () => {
+      return (
+        <Tetris socket={this.props.socket}/>
+        // <NewTetris/>
       );
     }
 
@@ -36,14 +43,9 @@ class Main extends Component {
         <Header />
         <Switch>
           <Route path="/home" component={HomePage} />
-          <Route exact path="/tetris" component={Tetris} />
-          {/* link to tetris not in used: */}
-          {/* <Route path="/Tetris/index.html" onEnter={reload} /> */}
-          {/*<Route exact path="/menu" component={() => <Menu dishes={this.props.dishes}/>} />
-          <Route path="/menu/:dishId" component={DishWithId} /> */}
+          <Route exact path="/tetris" component={TetrisPage} />
           <Redirect to="/home" />
         </Switch>
-        {/* <TetrisGame /> */}
       </div>
     );
   }

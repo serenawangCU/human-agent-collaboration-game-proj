@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('tetris5150:server');
 var http = require('http');
 var socketIo = require('socket.io');
+var Game = require('./game.js');
 const uuidv1 = require('uuid/v1');
 
 /**
@@ -34,6 +35,8 @@ var io = socketIo.listen(server);
 
 // Global variable to record the user to be paired
 let idleUser = null;
+// Global variable to record the status of each room
+let rooms = {};
 io.on('connection', (socket) => {
 
   // Listen on entering the game
@@ -44,6 +47,11 @@ io.on('connection', (socket) => {
   // Listen on becoming ready to start the game
   socket.on('ready', () => {
     prepareGame(socket);
+  });
+
+  // Listen on game start to start the game
+  socket.on('start', () => {
+    startSendingGameField(socket);
   });
 
   // Listen on disconnecting from the server
@@ -74,12 +82,19 @@ function addUser(socket, userName) {
     });
   } else {
     // Pairing succeed
-    // Send the event to both of the clients
+    
+    //Generate a random room id
     let roomId = uuidv1();
 
     // Join the room
     idleUser.join(roomId);
     socket.join(roomId);
+
+    //record room status
+    rooms[roomId] = new Game(idleUser.id, socket.id);
+
+    console.log("join the room" + roomId);
+    console.log(rooms[roomId]);
 
     // Set fields
     idleUser.roomId = roomId;
@@ -116,6 +131,19 @@ function prepareGame(socket) {
   io.in(socket.roomId).emit('gaming', {
     result: socket.opponent.ifReady
   });
+
+}
+
+function startSendingGameField(socket) {
+  if(socket.hasOwnProperty("roomId") && rooms.hasOwnProperty(socket.roomId)) {
+    setInterval(() => {
+      socket.emit('gameField', {
+        gameField: rooms[socket.roomId].gameField
+      });
+    }, 1000/60);
+  } else {
+    console.log("invalid start game trigure by " + socket.id);
+  }
 }
 
 /**
@@ -126,7 +154,7 @@ function prepareGame(socket) {
 function disconnect(socket) {
   // If the idle user leaves the lobby
   // Reset the global idle user id
-  if (idleUser == socket) {
+  if (idleUser === socket) {
     idleUser = null;
   }
 

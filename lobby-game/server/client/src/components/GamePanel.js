@@ -4,11 +4,12 @@ import GameGrid from './GameGrid';
 
 
 
-const GamePanel = () => (
-    <div>
-        <GameGrid/>
-    </div>
-    
-);
+function GamePanel(props) {
+    return (
+        <div>
+            <GameGrid socket={props.socket}/>
+        </div>
+    )
+}
 
 export default GamePanel;
