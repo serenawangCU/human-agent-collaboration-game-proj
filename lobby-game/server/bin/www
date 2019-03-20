@@ -50,6 +50,11 @@ io.on('connection', (socket) => {
     prepareGame(socket);
   });
 
+  // TODO: deal with the move from players
+  socket.on('move', () => {
+    
+  })
+
   // Listen on disconnecting from the server
   socket.on('disconnect', () => {
     disconnect(socket);
@@ -86,7 +91,7 @@ function addUser(socket, userName) {
 
     // Record game status
     // Use room id to index
-    games[roomId] = new Game(idleUser.id, socket.id);
+    games[roomId] = new Game(idleUser.id, socket.id, io);
 
     // Set fields
     idleUser.roomId = roomId;

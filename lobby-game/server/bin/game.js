@@ -1,11 +1,12 @@
 const Shapes = require("./Shapes.js");
 
 class Game {
-    constructor(socketId1, socektId2) {
+    constructor(socketId1, socektId2, io) {
         
         // The two sockets of players
         this.socketId1 = socketId1;
         this.socektId2 = socektId2;
+        this.io = io;
 
         // Height and width
         this.fieldHeight = 15;
@@ -50,6 +51,8 @@ class Game {
                 this.gameField[i][j] = 0;
             }
         }
+
+        // TODO: send the initial information
     }
 
     /**
@@ -150,6 +153,8 @@ class Game {
             this.addBlockToField(this.currentBlock);
             // Reset the current block as we would need a new block ins the next turn
             this.currentBlock = null;
+
+            // TODO: send some information to update blocks and players
         }
     }
 
@@ -158,6 +163,8 @@ class Game {
      */
     finishGame() {
         clearInterval(this.interval);
+
+        // TODO: send game is over to players
     }
 
     /**
@@ -187,6 +194,8 @@ class Game {
 
             // Update the score
             this.totalScore += fullRows.length * fullRows.length;
+
+            // TODO: send information to update the score
         }
     }
 
@@ -212,6 +221,14 @@ class Game {
         }
 
         return field;
+    }
+
+    move(direction) {
+        // TODO: implement
+    }
+
+    rotate() {
+        // TODO:implement
     }
 }
 
