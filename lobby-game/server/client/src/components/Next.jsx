@@ -3,7 +3,7 @@ import Cell from './Cell'
 import './Next.css'
 
 function Next(props) {
-    return <div className="next">
+    return (<div className="next">
         {[...Array(4)].map((x, i) =>
             <div className="row" key={i}>
                 {[...Array(4)].map((x, j) => {
@@ -15,7 +15,7 @@ function Next(props) {
                 })}
             </div>
         )}
-    </div>
+    </div>);
 }
 
 export default Next
