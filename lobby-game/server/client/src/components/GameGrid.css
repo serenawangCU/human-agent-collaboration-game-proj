@@ -1,7 +1,16 @@
 .aside {
-    display: inline-block;
+    /* display: inline-block; */
     vertical-align: top;
     font-size: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    
+}
+
+.aside>* {
+    justify-content: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
 .field{
@@ -11,16 +20,45 @@
     width: 100%;
 }
 
-.status,
-.score {
-    border: 1px solid #000;
+.status {
+    border: 1px solid #4c576b;
+    color: red;
     margin: auto;
-    height: 30px;
+    height: 50px;
     padding: 3px 6px;
-    width: 74px;
+    width: 120px;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
+.score {
+    border: 1px solid #4c576b;
+    color: #8fade0;
+    margin: auto;
+    height: 50px;
+    padding: 3px 6px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player{
+    border: 1px solid #4c576b;
+    color: #8fade0;
+    margin: auto;
+    height: 50px;
+    padding: 3px 6px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.next{
+    margin-top: 20px;
+}
+
 
 .wrapper{
     margin: auto;

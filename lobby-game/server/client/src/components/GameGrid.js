@@ -31,7 +31,9 @@ class GameGrid extends Component {
             fastSpeed: 10,
             gameOver: false,
             rotate: false,
-            stepCounter: 0
+            stepCounter: 0,
+            currentPlayerOne: true,
+            nextPlayerOne: false
         }
     }
 
@@ -287,8 +289,19 @@ class GameGrid extends Component {
                     <Col xs="auto">.col-auto
                         <div className="aside">
                             <div className="status">{this.state.gameOver ? 'Game over' : ''}</div>
-                            <div className="score">{this.state.score}</div>
-                            <Next figure={this.state.nextFigure} shift={this.state.fieldWidth / 2 - 2}/>
+                            <div className="score">
+                                Score:<br />
+                                {this.state.score}<br />
+                            </div>
+                            <div className="player">
+                                Current Player: <br />
+                                {this.state.currentPlayerOne ? 'Player1' : 'Player2'}<br />
+                            </div>
+                            <div className="player">
+                                Next Player:<br />
+                                {this.state.nextPlayerOne ? 'Player1' : 'Player2'}<br />
+                            </div>
+                            <Next className="next" figure={this.state.nextFigure} shift={this.state.fieldWidth / 2 - 2}/>
                         </div>
                     </Col>
                 </Row>
