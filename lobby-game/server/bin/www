@@ -36,7 +36,8 @@ var io = socketIo.listen(server);
 // Global variable to record the user to be paired
 let idleUser = null;
 // Global variable to record the status of each room
-let rooms = {};
+let games = {};
+
 io.on('connection', (socket) => {
 
   // Listen on entering the game
@@ -47,11 +48,6 @@ io.on('connection', (socket) => {
   // Listen on becoming ready to start the game
   socket.on('ready', () => {
     prepareGame(socket);
-  });
-
-  // Listen on game start to start the game
-  socket.on('start', () => {
-    startSendingGameField(socket);
   });
 
   // Listen on disconnecting from the server
@@ -68,8 +64,6 @@ io.on('connection', (socket) => {
 
 function addUser(socket, userName) {
   socket.userName = userName;
-
-  console.log('Client\'s name: ' + userName);
 
   // Use the same event for pairing no matter it's successful or not
   if (idleUser == null) {
@@ -90,11 +84,9 @@ function addUser(socket, userName) {
     idleUser.join(roomId);
     socket.join(roomId);
 
-    //record room status
-    rooms[roomId] = new Game(idleUser.id, socket.id);
-
-    console.log("join the room" + roomId);
-    console.log(rooms[roomId]);
+    // Record game status
+    // Use room id to index
+    games[roomId] = new Game(idleUser.id, socket.id);
 
     // Set fields
     idleUser.roomId = roomId;
@@ -132,17 +124,36 @@ function prepareGame(socket) {
     result: socket.opponent.ifReady
   });
 
+  if (socket.opponent.ifReady == true) {
+    startSendingGameField(socket);
+  }
 }
 
+/**
+ * Function to start sending the game field priodically
+ * @param socket: one of the players in the room
+ */
+
 function startSendingGameField(socket) {
-  if(socket.hasOwnProperty("roomId") && rooms.hasOwnProperty(socket.roomId)) {
+
+  // Checking
+  if(socket.hasOwnProperty("roomId") && games.hasOwnProperty(socket.roomId)) {
+
+    let curGame = games[socket.roomId];
+    let roomId = socket.roomId;
+
+    // Start the game
+    // Game moving and message sending have different speeds
+    // TODO: find an appropriate speed
+    curGame.loop();
+
     setInterval(() => {
-      socket.emit('gameField', {
-        gameField: rooms[socket.roomId].gameField
+      io.in(roomId).emit('gameContents', {
+        gameField: curGame.wrapBlockAndField()
       });
-    }, 1000/60);
+    }, 1000);
   } else {
-    console.log("invalid start game trigure by " + socket.id);
+    console.log("Invalid start game triggered by " + socket.id);
   }
 }
 

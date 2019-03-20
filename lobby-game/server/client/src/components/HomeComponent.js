@@ -32,7 +32,6 @@ class Home extends Component {
 
             if (data.result == true) {
                 this.setState({currentStatus: status.GAMING});
-                this.props.socket.emit('start');
             }
         });
     }

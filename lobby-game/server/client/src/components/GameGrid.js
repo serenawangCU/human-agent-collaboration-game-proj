@@ -44,12 +44,14 @@ class GameGrid extends Component {
         }
 
         //Listen for the next block type from the server
-        this.props.socket.on('gameField', (data) => {
-            console.log('gameField');
+        this.props.socket.on('gameContents', (data) => {
+            console.log('gameContents');
             console.log(data.gameField);
             this.setState({field : data.gameField});
         });
     }
+
+    // -- start of code to be removed --
 
     // componentDidMount() {
     //     this.flushField()
@@ -287,6 +289,8 @@ class GameGrid extends Component {
     //         }, this.state.speed)
     //     })
     // }
+
+    // -- end of code to be removed --
 
     // reactstrap, adjust the place of grid
     render() {
