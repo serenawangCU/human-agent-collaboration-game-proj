@@ -1,3 +1,0 @@
-C:\Users\YJC\Desktop\19Spring\CS5150\Project\Human-Agent-Collaboration-Tetris-Game\obj\Debug\tetris1.njsprojResolveAssemblyReference.cache
-C:\Users\YJC\Desktop\19Spring\CS5150\Project\Human-Agent-Collaboration-Tetris-Game\obj\Debug\tetris1.njsproj.CoreCompileInputs.cache
-C:\Users\YJC\Desktop\19Spring\CS5150\Project\Human-Agent-Collaboration-Tetris-Game\bin\Microsoft.NodejsTools.WebRole.dll

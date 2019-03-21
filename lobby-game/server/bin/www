@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('tetris5150:server');
 var http = require('http');
 var socketIo = require('socket.io');
+var Game = require('./game.js');
 const uuidv1 = require('uuid/v1');
 
 /**
@@ -32,68 +33,150 @@ server.on('error', onError);
 server.on('listening', onListening);
 var io = socketIo.listen(server);
 
+// Global variable to record the user to be paired
 let idleUser = null;
+// Global variable to record the status of each room
+let games = {};
+
 io.on('connection', (socket) => {
-  console.log('client connected');
 
+  // Listen on entering the game
   socket.on('add_user', (userName) => {
-    socket.userName = userName;
-
-    console.log('Client\'s name: ' + userName);
-
-    // Use the same event for pairing no matter it's successful or not
-    if (idleUser == null) {
-      // If there's no available user
-      // Set the current user as the idle user
-      idleUser = socket;
-      socket.emit('paired', {
-        result: false,
-        userName: null
-      });
-    } else {
-      // Pairing succeed
-      // Send the event to both of the clients
-      let roomId = uuidv1();
-      idleUser.join(roomId);
-      socket.join(roomId);
-
-      idleUser.emit('paired', {
-        result: true,
-        userName: socket.userName,
-        roomId: roomId
-      });
-      socket.emit('paired', {
-        result: true,
-        userName: idleUser.userName,
-        roomId: roomId
-      });
-
-      // Reset the idle user
-      idleUser = null;
-    }
+    addUser(socket, userName);
   });
 
+  // Listen on becoming ready to start the game
+  socket.on('ready', () => {
+    prepareGame(socket);
+  });
+
+  // TODO: deal with the move from players
+  socket.on('move', () => {
+    
+  })
+
+  // Listen on disconnecting from the server
   socket.on('disconnect', () => {
-    console.log('Client disconnect');
-
-    // If the idle user leaves the lobby
-    // Reset the global idle user id
-    if (idleUser == socket) {
-      idleUser = null;
-    }
+    disconnect(socket);
   });
-
-  socket.on("user_join", (data) => {
-    this.username = data;
-    socket.broadcast.emit("user_join", data);
-  });
-
-  socket.on("chat_message", (data) => {
-    data.username = this.username;
-    socket.broadcast.emit("chat_message", data);
-  });
-
 })
+
+/**
+ * Handle when a new user enters the waiting lobby
+ * @param socket: the socket of the added user
+ * @param userName: new user's name
+ */
+
+function addUser(socket, userName) {
+  socket.userName = userName;
+
+  // Use the same event for pairing no matter it's successful or not
+  if (idleUser == null) {
+    // If there's no available user
+    // Set the current user as the idle user
+    idleUser = socket;
+    socket.emit('paired', {
+      result: false,
+      userName: null
+    });
+  } else {
+    // Pairing succeed
+    
+    //Generate a random room id
+    let roomId = uuidv1();
+
+    // Join the room
+    idleUser.join(roomId);
+    socket.join(roomId);
+
+    // Record game status
+    // Use room id to index
+    games[roomId] = new Game(idleUser.id, socket.id, io);
+
+    // Set fields
+    idleUser.roomId = roomId;
+    socket.roomId = roomId;
+    idleUser.opponent = socket;
+    socket.opponent = idleUser;
+    idleUser.ifReady = false;
+    socket.ifReady = false;
+
+    // Emit the pairing result
+    idleUser.emit('paired', {
+      result: true,
+      userName: socket.userName
+    })
+
+    socket.emit('paired', {
+      result: true,
+      userName: idleUser.userName
+    })
+
+    // Reset the idle user
+    idleUser = null;
+  }
+}
+
+/**
+ * Handle when a user is ready to start the game
+ * @param socket: the socket of the ready user 
+ */
+
+function prepareGame(socket) {
+  socket.ifReady = true;
+
+  io.in(socket.roomId).emit('gaming', {
+    result: socket.opponent.ifReady
+  });
+
+  if (socket.opponent.ifReady == true) {
+    startSendingGameField(socket);
+  }
+}
+
+/**
+ * Function to start sending the game field priodically
+ * @param socket: one of the players in the room
+ */
+
+function startSendingGameField(socket) {
+
+  // Checking
+  if(socket.hasOwnProperty("roomId") && games.hasOwnProperty(socket.roomId)) {
+
+    let curGame = games[socket.roomId];
+    let roomId = socket.roomId;
+
+    // Start the game
+    // Game moving and message sending have different speeds
+    // TODO: find an appropriate speed
+    curGame.loop();
+
+    setInterval(() => {
+      io.in(roomId).emit('gameContents', {
+        gameField: curGame.wrapBlockAndField()
+      });
+    }, 1000);
+  } else {
+    console.log("Invalid start game triggered by " + socket.id);
+  }
+}
+
+/**
+ * Handle when a user disconnects from the server
+ * @param socket: the socket of the user to disconnect
+ */
+
+function disconnect(socket) {
+  // If the idle user leaves the lobby
+  // Reset the global idle user id
+  if (idleUser === socket) {
+    idleUser = null;
+  }
+
+  // TODO: notify teammate the leaving
+}
+
 /**
  * Normalize a port into a number, string, or false.
  */

@@ -13,6 +13,15 @@ export default {
 	fieldHeight: 660,
   blockUnit: 30,
 
+  state: {
+    INITIAL: 'initial',
+    PAIRING: 'pairing',
+    PAIRED: 'paired',
+    READY: 'ready',
+    GAMING: 'gaming',
+    FINISHED: 'finished'
+  },
+
   shapesMapping: [
 		'straight', 'square', 'cross', 'leftGun', 'rightGun', 'leftSnake', 'rightSnake',
 	],
