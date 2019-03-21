@@ -1,4 +1,5 @@
 const Shapes = require("./Shapes.js");
+const Directions = require("./Directions.js");
 
 class Game {
     constructor(socketId1, socektId2, io) {
@@ -36,6 +37,7 @@ class Game {
     /**
      * Initialize the game
      */
+
     initGame() {
 
         // Generate the next block
@@ -58,6 +60,7 @@ class Game {
     /**
      * Infinite loop of the game
      */
+
     loop() {
         // Start a interval and store the function
         this.interval = setInterval(() => {
@@ -72,9 +75,21 @@ class Game {
     /**
      * Function to generate a block
      */
+
     generateBlock() {
         // Rondom a block
         let nextBlock = Shapes[Math.floor(Math.random() * Shapes.length)];
+        // Do a deep copy
+        let newBlock = {};
+        newBlock.path = Array.from(nextBlock.path);
+        newBlock.id = nextBlock.id;
+        newBlock.type = nextBlock.type;
+
+        return newBlock;
+    }
+
+    generateBlockByIndex(index) {
+        let nextBlock = Shapes[index];
         // Do a deep copy
         let newBlock = {};
         newBlock.path = Array.from(nextBlock.path);
@@ -88,6 +103,7 @@ class Game {
      * Function to check if the game is over
      * @param block: the new generated block (would be on the top)
      */
+
     checkIfGameOver(block) {
         // Iterate over all cells to see if there're overlapping or reaching the bottom
         for (let i = 0; i < 4; i++) {
@@ -103,6 +119,7 @@ class Game {
      * Function to check if the current block reaches the bottom
      * @param block: the current active block
      */
+
     checkIfReachBottom(block) {
         // Iterate all cells to see if they are at the bottom or there's an existing cell beneath
         for (let i = 0; i < 4; i++) {
@@ -118,6 +135,7 @@ class Game {
      * Add a block to the field when it reaches the bottom
      * @param block: the block that reaches the bottom
      */
+
     addBlockToField(block) {
         // Iterate over all cells
         for (let i = 0; i < 4; i++) {
@@ -128,6 +146,7 @@ class Game {
     /**
      * Function to move the current block downwards by 1
      */
+
     blockFallDown() {
         // If the current block is empty
         // Generate a new block
@@ -170,6 +189,7 @@ class Game {
     /**
      * Eliminate complete rows if possible
      */
+
     eliminateRows() {
         // Get all full rows
         let fullRows = []
@@ -202,6 +222,7 @@ class Game {
     /**
      * Wrap the block and the field for sending to front-end
      */
+
     wrapBlockAndField() {
 
         // Do a deep copy
@@ -224,11 +245,102 @@ class Game {
     }
 
     move(direction) {
-        // TODO: implement
+        
+        switch(direction) {
+            case Directions.UP:
+            this.rotate();
+            break;
+
+            case Directions.DOWN:
+            break;
+
+            case Directions.LEFT:
+            break;
+
+            case Directions.RIGHT:
+            break;
+
+            default:
+            console.log("Invalid direction input");
+        }
+
     }
 
     rotate() {
-        // TODO:implement
+        let curBlockIndex = -1;
+        let nextBlockIndex = -1;
+        switch(this.currentBlock.type) {
+            case 'line':
+            curBlockIndex = this.currentBlock.id - 1;
+            nextBlockIndex = this.currentBlock.id % 2;
+            break;
+
+            case 'cube':
+            return;
+
+            case 'romb1':
+            curBlockIndex = 2 + this.currentBlock.id;
+            nextBlockIndex = 3 + this.currentBlock.id % 2;
+            break;
+
+            case 'romb2':
+            curBlockIndex = 4 + this.currentBlock.id;
+            nextBlockIndex = 5 + this.currentBlock.id % 2;
+            break;
+
+            case 'horse1':
+            curBlockIndex = 6 + this.currentBlock.id;
+            nextBlockIndex = 7 + this.currentBlock.id % 4;
+            break;
+
+            case 'horse2':
+            curBlockIndex = 10 + this.currentBlock.id;
+            nextBlockIndex = 11 + this.currentBlock.id % 4;
+            break;
+
+            case 'triangle':
+            curBlockIndex = 14 + this.currentBlock.id;
+            nextBlockIndex = 15 + this.currentBlock.id % 4;
+            break;
+        }
+
+        if (nextBlockIndex === -1) {
+            console.log("Invalid shape type");
+            return;
+        }
+
+        nextBlock = this.moveBlock(this.generateBlockByIndex(nextBlockIndex), 
+                                    this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex), 
+                                                            this.currentBlock));
+
+        if (this.ifMovable(nextBlock) === true) {
+            currentBlock = nextBlock;
+        }
+    }
+
+    calculatePathDiff(oriPath, curPath) {
+        let diffPath = [];
+
+        for (let i = 0; i < 4; i++) {
+            diffPath[i] = [];
+            for (let j = 0; j < 2; j++) {
+                diffPath[i][j] = curPath[i][j] - oriPath[i][j];
+            }
+        }
+
+        return diffPath;
+    }
+
+    moveBlock(oriBlock, diffPath) {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 2; j++) {
+                oriBlock[i][j] += diffPath[i][j];
+            }
+        }
+    }
+
+    ifMovable(rotatedBlock) {
+
     }
 }
 
