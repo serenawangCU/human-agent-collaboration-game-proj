@@ -1,5 +1,6 @@
 
 const Shapes = require("./Shapes.js");
+const Shape = Shapes.Shape;
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
 
@@ -260,18 +261,17 @@ class Game {
             break;
 
             case Directions.DOWN:
-            this.down();
+            newBlock = new Shape(this.currentBlock);
+            for (let i = 0; i < 4; i++) {
+                newBlock.path[i][0]++;
+            }
             break;
-
-            // TODO: how we define pressing down
-            return;
 
             case Directions.LEFT:
             newBlock = new Shape(this.currentBlock);
             for (let i = 0; i < 4; i++) {
                 newBlock.path[i][1]--;
             }
-
             break;
 
             case Directions.RIGHT:
@@ -287,7 +287,7 @@ class Game {
 
         // Check if the new block overlaps can be put in the field
         if (newBlock != null && this.ifMovable(newBlock) === true) {
-            currentBlock = newBlock;
+            this.currentBlock = newBlock;
         }
     }
 
@@ -344,12 +344,9 @@ class Game {
             return;
         }
 
-        nextBlock = this.moveBlock(Shape.generateBlockByIndex(nextBlockIndex), 
+        return this.moveBlock(Shape.generateBlockByIndex(nextBlockIndex), 
                                     this.calculatePathDiff(Shape.generateBlockByIndex(curBlockIndex), 
-
-                                                            this.currentBlock));
-
-        return newBlock;
+                                    this.currentBlock));
     }
 
     /**

@@ -176,3 +176,4 @@ const generateShapeByIndex = (index) => {
 
 exports.generateRandomShape = generateRandomShape;
 exports.generateShapeByIndex = generateShapeByIndex;
+exports.Shape = Shape;

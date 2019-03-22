@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
   });
 
   // TODO: deal with the move from players
-  socket.on('move', () => {
-    
+  socket.on('move', (direction) => {
+    moveBlocks(socket, direction);
   })
 
   // Listen on disconnecting from the server
@@ -61,6 +61,21 @@ io.on('connection', (socket) => {
     disconnect(socket);
   });
 })
+
+/**
+ * Handle when a new user enters the waiting lobby
+ * @param socket: the socket of the added user
+ * @param userName: new user's name
+ */
+function moveBlocks(socket, direction) {
+  if (!socket.hasOwnProperty("roomId")) {
+    return;
+  }
+
+  let curGame = games[socket.roomId];
+  curGame.move(direction);
+}
+
 
 /**
  * Handle when a new user enters the waiting lobby

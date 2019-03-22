@@ -81,7 +81,7 @@ class GameGrid extends Component {
             
         }
         //console.log(this.state.direction);
-        this.props.socket.emit('move', {direction: this.state.direction});
+        this.props.socket.emit('move', this.state.direction);
     }
 
 
