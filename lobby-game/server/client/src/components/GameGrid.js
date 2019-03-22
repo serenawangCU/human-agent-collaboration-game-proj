@@ -33,7 +33,8 @@ class GameGrid extends Component {
             rotate: false,
             stepCounter: 0,
             currentPlayerOne: true,
-            nextPlayerOne: false
+            nextPlayerOne: false,
+            direction: ""
         }
 
         this.gameMove = {
@@ -45,23 +46,44 @@ class GameGrid extends Component {
 
         //Listen for the next block type from the server
         this.props.socket.on('gameContents', (data) => {
-            console.log('gameContents');
-            console.log(data.gameField);
+            //console.log('gameContents');
+            //console.log(data.gameField);
             this.setState({field : data.gameField});
         });
     }
 
     // -- start of code to be removed --
 
-    // componentDidMount() {
-    //     this.flushField()
-    //     this.initFigures()
-    //     this.loop()
-    //     document.addEventListener('keydown', this.moveLeft.bind(this), false)
-    //     document.addEventListener('keydown', this.moveRight.bind(this), false)
-    //     document.addEventListener('keydown', this.moveDown.bind(this), false)
-    //     document.addEventListener('keydown', this.rotate.bind(this), false)
-    // }
+    componentDidMount() {
+        document.addEventListener('keydown', this.keydownHandler.bind(this), false)
+        
+    }
+
+    keydownHandler(e) {
+        switch(e.keyCode){
+            //left
+            case 37: this.setState({direction: "left"});
+            break;
+            
+            //right
+            case 39: this.setState({direction: "right"});
+            break;
+            
+            //up
+            case 38: this.setState({direction: "up"});
+            break;
+
+            //down
+            case 40: this.setState({direction: "right"});
+            break;
+
+            default: break;
+            
+        }
+        //console.log(this.state.direction);
+        this.props.socket.emit('move', {direction: this.state.direction});
+    }
+
 
     // componentWillUnmount() {
     //     document.removeEventListener('keydown', this.moveLeft.bind(this), false)
@@ -291,6 +313,8 @@ class GameGrid extends Component {
     // }
 
     // -- end of code to be removed --
+
+    
 
     // reactstrap, adjust the place of grid
     render() {
