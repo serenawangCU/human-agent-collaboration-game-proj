@@ -1,8 +1,5 @@
-<<<<<<< HEAD
+
 const Shapes = require("./Shapes.js");
-=======
-const Shape = require("./Shapes.js");
->>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
 
@@ -87,22 +84,16 @@ class Game {
 
     generateBlock() {
         // Rondom a block
-<<<<<<< HEAD
-        let newShape = Shapes.generateRandomShape();
-        return newShape;
-    }
-
-    generateBlockByIndex(index) {
-        let nextBlock = Shapes.generateShapeByIndex(index);
+        let newBlock = Shapes.generateRandomShape();
         return newBlock;
     }
 
-=======
-        let newShape = Shape.randomShape();
-        return newShape;
+    generateBlockByIndex(index) {
+        let newBlock = Shapes.generateShapeByIndex(index);
+        return newBlock;
     }
 
->>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
+
     /**
      * Function to check if the game is over
      * @param block: the new generated block (would be on the top)
@@ -173,7 +164,7 @@ class Game {
             this.addBlockToField(this.currentBlock);
             // Reset the current block as we would need a new block ins the next turn
             this.currentBlock = null;
-
+            return;
             // TODO: send some information to update blocks and players
         }
 
@@ -269,13 +260,9 @@ class Game {
             break;
 
             case Directions.DOWN:
-<<<<<<< HEAD
             this.down();
             break;
 
-            case Directions.LEFT:
-            this.left()
-=======
             // TODO: how we define pressing down
             return;
 
@@ -284,7 +271,7 @@ class Game {
             for (let i = 0; i < 4; i++) {
                 newBlock.path[i][1]--;
             }
->>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
+
             break;
 
             case Directions.RIGHT:
@@ -356,15 +343,10 @@ class Game {
             console.log("Invalid shape type");
             return;
         }
-<<<<<<< HEAD
-        
-        nextBlock = this.moveBlock(this.generateBlockByIndex(nextBlockIndex), 
-                                    this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex), 
-=======
 
         nextBlock = this.moveBlock(Shape.generateBlockByIndex(nextBlockIndex), 
                                     this.calculatePathDiff(Shape.generateBlockByIndex(curBlockIndex), 
->>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
+
                                                             this.currentBlock));
 
         return newBlock;
