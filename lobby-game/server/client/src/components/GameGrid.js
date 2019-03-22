@@ -74,7 +74,7 @@ class GameGrid extends Component {
             break;
 
             //down
-            case 40: this.setState({direction: "right"});
+            case 40: this.setState({direction: "down"});
             break;
 
             default: break;

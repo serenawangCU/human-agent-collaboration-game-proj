@@ -242,16 +242,20 @@ class Game {
             }
         });
 
+        console.log("full rows: " + fullRows);
+
         // Remove all full rows
         if (fullRows.length) {
             let field = this.gameField;
             fullRows.forEach(row => {
                 for (let i = row; i > 0; i--) {
                     for (let j = 0; j < this.fieldWidth; j++) {
-                        if (field[i][j] !== 0 && field[i - 1][j] !== 0) {
-                            field[i][j] = field[i - 1][j]
-                        }
+                        field[i][j] = field[i - 1][j];
                     }
+                }
+
+                for (let i = 0; i < this.fieldWidth; i++) {
+                    field[0][i] = 0;
                 }
             })
 
@@ -396,9 +400,11 @@ class Game {
             return;
         }
 
-        return this.moveBlock(this.generateBlockByIndex(nextBlockIndex), 
-                                    this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex).path, 
-                                    this.currentBlock.path));
+        let newBlock = this.generateBlockByIndex(nextBlockIndex);
+        this.moveBlock(newBlock, this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex).path, 
+                                                        this.currentBlock.path));
+
+        return newBlock;
     }
 
     /**
