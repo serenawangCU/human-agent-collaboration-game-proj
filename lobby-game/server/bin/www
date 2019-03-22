@@ -92,7 +92,7 @@ function addUser(socket, userName) {
 
     // Record game status
     // Use room id to index
-    games[roomId] = new Game(idleUser.id, socket.id, io);
+    games[roomId] = new Game(idleUser.id, socket.id, roomId, io);
 
     // Set fields
     idleUser.roomId = roomId;
