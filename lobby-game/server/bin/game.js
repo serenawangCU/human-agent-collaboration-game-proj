@@ -1,4 +1,4 @@
-const randomShape = require("./Shapes.js");
+const Shapes = require("./Shapes.js");
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
 
@@ -83,18 +83,12 @@ class Game {
 
     generateBlock() {
         // Rondom a block
-        let newShape = randomShape();
+        let newShape = Shapes.generateRandomShape();
         return newShape;
     }
 
     generateBlockByIndex(index) {
-        let nextBlock = Shapes[index];
-        // Do a deep copy
-        let newBlock = {};
-        newBlock.path = Array.from(nextBlock.path);
-        newBlock.id = nextBlock.id;
-        newBlock.type = nextBlock.type;
-
+        let nextBlock = Shapes.generateShapeByIndex(index);
         return newBlock;
     }
 
@@ -257,9 +251,11 @@ class Game {
             break;
 
             case Directions.DOWN:
+            this.down();
             break;
 
             case Directions.LEFT:
+            this.left()
             break;
 
             case Directions.RIGHT:
@@ -313,7 +309,7 @@ class Game {
             console.log("Invalid shape type");
             return;
         }
-
+        
         nextBlock = this.moveBlock(this.generateBlockByIndex(nextBlockIndex), 
                                     this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex), 
                                                             this.currentBlock));

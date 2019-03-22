@@ -154,7 +154,7 @@ function startSendingGameField(socket) {
     curGame.loop();
 
     var gameContentsIntervel = setInterval(() => {
-      console.log(curGame.gameStatus);
+      //if game over, clear the current interval
       if (curGame.gameStatus == GameStatus.OVER) {
         clearInterval(gameContentsIntervel);
       }

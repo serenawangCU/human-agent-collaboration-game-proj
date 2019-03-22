@@ -157,9 +157,22 @@ class Shape {
     }
 }
 
-const randomShape = () => {
+/*
+*   Return a Random Shape
+*/
+const generateRandomShape = () => {
     let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
     return new Shape(shape);
 }
 
-module.exports = randomShape;
+/*
+* @param: index in constant shapes
+* Return a Shape by index
+*/
+const generateShapeByIndex = (index) => {
+    let shape = Shapes[index];
+    return new Shape(shape);
+}
+
+exports.generateRandomShape = generateRandomShape;
+exports.generateShapeByIndex = generateShapeByIndex;
