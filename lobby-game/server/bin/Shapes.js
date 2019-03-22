@@ -1,3 +1,4 @@
+// The const shape array
 const Shapes = [
     {
         // * * * *
@@ -143,8 +144,19 @@ const Shapes = [
     },
 ]
 
+/**
+ * The class of all the shapes
+ */
+
 class Shape {
-    constructor(shape) {
+
+    /**
+     * Constructor function to create a new shape
+     * @param shape: the shape to copy from
+     */
+
+    constructor (shape) {
+        // Do a deep copy
         this.id = shape.id;
         this.type = shape.type;
         this.path = [];
@@ -155,11 +167,25 @@ class Shape {
             }
         }
     }
+
+    /**
+     * Static method to generate a random shape
+     */
+
+    static randomShape () {
+        let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
+        return new Shape(shape);
+    }
+
+    /**
+     * Static method to generate a shape by giving the index of the array
+     * @param index: the index of the desired shape in the const array
+     */
+
+    static generateBlockByIndex(index) {
+        let shape = Shapes[index];
+        return new Shape(shape);
+    }
 }
 
-const randomShape = () => {
-    let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
-    return new Shape(shape);
-}
-
-module.exports = randomShape;
+module.exports = Shape;
