@@ -1,5 +1,6 @@
-const Shapes = require("./Shapes.js");
+const randomShape = require("./Shapes.js");
 const Directions = require("./Directions.js");
+const GameStatus = require("./GameStatus.js");
 
 class Game {
     constructor(socketId1, socektId2, io) {
@@ -30,6 +31,9 @@ class Game {
         this.level = 1;
         // The interval function to loop infinitely
         this.interval = null;
+
+        // The game status
+        this.gameStatus = GameStatus.PENDING;
 
         this.initGame();
     }
@@ -63,6 +67,7 @@ class Game {
 
     loop() {
         // Start a interval and store the function
+        this.gameStatus = GameStatus.PLAYING;
         this.interval = setInterval(() => {
 
             console.log(this.gameField);
@@ -78,14 +83,8 @@ class Game {
 
     generateBlock() {
         // Rondom a block
-        let nextBlock = Shapes[Math.floor(Math.random() * Shapes.length)];
-        // Do a deep copy
-        let newBlock = {};
-        newBlock.path = Array.from(nextBlock.path);
-        newBlock.id = nextBlock.id;
-        newBlock.type = nextBlock.type;
-
-        return newBlock;
+        let newShape = randomShape();
+        return newShape;
     }
 
     generateBlockByIndex(index) {
@@ -156,6 +155,8 @@ class Game {
 
             // Check if the game is over because of the new block
             if (this.checkIfGameOver(this.currentBlock) === true) {
+                console.log(this.currentBlock);
+                this.addBlockToField(this.currentBlock);
                 this.finishGame();
             }
             return;
@@ -181,8 +182,12 @@ class Game {
      * Terminate the interval if the game finishes
      */
     finishGame() {
+        
         clearInterval(this.interval);
-
+        
+        // change the game status
+        this.gameStatus = GameStatus.OVER;
+        
         // TODO: send game is over to players
     }
 
@@ -237,7 +242,7 @@ class Game {
         // Add the block to the field
         if (this.currentBlock !== null) {
             for (let i = 0; i < 4; i++) {
-                field[this.currentBlock.path[i][0]][this.currentBlock.path[i][1]] = 1;
+                field[this.currentBlock.path[i][0]][this.currentBlock.path[i][1]] = 2;
             }
         }
 

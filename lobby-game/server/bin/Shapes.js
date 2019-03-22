@@ -143,4 +143,23 @@ const Shapes = [
     },
 ]
 
-module.exports = Shapes;
+class Shape {
+    constructor(shape) {
+        this.id = shape.id;
+        this.type = shape.type;
+        this.path = [];
+        for (let i = 0; i < shape.path.length; i++) {
+            this.path[i] = []
+            for (let j = 0; j < 2; j++) {
+                this.path[i][j] = shape.path[i][j];
+            }
+        }
+    }
+}
+
+const randomShape = () => {
+    let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
+    return new Shape(shape);
+}
+
+module.exports = randomShape;

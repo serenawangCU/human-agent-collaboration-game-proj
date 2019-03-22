@@ -10,6 +10,7 @@ var http = require('http');
 var socketIo = require('socket.io');
 var Game = require('./game.js');
 const uuidv1 = require('uuid/v1');
+const GameStatus = require('./GameStatus.js');
 
 /**
  * Get port from environment and store in Express.
@@ -152,11 +153,15 @@ function startSendingGameField(socket) {
     // TODO: find an appropriate speed
     curGame.loop();
 
-    setInterval(() => {
+    var gameContentsIntervel = setInterval(() => {
+      console.log(curGame.gameStatus);
+      if (curGame.gameStatus == GameStatus.OVER) {
+        clearInterval(gameContentsIntervel);
+      }
       io.in(roomId).emit('gameContents', {
         gameField: curGame.wrapBlockAndField()
       });
-    }, 1000);
+    }, 1000/30);
   } else {
     console.log("Invalid start game triggered by " + socket.id);
   }
