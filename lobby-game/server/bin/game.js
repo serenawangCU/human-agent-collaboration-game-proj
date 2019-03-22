@@ -1,15 +1,15 @@
-
 const Shapes = require("./Shapes.js");
 const Shape = Shapes.Shape;
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
 
 class Game {
-    constructor(socketId1, socektId2, io) {
+    constructor(socketId1, socketId2, roomId, io) {
         
         // The two sockets of players
         this.socketId1 = socketId1;
-        this.socektId2 = socektId2;
+        this.socketId2 = socketId2;
+        this.roomId = roomId;
         this.io = io;
 
         // Height and width
@@ -19,6 +19,11 @@ class Game {
         // Two block objects
         this.currentBlock = null;
         this.nextBlock = null;
+
+        // Two players
+        // Distinguished by player's id
+        this.currentPlayer = null;
+        this.nextPlayer = null;
 
         // Field matrix
         this.gameField = [];
@@ -52,6 +57,8 @@ class Game {
         this.score[this.socketId1] = 0;
         this.score[this.socektId2] = 0;
 
+        this.nextPlayer = this.decidePlayer();
+
         // Create an empty game pane
         for (let i = 0; i < this.fieldHeight; i++) {
             this.gameField[i] = [];
@@ -60,7 +67,10 @@ class Game {
             }
         }
 
-        // TODO: send the initial information
+        // Send the intial score
+        this.io.in(this.roomId).emit('score', {
+            score : 0
+        });
     }
 
     /**
@@ -72,7 +82,7 @@ class Game {
         this.gameStatus = GameStatus.PLAYING;
         this.interval = setInterval(() => {
 
-            console.log(this.gameField);
+            // console.log(this.gameField);
 
             this.blockFallDown();
             this.eliminateRows();
@@ -89,11 +99,28 @@ class Game {
         return newBlock;
     }
 
+    /**
+     * Decide which player would take the next turn
+     */
+
+    decidePlayer() {
+        // TODO: define a better interface
+        if (Math.floor(Math.random() * 2) == 0) {
+            return this.socketId1;
+        } else {
+            return this.socketId2;
+        }
+    }
+
+   /**
+    * Return a shape by index
+    * @param index: index in constant shapes
+    */
+
     generateBlockByIndex(index) {
         let newBlock = Shapes.generateShapeByIndex(index);
         return newBlock;
     }
-
 
     /**
      * Function to check if the game is over
@@ -144,11 +171,24 @@ class Game {
      */
 
     blockFallDown() {
-        // If the current block is empty
-        // Generate a new block
+        // If the current block and the current player are empty
+        // Generate a new block and decide the next player
         if (this.currentBlock === null) {
             this.currentBlock = this.nextBlock;
             this.nextBlock = this.generateBlock();
+
+            this.currentPlayer = this.nextPlayer;
+            this.nextPlayer = this.decidePlayer();
+
+            // Send the data to the front-end
+            this.io.in(this.roomId).emit('player_block_data', {
+                currentBlockId : this.currentBlock.id,
+                currentBlockType : this.currentBlock.type,
+                nextBlockId : this.nextBlock.id,
+                nextBlockType : this.nextBlock.type,
+                currentPlayer : this.nextPlayer,
+                nextPlayer : this.nextplayer
+            });
 
             // Check if the game is over because of the new block
             if (this.checkIfGameOver(this.currentBlock) === true) {
@@ -156,6 +196,7 @@ class Game {
                 this.addBlockToField(this.currentBlock);
                 this.finishGame();
             }
+
             return;
         }
 
@@ -166,7 +207,6 @@ class Game {
             // Reset the current block as we would need a new block ins the next turn
             this.currentBlock = null;
             return;
-            // TODO: send some information to update blocks and players
         }
 
         // Move down the block
@@ -180,13 +220,13 @@ class Game {
      */
 
     finishGame() {
-        
         clearInterval(this.interval);
         
         // change the game status
         this.gameStatus = GameStatus.OVER;
         
-        // TODO: send game is over to players
+        // Send game is over to players
+        this.io.in(this.roomId).emit('game_over');
     }
 
     /**
@@ -218,7 +258,10 @@ class Game {
             // Update the score
             this.totalScore += fullRows.length * fullRows.length;
 
-            // TODO: send information to update the score
+            // Send information to update the score
+            this.io.in(this.roomId).emit('score', {
+                score : this.totalScore
+            });
         }
     }
 
@@ -253,10 +296,14 @@ class Game {
      */
 
     move(direction) {
+        if (this.currentBlock === null) {
+            return;
+        }
         let newBlock = null;
 
         switch(direction) {
             case Directions.UP:
+            console.log('press up');
             newBlock = this.rotate();
             break;
 
@@ -287,6 +334,7 @@ class Game {
 
         // Check if the new block overlaps can be put in the field
         if (newBlock != null && this.ifMovable(newBlock) === true) {
+            console.log("newBlock");
             this.currentBlock = newBlock;
         }
     }
@@ -298,6 +346,7 @@ class Game {
      */
 
     rotate() {
+        console.log('rotate');
         let curBlockIndex = -1;
         let nextBlockIndex = -1;
 
@@ -339,14 +388,17 @@ class Game {
             break;
         }
 
+        console.log('nextBlockIndex: ' + nextBlockIndex);
+        console.log('curBlockIndex: ' + curBlockIndex);
+
         if (nextBlockIndex === -1) {
             console.log("Invalid shape type");
             return;
         }
 
-        return this.moveBlock(Shape.generateBlockByIndex(nextBlockIndex), 
-                                    this.calculatePathDiff(Shape.generateBlockByIndex(curBlockIndex), 
-                                    this.currentBlock));
+        return this.moveBlock(this.generateBlockByIndex(nextBlockIndex), 
+                                    this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex).path, 
+                                    this.currentBlock.path));
     }
 
     /**
@@ -374,7 +426,7 @@ class Game {
     moveBlock(oriBlock, diffPath) {
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 2; j++) {
-                oriBlock[i][j] += diffPath[j];
+                oriBlock.path[i][j] += diffPath[j];
             }
         }
     }
