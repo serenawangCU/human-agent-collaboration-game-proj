@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const Shapes = require("./Shapes.js");
+=======
+const Shape = require("./Shapes.js");
+>>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
 
@@ -83,6 +87,7 @@ class Game {
 
     generateBlock() {
         // Rondom a block
+<<<<<<< HEAD
         let newShape = Shapes.generateRandomShape();
         return newShape;
     }
@@ -92,6 +97,12 @@ class Game {
         return newBlock;
     }
 
+=======
+        let newShape = Shape.randomShape();
+        return newShape;
+    }
+
+>>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
     /**
      * Function to check if the game is over
      * @param block: the new generated block (would be on the top)
@@ -156,12 +167,7 @@ class Game {
             return;
         }
 
-        // Otherwise, iterate over the current block to move downwards
-        for (let i = 0; i < 4; i++) {
-            this.currentBlock.path[i][0] = this.currentBlock.path[i][0] + 1;
-        }
-
-        // Check if the current block reaches the bottom after moving down
+        // Check if the current block reaches the bottom
         if (this.checkIfReachBottom(this.currentBlock) === true) {
             // Add the block to field if it reaches the bottom
             this.addBlockToField(this.currentBlock);
@@ -170,11 +176,17 @@ class Game {
 
             // TODO: send some information to update blocks and players
         }
+
+        // Move down the block
+        for (let i = 0; i < 4; i++) {
+            this.currentBlock.path[i][0] = this.currentBlock.path[i][0] + 1;
+        }
     }
 
     /**
      * Terminate the interval if the game finishes
      */
+
     finishGame() {
         
         clearInterval(this.interval);
@@ -243,41 +255,76 @@ class Game {
         return field;
     }
 
+    /**
+     * Method to move the current shape by the given direction
+     * @param direction: the direction of the move
+     */
+
     move(direction) {
-        
+        let newBlock = null;
+
         switch(direction) {
             case Directions.UP:
-            this.rotate();
+            newBlock = this.rotate();
             break;
 
             case Directions.DOWN:
+<<<<<<< HEAD
             this.down();
             break;
 
             case Directions.LEFT:
             this.left()
+=======
+            // TODO: how we define pressing down
+            return;
+
+            case Directions.LEFT:
+            newBlock = new Shape(this.currentBlock);
+            for (let i = 0; i < 4; i++) {
+                newBlock.path[i][1]--;
+            }
+>>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
             break;
 
             case Directions.RIGHT:
+            newBlock = new Shape(this.currentBlock);
+            for (let i = 0; i < 4; i++) {
+                newBlock.path[i][1]++;
+            }
             break;
 
             default:
             console.log("Invalid direction input");
         }
 
+        // Check if the new block overlaps can be put in the field
+        if (newBlock != null && this.ifMovable(newBlock) === true) {
+            currentBlock = newBlock;
+        }
     }
+
+    /**
+     * Method to generate the rotated shape by the current shape
+     * The way to do this is to get the rotated shape first from the const array
+     * And then move the rotated shape to the current position
+     */
 
     rotate() {
         let curBlockIndex = -1;
         let nextBlockIndex = -1;
+
+        // Hard-coded switch based on the const array
         switch(this.currentBlock.type) {
             case 'line':
             curBlockIndex = this.currentBlock.id - 1;
             nextBlockIndex = this.currentBlock.id % 2;
             break;
 
+            // Doesn't make sense to rotate a cube
+            // Return directly
             case 'cube':
-            return;
+            return new Shape(this.currentBlock);
 
             case 'romb1':
             curBlockIndex = 2 + this.currentBlock.id;
@@ -309,39 +356,66 @@ class Game {
             console.log("Invalid shape type");
             return;
         }
+<<<<<<< HEAD
         
         nextBlock = this.moveBlock(this.generateBlockByIndex(nextBlockIndex), 
                                     this.calculatePathDiff(this.generateBlockByIndex(curBlockIndex), 
+=======
+
+        nextBlock = this.moveBlock(Shape.generateBlockByIndex(nextBlockIndex), 
+                                    this.calculatePathDiff(Shape.generateBlockByIndex(curBlockIndex), 
+>>>>>>> 43dfbdb5e5e6bf068ffc371aff1e3c72bbde940b
                                                             this.currentBlock));
 
-        if (this.ifMovable(nextBlock) === true) {
-            currentBlock = nextBlock;
-        }
+        return newBlock;
     }
+
+    /**
+     * Method to caculate the distance between the two shapes
+     * @param oriPath: the starting position of the shape
+     * @param curPath: the current position of the shape
+     */
 
     calculatePathDiff(oriPath, curPath) {
         let diffPath = [];
 
-        for (let i = 0; i < 4; i++) {
-            diffPath[i] = [];
-            for (let j = 0; j < 2; j++) {
-                diffPath[i][j] = curPath[i][j] - oriPath[i][j];
-            }
+        for (let j = 0; j < 2; j++) {
+            diffPath[j] = curPath[0][j] - oriPath[0][j];
         }
 
         return diffPath;
     }
 
+    /**
+     * Move the current shape by the distance given
+     * @param oriBlock: the current shape
+     * @param diffPath: the distance to move
+     */
+
     moveBlock(oriBlock, diffPath) {
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 2; j++) {
-                oriBlock[i][j] += diffPath[i][j];
+                oriBlock[i][j] += diffPath[j];
             }
         }
     }
 
-    ifMovable(rotatedBlock) {
+    /**
+     * Check if the given block would exceed the boundary or overlap with the field
+     * @param movedBlock: the block to be checked
+     */
 
+    ifMovable(movedBlock) {
+
+        for (let i = 0; i < 4; i++) {
+            if (movedBlock.path[i][0] < 0 || movedBlock.path[i][0] >= this.fieldHeight ||
+                movedBlock.path[i][1] < 0 || movedBlock.path[i][1] >= this.fieldWidth ||
+                this.gameField[movedBlock.path[i][0]][movedBlock.path[i][1]] === 1) {
+                    return false;
+                }
+        }
+
+        return true;
     }
 }
 
