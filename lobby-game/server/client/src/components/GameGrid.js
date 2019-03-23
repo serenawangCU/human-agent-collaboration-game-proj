@@ -9,22 +9,17 @@ import { Container, Row, Col } from 'reactstrap';
 //     <h1>This is a game grid</h1>
 // )
 
-
 class GameGrid extends Component {
     constructor(props) {
         super(props)
         this.state = {
             field: [],
-            currentFigure: '',
-            currentFigureId: 0,
-            currentFigureType: '',
             nextFigure: '',
-            nextFigureId: 0,
-            nextFigureType: '',
+            nextFigureIndex: 0,
             score: 0,
             fieldWidth: 10,
             fieldHeight: 15,
-            figures: [],
+            figures: Shapes,
             interval: null,
             speed: 150,
             defaultSpeed: 150,
@@ -34,7 +29,10 @@ class GameGrid extends Component {
             stepCounter: 0,
             currentPlayerOne: true,
             nextPlayerOne: false,
-            direction: ""
+            direction: "",
+            currentPlayer : '',
+            nextPlayer : '',
+            playerId:''
         }
 
         this.gameMove = {
@@ -50,16 +48,58 @@ class GameGrid extends Component {
             //console.log(data.gameField);
             this.setState({field : data.gameField});
         });
-    }
-
-    // -- start of code to be removed --
-
-    componentDidMount() {
-        document.addEventListener('keydown', this.keydownHandler.bind(this), false)
         
     }
 
+    componentDidMount() {    
+        this.initId();
+        //this.initFigures();
+        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
+        this.updateScore();
+        this.updatePlayerData();
+    }
+
+    componentWillUnmount() {
+        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
+        //this.updatePlayerData();
+    }
+
+    //TODO: get player ID of current node
+    initId() {
+        this.props.socket.on('playerId', (data) => {
+            this.setState({playerId: data.playerId});
+        });
+        //console.log("Player: " + this.state.playerId);
+    }
+
+    // initFigures() {
+    //     //Shape is a const jso
+    //     this.setState({figures: Shapes}) 
+        
+    // }
+
+    updateScore() {
+        this.props.socket.on('score', (data) => {
+            this.setState({score: data.score});
+        });
+    }
+    
+    updatePlayerData() {
+        let figures = this.state.figures;
+        this.props.socket.on('player_block_data', (data) => {
+            this.setState({  
+                nextFigure: figures[data.nextBlockIndex].path,
+                currentPlayer : data.currentPlayer,
+                nextPlayer : data.nextPlayer
+            });
+        });
+    }
+
+
     keydownHandler(e) {
+        //TODO: check if player is current player
+        //if (this.state.playerId === this.state.currentPlayer) 
+
         switch(e.keyCode){
             //left
             case 37: this.setState({direction: "left"});
@@ -82,8 +122,14 @@ class GameGrid extends Component {
         }
         //console.log(this.state.direction);
         this.props.socket.emit('move', this.state.direction);
+        
     }
 
+
+    
+
+
+    // -- start of code to be removed --
 
     // componentWillUnmount() {
     //     document.removeEventListener('keydown', this.moveLeft.bind(this), false)
@@ -103,10 +149,7 @@ class GameGrid extends Component {
     //     this.setState({field: newField})
     // }
 
-    // initFigures() {
-    //     //Shape is a const jso
-    //     this.setState({figures: Shapes}) 
-    // }
+    
 
     // moveFigure() {
     //     let freezeFlag = false;
@@ -336,9 +379,11 @@ class GameGrid extends Component {
                                 Score:<br />
                                 {this.state.score}<br />
                             </div>
+                            
                             <div className="player">
                                 Current Player: <br />
-                                {this.state.currentPlayerOne ? 'Player1' : 'Player2'}<br />
+                                {//TODO: display user name
+                                    this.state.currentPlayerOne ? 'Player1' : 'Player2'}<br />
                             </div>
                             <div className="player">
                                 Next Player:<br />
