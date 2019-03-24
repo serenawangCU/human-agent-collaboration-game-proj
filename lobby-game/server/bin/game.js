@@ -182,14 +182,11 @@ class Game {
 
             // Send the data to the front-end
             this.io.in(this.roomId).emit('player_block_data', {
-                currentBlockId : this.currentBlock.id,
-                currentBlockType : this.currentBlock.type,
-                nextBlockId : this.nextBlock.id,
-                nextBlockType : this.nextBlock.type,
-                currentPlayer : this.nextPlayer,
-                nextPlayer : this.nextplayer
+                nextBlockIndex : this.getShapeIndex(this.nextBlock),
+                currentPlayer : this.currentPlayer,
+                nextPlayer : this.nextPlayer
             });
-
+            //console.log("current: " + this.currentPlayer + " next: " + this.nextPlayer)
             // Check if the game is over because of the new block
             if (this.checkIfGameOver(this.currentBlock) === true) {
                 console.log(this.currentBlock);
@@ -405,6 +402,40 @@ class Game {
                                                         this.currentBlock.path));
 
         return newBlock;
+    }
+
+    /**
+     * Find the index of the given shape in the const array
+     * TODO: refactor this part
+     * @param shape: the shape to calculate the index
+     */
+
+    getShapeIndex(shape) {
+        switch(shape.type) {
+            case 'line':
+            return shape.id - 1;
+
+            case 'cube':
+            return shape.id + 1;
+
+            case 'romb1':
+            return 2 + shape.id;
+
+            case 'romb2':
+            return 4 + shape.id;
+
+            case 'horse1':
+            return 6 + shape.id;
+
+            case 'horse2':
+            return 10 + shape.id;
+
+            case 'triangle':
+            return 14 + shape.id;
+        }
+
+        console.log("Unrecognized shape type");
+        return null;
     }
 
     /**

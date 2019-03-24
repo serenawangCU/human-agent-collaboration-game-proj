@@ -13,6 +13,7 @@ function Cell (props) {
         case 2:
             cellStatus = 'active';
             break;
+        default: break;
     }
     return (
         <div className={'cell ' + cellStatus}></div>
