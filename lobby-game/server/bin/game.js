@@ -304,7 +304,6 @@ class Game {
 
         switch(direction) {
             case Directions.UP:
-            console.log('press up');
             newBlock = this.rotate();
             break;
 
@@ -335,7 +334,6 @@ class Game {
 
         // Check if the new block overlaps can be put in the field
         if (newBlock != null && this.ifMovable(newBlock) === true) {
-            console.log("newBlock");
             this.currentBlock = newBlock;
         }
     }
