@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 require('./styles/style.scss');
 
-const socket = openSocket('http://localhost:5000');
+const socket = openSocket('http://localhost:8000');
 console.log("here!");
 
 ReactDOM.render(<App socket={socket}/>, document.getElementById('root'));
