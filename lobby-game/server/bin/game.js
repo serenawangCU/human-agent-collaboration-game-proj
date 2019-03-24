@@ -183,10 +183,10 @@ class Game {
             // Send the data to the front-end
             this.io.in(this.roomId).emit('player_block_data', {
                 nextBlockIndex : this.getShapeIndex(this.nextBlock),
-                currentPlayer : this.nextPlayer,
-                nextPlayer : this.nextplayer
+                currentPlayer : this.currentPlayer,
+                nextPlayer : this.nextPlayer
             });
-
+            //console.log("current: " + this.currentPlayer + " next: " + this.nextPlayer)
             // Check if the game is over because of the new block
             if (this.checkIfGameOver(this.currentBlock) === true) {
                 console.log(this.currentBlock);

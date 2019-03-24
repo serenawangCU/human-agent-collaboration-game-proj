@@ -4,6 +4,7 @@ import Next from './Next'
 import Shapes from "./Shapes";
 import './GameGrid.css'
 import { Container, Row, Col } from 'reactstrap';
+import { names } from './HomeComponent';
 
 // const GameGrid = () => (
 //     <h1>This is a game grid</h1>
@@ -27,12 +28,10 @@ class GameGrid extends Component {
             gameOver: false,
             rotate: false,
             stepCounter: 0,
-            currentPlayerOne: true,
-            nextPlayerOne: false,
             direction: "",
             currentPlayer : '',
             nextPlayer : '',
-            playerId:''
+            playerId: this.props.socket.id
         }
 
         this.gameMove = {
@@ -48,11 +47,9 @@ class GameGrid extends Component {
             //console.log(data.gameField);
             this.setState({field : data.gameField});
         });
-        
     }
 
     componentDidMount() {    
-        this.initId();
         //this.initFigures();
         document.addEventListener('keydown', this.keydownHandler.bind(this), false);
         this.updateScore();
@@ -64,13 +61,6 @@ class GameGrid extends Component {
         //this.updatePlayerData();
     }
 
-    //TODO: get player ID of current node
-    initId() {
-        this.props.socket.on('playerId', (data) => {
-            this.setState({playerId: data.playerId});
-        });
-        //console.log("Player: " + this.state.playerId);
-    }
 
     // initFigures() {
     //     //Shape is a const jso
@@ -92,37 +82,38 @@ class GameGrid extends Component {
                 currentPlayer : data.currentPlayer,
                 nextPlayer : data.nextPlayer
             });
+            
         });
     }
 
 
     keydownHandler(e) {
-        //TODO: check if player is current player
-        //if (this.state.playerId === this.state.currentPlayer) 
+        //check if player is current player
+        if (this.state.playerId === this.state.currentPlayer) {
 
-        switch(e.keyCode){
-            //left
-            case 37: this.setState({direction: "left"});
-            break;
-            
-            //right
-            case 39: this.setState({direction: "right"});
-            break;
-            
-            //up
-            case 38: this.setState({direction: "up"});
-            break;
+            switch(e.keyCode){
+                //left
+                case 37: this.setState({direction: "left"});
+                break;
+                
+                //right
+                case 39: this.setState({direction: "right"});
+                break;
+                
+                //up
+                case 38: this.setState({direction: "up"});
+                break;
 
-            //down
-            case 40: this.setState({direction: "down"});
-            break;
+                //down
+                case 40: this.setState({direction: "down"});
+                break;
 
-            default: break;
-            
+                default: break;
+                
+            }
+            //console.log(this.state.direction);
+            this.props.socket.emit('move', this.state.direction);
         }
-        //console.log(this.state.direction);
-        this.props.socket.emit('move', this.state.direction);
-        
     }
 
 
@@ -383,11 +374,15 @@ class GameGrid extends Component {
                             <div className="player">
                                 Current Player: <br />
                                 {//TODO: display user name
-                                    this.state.currentPlayerOne ? 'Player1' : 'Player2'}<br />
+                                    this.state.currentPlayer === this.state.playerId ? names[0] : names[1]}<br />
                             </div>
                             <div className="player">
                                 Next Player:<br />
-                                {this.state.nextPlayerOne ? 'Player1' : 'Player2'}<br />
+                                {this.state.nextPlayer === this.state.playerId ? names[0] : names[1]}<br />
+                            </div>
+                            <div className="player">
+                                Name:<br />
+                                {names[0]}<br />
                             </div>
                             <Next className="next" figure={this.state.nextFigure} shift={this.state.fieldWidth / 2 - 2}/>
                         </div>

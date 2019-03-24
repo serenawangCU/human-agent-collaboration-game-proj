@@ -4,6 +4,7 @@ import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 
 const status = Constant.state;
+export const names = []; //[playerName, partnerName]
 
 class Home extends Component {
 
@@ -24,6 +25,7 @@ class Home extends Component {
         this.props.socket.on('paired', (data) => {
             if (data.result === true) {
                 this.onOpponentPaired(data.userName);
+                names.push(data.userName)
             }
         });
 
@@ -55,6 +57,7 @@ class Home extends Component {
         event.preventDefault();
         this.setState({currentStatus: status.PAIRING});
         this.props.socket.emit('add_user', this.state.nickname);
+        names.unshift(this.state.nickname);
     }
 
     handleConfirm(event) {
