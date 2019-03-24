@@ -87,6 +87,7 @@ function moveBlocks(socket, direction) {
 function addUser(socket, userName) {
   socket.userName = userName;
 
+  console.log("connected: " + userName);
   // Use the same event for pairing no matter it's successful or not
   if (idleUser == null) {
     // If there's no available user
@@ -105,7 +106,7 @@ function addUser(socket, userName) {
     // Join the room
     idleUser.join(roomId);
     socket.join(roomId);
-
+    console.log("join room: " + roomId)
     // Record game status
     // Use room id to index
     games[roomId] = new Game(idleUser.id, socket.id, roomId, io);
