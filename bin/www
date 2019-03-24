@@ -38,7 +38,7 @@ var io = socketIo.listen(server);
 let idleUser = null;
 // Global variable to record the status of each room
 let games = {};
-
+console.log("before io");
 io.on('connection', (socket) => {
 
   // Listen on entering the game
@@ -106,7 +106,7 @@ function addUser(socket, userName) {
     // Join the room
     idleUser.join(roomId);
     socket.join(roomId);
-    console.log("join room: " + roomId)
+    console.log("join room: " + roomId);
     // Record game status
     // Use room id to index
     games[roomId] = new Game(idleUser.id, socket.id, roomId, io);
