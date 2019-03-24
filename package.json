@@ -1,9 +1,10 @@
 {
   "name": "server",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "main": "./bin/www",
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "node ./bin/www",
+    "dev-start": "nodemon ./bin/www",
     "heroku-postbuild": "cd client && yarn && yarn run build"
   },
   "dependencies": {
