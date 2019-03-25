@@ -160,15 +160,17 @@ class Shape {
 /*
 *   Return a Random Shape
 */
+
 const generateRandomShape = () => {
     let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
     return new Shape(shape);
 }
 
-/*
-* @param: index in constant shapes
-* Return a Shape by index
-*/
+/**
+ * Return a Shape by index
+ * @param index: index in constant shapes
+ */
+
 const generateShapeByIndex = (index) => {
     let shape = Shapes[index];
     return new Shape(shape);
@@ -176,3 +178,4 @@ const generateShapeByIndex = (index) => {
 
 exports.generateRandomShape = generateRandomShape;
 exports.generateShapeByIndex = generateShapeByIndex;
+exports.Shape = Shape;

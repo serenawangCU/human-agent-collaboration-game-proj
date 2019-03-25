@@ -4,27 +4,23 @@ import Next from './Next'
 import Shapes from "./Shapes";
 import './GameGrid.css'
 import { Container, Row, Col } from 'reactstrap';
+import { names } from './HomeComponent';
 
 // const GameGrid = () => (
 //     <h1>This is a game grid</h1>
 // )
-
 
 class GameGrid extends Component {
     constructor(props) {
         super(props)
         this.state = {
             field: [],
-            currentFigure: '',
-            currentFigureId: 0,
-            currentFigureType: '',
             nextFigure: '',
-            nextFigureId: 0,
-            nextFigureType: '',
+            nextFigureIndex: 0,
             score: 0,
             fieldWidth: 10,
             fieldHeight: 15,
-            figures: [],
+            figures: Shapes,
             interval: null,
             speed: 150,
             defaultSpeed: 150,
@@ -32,8 +28,10 @@ class GameGrid extends Component {
             gameOver: false,
             rotate: false,
             stepCounter: 0,
-            currentPlayerOne: true,
-            nextPlayerOne: false
+            direction: "",
+            currentPlayer : '',
+            nextPlayer : '',
+            playerId: this.props.socket.id
         }
 
         this.gameMove = {
@@ -45,23 +43,84 @@ class GameGrid extends Component {
 
         //Listen for the next block type from the server
         this.props.socket.on('gameContents', (data) => {
-            console.log('gameContents');
-            console.log(data.gameField);
+            //console.log('gameContents');
+            //console.log(data.gameField);
             this.setState({field : data.gameField});
         });
     }
 
-    // -- start of code to be removed --
+    componentDidMount() {    
+        //this.initFigures();
+        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
+        this.updateScore();
+        this.updatePlayerData();
+    }
 
-    // componentDidMount() {
-    //     this.flushField()
-    //     this.initFigures()
-    //     this.loop()
-    //     document.addEventListener('keydown', this.moveLeft.bind(this), false)
-    //     document.addEventListener('keydown', this.moveRight.bind(this), false)
-    //     document.addEventListener('keydown', this.moveDown.bind(this), false)
-    //     document.addEventListener('keydown', this.rotate.bind(this), false)
+    componentWillUnmount() {
+        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
+        //this.updatePlayerData();
+    }
+
+
+    // initFigures() {
+    //     //Shape is a const jso
+    //     this.setState({figures: Shapes}) 
+        
     // }
+
+    updateScore() {
+        this.props.socket.on('score', (data) => {
+            this.setState({score: data.score});
+        });
+    }
+    
+    updatePlayerData() {
+        let figures = this.state.figures;
+        this.props.socket.on('player_block_data', (data) => {
+            this.setState({  
+                nextFigure: figures[data.nextBlockIndex].path,
+                currentPlayer : data.currentPlayer,
+                nextPlayer : data.nextPlayer
+            });
+            
+        });
+    }
+
+
+    keydownHandler(e) {
+        //check if player is current player
+        if (this.state.playerId === this.state.currentPlayer) {
+
+            switch(e.keyCode){
+                //left
+                case 37: this.setState({direction: "left"});
+                break;
+                
+                //right
+                case 39: this.setState({direction: "right"});
+                break;
+                
+                //up
+                case 38: this.setState({direction: "up"});
+                break;
+
+                //down
+                case 40: this.setState({direction: "down"});
+                break;
+
+                default: break;
+                
+            }
+            //console.log(this.state.direction);
+            this.props.socket.emit('move', this.state.direction);
+        }
+    }
+
+
+    
+
+
+    // -- start of code to be removed --
 
     // componentWillUnmount() {
     //     document.removeEventListener('keydown', this.moveLeft.bind(this), false)
@@ -81,10 +140,7 @@ class GameGrid extends Component {
     //     this.setState({field: newField})
     // }
 
-    // initFigures() {
-    //     //Shape is a const jso
-    //     this.setState({figures: Shapes}) 
-    // }
+    
 
     // moveFigure() {
     //     let freezeFlag = false;
@@ -292,6 +348,8 @@ class GameGrid extends Component {
 
     // -- end of code to be removed --
 
+    
+
     // reactstrap, adjust the place of grid
     render() {
         return (
@@ -312,13 +370,19 @@ class GameGrid extends Component {
                                 Score:<br />
                                 {this.state.score}<br />
                             </div>
+                            
                             <div className="player">
                                 Current Player: <br />
-                                {this.state.currentPlayerOne ? 'Player1' : 'Player2'}<br />
+                                {//TODO: display user name
+                                    this.state.currentPlayer === this.state.playerId ? names[0] : names[1]}<br />
                             </div>
                             <div className="player">
                                 Next Player:<br />
-                                {this.state.nextPlayerOne ? 'Player1' : 'Player2'}<br />
+                                {this.state.nextPlayer === this.state.playerId ? names[0] : names[1]}<br />
+                            </div>
+                            <div className="player">
+                                Name:<br />
+                                {names[0]}<br />
                             </div>
                             <Next className="next" figure={this.state.nextFigure} shift={this.state.fieldWidth / 2 - 2}/>
                         </div>

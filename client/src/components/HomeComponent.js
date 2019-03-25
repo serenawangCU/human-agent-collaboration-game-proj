@@ -4,6 +4,7 @@ import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 
 const status = Constant.state;
+export const names = []; //[playerName, partnerName]
 
 class Home extends Component {
 
@@ -22,15 +23,16 @@ class Home extends Component {
         this.onOpponentPaired = this.onOpponentPaired.bind(this);
         
         this.props.socket.on('paired', (data) => {
-            if (data.result == true) {
+            if (data.result === true) {
                 this.onOpponentPaired(data.userName);
+                names.push(data.userName)
             }
         });
 
         this.props.socket.on('gaming', (data) => {
             console.log('gaming');
 
-            if (data.result == true) {
+            if (data.result === true) {
                 this.setState({currentStatus: status.GAMING});
             }
         });
@@ -55,6 +57,7 @@ class Home extends Component {
         event.preventDefault();
         this.setState({currentStatus: status.PAIRING});
         this.props.socket.emit('add_user', this.state.nickname);
+        names.unshift(this.state.nickname);
     }
 
     handleConfirm(event) {
@@ -63,7 +66,7 @@ class Home extends Component {
     }
 
     renderStart(currentStatus) {
-        if (currentStatus == status.READY) {
+        if (currentStatus === status.READY) {
             return (
                 <Col md={{size:4, offset: 4}}>
                     <Alert color="info" type="text" id="ungaming">Ready! Waiting for your opponent...</Alert>
@@ -71,13 +74,13 @@ class Home extends Component {
             );
         }
 
-        if (currentStatus == status.GAMING) {
+        if (currentStatus === status.GAMING) {
             return <Redirect push to={`/tetris`} />;
         }
     }
 
     renderPair(name, currentStatus) {
-        if (currentStatus == status.PAIRING) {
+        if (currentStatus === status.PAIRING) {
             return (
                 <Col md={{size:4, offset: 4}}>
                     <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
@@ -85,7 +88,7 @@ class Home extends Component {
             );
         }
 
-        if (currentStatus == status.PAIRED) {
+        if (currentStatus === status.PAIRED) {
             return (
                 <Form>
                     <FormGroup row>
@@ -125,7 +128,7 @@ class Home extends Component {
                         </FormGroup>
                         <FormGroup row>
                             <Col md={{size: 6, offset: 3}}>
-                                <Button type="submit" color="primary" disabled={this.state.currentStatus != status.INITIAL}>
+                                <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
                                     Try Pair
                                 </Button>
                             </Col>

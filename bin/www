@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
   });
 
   // TODO: deal with the move from players
-  socket.on('move', () => {
-    
+  socket.on('move', (direction) => {
+    moveBlocks(socket, direction);
   })
 
   // Listen on disconnecting from the server
@@ -67,10 +67,27 @@ io.on('connection', (socket) => {
  * @param socket: the socket of the added user
  * @param userName: new user's name
  */
+function moveBlocks(socket, direction) {
+  if (!socket.hasOwnProperty("roomId")) {
+    return;
+  }
+
+  let curGame = games[socket.roomId];
+  console.log(direction);
+  curGame.move(direction);
+}
+
+
+/**
+ * Handle when a new user enters the waiting lobby
+ * @param socket: the socket of the added user
+ * @param userName: new user's name
+ */
 
 function addUser(socket, userName) {
   socket.userName = userName;
 
+  console.log("connected: " + userName);
   // Use the same event for pairing no matter it's successful or not
   if (idleUser == null) {
     // If there's no available user
@@ -89,10 +106,10 @@ function addUser(socket, userName) {
     // Join the room
     idleUser.join(roomId);
     socket.join(roomId);
-
+    console.log("join room: " + roomId)
     // Record game status
     // Use room id to index
-    games[roomId] = new Game(idleUser.id, socket.id, io);
+    games[roomId] = new Game(idleUser.id, socket.id, roomId, io);
 
     // Set fields
     idleUser.roomId = roomId;

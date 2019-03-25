@@ -11,7 +11,8 @@ function Next(props) {
                     if (props.figure.length) {
                         props.figure.map(item => (item[0] === j + props.shift && item[1] === i) ? active = true : null)
                     }
-                    return <Cell key={j} cell={active ? 'active' : ''}/>
+                    //return <Cell key={j} cell={active ? 'active' : ''}/>
+                    return <Cell key={j} cell={active ? 2 : 0}/>
                 })}
             </div>
         )}
