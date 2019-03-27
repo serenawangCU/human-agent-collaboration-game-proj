@@ -229,7 +229,9 @@ class Game {
         this.exportRecords();
 
         // Send game is over to players
-        this.io.in(this.roomId).emit('game_over');
+        this.io.in(this.roomId).emit('game_over', {
+            game_over: true
+        });
     }
 
     /**

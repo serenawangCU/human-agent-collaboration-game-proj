@@ -54,6 +54,7 @@ class GameGrid extends Component {
         document.addEventListener('keydown', this.keydownHandler.bind(this), false);
         this.updateScore();
         this.updatePlayerData();
+        this.gameStatus();
     }
 
     componentWillUnmount() {
@@ -73,6 +74,12 @@ class GameGrid extends Component {
             this.setState({score: data.score});
         });
     }
+
+    gameStatus() {
+        this.props.socket.on('game_over',() => {
+            this.setState({gameOver: true});
+        });
+    }
     
     updatePlayerData() {
         let figures = this.state.figures;
@@ -82,7 +89,6 @@ class GameGrid extends Component {
                 currentPlayer : data.currentPlayer,
                 nextPlayer : data.nextPlayer
             });
-            
         });
     }
 
@@ -365,7 +371,7 @@ class GameGrid extends Component {
                     </Col>
                     <Col xs="auto">.col-auto
                         <div className="aside">
-                            <div className="status">{this.state.gameOver ? 'Game over' : ''}</div>
+                            <div className="status">{this.state.gameOver ? 'Game over' : 'Game start'}</div>
                             <div className="score">
                                 Score:<br />
                                 {this.state.score}<br />
