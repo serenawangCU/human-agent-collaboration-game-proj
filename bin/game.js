@@ -239,8 +239,6 @@ class Game {
             }
         });
 
-        console.log("full rows: " + fullRows);
-
         // Remove all full rows
         if (fullRows.length) {
             let field = this.gameField;
@@ -329,7 +327,7 @@ class Game {
             break;
 
             default:
-            console.log("Invalid direction input");
+                console.log("Invalid direction input");
         }
 
         // Check if the new block overlaps can be put in the field
@@ -387,11 +385,7 @@ class Game {
             break;
         }
 
-        console.log('nextBlockIndex: ' + nextBlockIndex);
-        console.log('curBlockIndex: ' + curBlockIndex);
-
         if (nextBlockIndex === -1) {
-            console.log("Invalid shape type");
             return;
         }
 
@@ -432,7 +426,6 @@ class Game {
             return 14 + shape.id;
         }
 
-        console.log("Unrecognized shape type");
         return null;
     }
 
