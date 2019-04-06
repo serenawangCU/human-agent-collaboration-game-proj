@@ -13,12 +13,12 @@
 
 # You need start both server and client application
 # Server Part
-Go to 'server' folder<br>
+Go to the out most folder
 In a bash ternimal, type `npm start` that will install required packages<br>
-It will run on http:\\\\localhost:8000.
+It will run on http:\\\\localhost:5000.
 
 # Client Part
-Go to 'server/client' folder<br>
+Go to 'client' folder<br>
 In a bash ternimal, type `yarn start` that will install required packages<br>
 It will run on http:\\\\localhost:3000. You may copy paste this address to a browser to test our application.
 
