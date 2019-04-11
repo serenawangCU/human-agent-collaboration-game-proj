@@ -2,6 +2,9 @@ const Shapes = require("./Shapes.js");
 const Shape = Shapes.Shape;
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
+const FileSystem = require('fs');
+const Distributor = require("./Distributor.js");
+const decideNextPlayer = Distributor.decideNextPlayer;
 
 class Game {
     constructor(socketId1, socketId2, roomId, io) {
@@ -39,6 +42,9 @@ class Game {
         // The interval function to loop infinitely
         this.interval = null;
 
+        // The records of each step
+        this.records = [];
+
         // The game status
         this.gameStatus = GameStatus.PENDING;
 
@@ -57,7 +63,7 @@ class Game {
         this.score[this.socketId1] = 0;
         this.score[this.socektId2] = 0;
 
-        this.nextPlayer = this.decidePlayer();
+        this.nextPlayer = decideNextPlayer(this.socketId1, this.socketId2, null);
 
         // Create an empty game pane
         for (let i = 0; i < this.fieldHeight; i++) {
@@ -70,6 +76,16 @@ class Game {
         // Send the intial score
         this.io.in(this.roomId).emit('score', {
             score : 0
+        });
+
+        // Create the dataset folder
+        // TODO: might be moved to another place
+        FileSystem.exists('collected_data', function(exists) {
+            if (!exists) {
+                FileSystem.mkdir('collected_data', function(error) {
+                    console.error(error);
+                });
+            }
         });
     }
 
@@ -85,7 +101,6 @@ class Game {
             // console.log(this.gameField);
 
             this.blockFallDown();
-            this.eliminateRows();
           }, this.speed);
     }
 
@@ -97,19 +112,6 @@ class Game {
         // Rondom a block
         let newBlock = Shapes.generateRandomShape();
         return newBlock;
-    }
-
-    /**
-     * Decide which player would take the next turn
-     */
-
-    decidePlayer() {
-        // TODO: define a better interface
-        if (Math.floor(Math.random() * 2) == 0) {
-            return this.socketId1;
-        } else {
-            return this.socketId2;
-        }
     }
 
    /**
@@ -178,7 +180,7 @@ class Game {
             this.nextBlock = this.generateBlock();
 
             this.currentPlayer = this.nextPlayer;
-            this.nextPlayer = this.decidePlayer();
+            this.nextPlayer = decideNextPlayer(this.socketId1, this.socketId2, this.currentPlayer);
 
             // Send the data to the front-end
             this.io.in(this.roomId).emit('player_block_data', {
@@ -201,6 +203,7 @@ class Game {
         if (this.checkIfReachBottom(this.currentBlock) === true) {
             // Add the block to field if it reaches the bottom
             this.addBlockToField(this.currentBlock);
+            this.eliminateRows();
             // Reset the current block as we would need a new block ins the next turn
             this.currentBlock = null;
             return;
@@ -222,8 +225,13 @@ class Game {
         // change the game status
         this.gameStatus = GameStatus.OVER;
         
+        // Write out the records as a CSV file
+        this.exportRecords();
+
         // Send game is over to players
-        this.io.in(this.roomId).emit('game_over');
+        this.io.in(this.roomId).emit('game_over', {
+            game_over: true
+        });
     }
 
     /**
@@ -238,8 +246,6 @@ class Game {
                 fullRows.push(rowIndex)
             }
         });
-
-        console.log("full rows: " + fullRows);
 
         // Remove all full rows
         if (fullRows.length) {
@@ -256,14 +262,19 @@ class Game {
                 }
             })
 
-            // Update the score
-            this.totalScore += fullRows.length * fullRows.length;
+            // Update the total score
+            // Multiply the score by 10
+            this.totalScore += fullRows.length * fullRows.length * 10;
 
             // Send information to update the score
             this.io.in(this.roomId).emit('score', {
                 score : this.totalScore
             });
         }
+
+        // Record each step even if it's 0
+        let stepScore = fullRows.length * fullRows.length * 10;
+        this.records.push({player : this.currentPlayer, score : stepScore});
     }
 
     /**
@@ -329,7 +340,7 @@ class Game {
             break;
 
             default:
-            console.log("Invalid direction input");
+                console.log("Invalid direction input");
         }
 
         // Check if the new block overlaps can be put in the field
@@ -387,11 +398,7 @@ class Game {
             break;
         }
 
-        console.log('nextBlockIndex: ' + nextBlockIndex);
-        console.log('curBlockIndex: ' + curBlockIndex);
-
         if (nextBlockIndex === -1) {
-            console.log("Invalid shape type");
             return;
         }
 
@@ -432,7 +439,6 @@ class Game {
             return 14 + shape.id;
         }
 
-        console.log("Unrecognized shape type");
         return null;
     }
 
@@ -482,6 +488,46 @@ class Game {
         }
 
         return true;
+    }
+
+    /**
+     * Method to generate a unique file name
+     */
+
+    generateFileName() {
+        let curTime = new Date();
+        return 'collected_data/' + curTime.getFullYear() 
+                    + '_' + curTime.getMonth() 
+                    + '_' + curTime.getDay()
+                    + '_' + curTime.getHours()
+                    + '_' + curTime.getMinutes()
+                    + '_' + this.socketId1
+                    + '_' + this.socketId2
+                    + '.csv';
+    }
+
+    /**
+     * Export the game record as a CSV file
+     */
+
+    exportRecords () {
+
+        // Table header
+        let tableContent = 'Player, Score\n';
+
+        // Append each line of records
+        this.records.forEach(function(singleRecord) {
+            tableContent += singleRecord.player + ',' + singleRecord.score + '\n';
+        });
+
+        // Get the file name
+        let fileName = this.generateFileName();
+        // Create the record file
+        FileSystem.writeFile(fileName, tableContent, 'utf8', function(error){
+            if (error) {
+                console.error(error);
+            }
+        });
     }
 }
 
