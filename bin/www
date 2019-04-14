@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('tetris5150:server');
 var http = require('http');
 var socketIo = require('socket.io');
-var Game = require('./game.js');
+var Game = require('./Game.js');
 const uuidv1 = require('uuid/v1');
 const GameStatus = require('./GameStatus.js');
 
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
     prepareGame(socket);
   });
 
-  // TODO: deal with the move from players
+  // Deal with the move from players
   socket.on('move', (direction) => {
     moveBlocks(socket, direction);
   })
@@ -198,7 +198,9 @@ function disconnect(socket) {
     idleUser = null;
   }
 
-  // TODO: notify teammate the leaving
+  // Notify the room of the leaving
+  // TODO: add the listener in the front-end
+  io.in(socket.roomId).emit('leaving');
 }
 
 /**
