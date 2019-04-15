@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const Games = require('../models/games');
 
-const url = 'mongodb+srv://kw53098:wk2010gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
-const connect = mongoose.connect(url, {useNewUrlParser: true});
-
 /**
  * Class of all the collected data in a game
  */
