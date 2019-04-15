@@ -8,9 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 require('./styles/style.scss');
 
-// const socket = openSocket("http://localhost:5000/"); //for local
-const socket = openSocket(); //for heroku
-console.log("here!");
+const socket = openSocket("http://localhost:8000/"); //for local
+// const socket = openSocket(); //for heroku
+console.log("React Client Open Socket");
 
 ReactDOM.render(<App socket={socket}/>, document.getElementById('root'));
 

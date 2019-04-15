@@ -1,3 +1,9 @@
+const mongoose = require('mongoose');
+const Games = require('../models/games');
+
+const url = 'mongodb+srv://kw53098:wk2010gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
+const connect = mongoose.connect(url, {useNewUrlParser: true});
+
 /**
  * Class of all the collected data in a game
  */
@@ -7,21 +13,35 @@ class GameData {
      * Constructor of the object, would intialize all fields
      * @param player1: the socket id of the first player
      * @param player2: the socket id of the second player
+     * @param roomId: the socket room id of the game
      */
 
-    constructor(player1, player2) {
+    constructor(player1, player2, roomId) {
         // The following fields are the data we want to collect
         this.indivScore = [0, 0];
         this.indivSteps = [0, 0]
         this.totalScore = 0;
         this.linesPerMin = [];
         this.steps = [];
+        this.stepCounter = 0;
         
         // The following fields are some helper variables
         this.curNumRotate = 0;
         this.curElimLines = 0;
         this.startTime = new Date();
         this.players = [player1, player2];
+
+        Games.create({
+            roomId: roomId
+        })
+        .then((game) => {
+            console.log("Create a new game entry!")
+            console.log(game);
+            this.gameId = game._id;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     /**
@@ -68,9 +88,38 @@ class GameData {
         if (passedMins === this.linesPerMin.length + 1) {
             this.curElimLines += lines;
         } else {
+            //push eliminated lines per min to mongoDB
+            Games.findByIdAndUpdate(this.gameId, {
+                $push: {"linesPerMin" : this.curElimLines}
+            }, {
+                new: true
+            })
+            .then((game) => {
+                console.log("Push a new lines per min to DB");
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    
             this.linesPerMin.push(this.curElimLines);
             this.curElimLines = lines;
         }
+
+        //push step info to mongoDB
+        Games.findByIdAndUpdate(this.gameId, {
+            $push: {"steps" : {playerId: player, score: score, numOfRotations: this.curNumRotate}}
+        }, {
+            new: true
+        })
+        .then((game) => {
+            console.log("Push a new step to DB");
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+
+        //stepCounter count total number of steps played
+        this.stepCounter++;
 
         this.steps.push([player, score, this.curNumRotate]);
         this.curNumRotate = 0;
@@ -107,6 +156,36 @@ class GameData {
             console.log("   Number of Rotation: " + this.steps[i][2] + "\n");
         }
         console.log("-------------End-------------");
+    }
+
+    /**
+     * Upload logged data to MongoDB
+     */
+    uploadToDB() {
+        //calculate the total time elapsed for this game
+        let curTime = new Date();
+        let passedSecs = Math.round((curTime - this.startTime) / 1000);
+
+        //update the stored game document
+        Games.findByIdAndUpdate(this.gameId, {
+            $set: {
+                    "player1" : {playerId: this.players[0], individualScore: this.indivScore[0], stepsPlayed: this.indivSteps[0]},
+                    "player2" : {playerId: this.players[1], individualScore: this.indivScore[1], stepsPlayed: this.indivSteps[1]},
+                    "totalScore" : this.totalScore,
+                    "totalTime" : passedSecs,
+                    "totalSteps" : this.stepCounter
+            }
+        }, {
+            new: true
+        })
+        .exec()
+        .then((game) => {
+            console.log("Successfully upload data to MongoDB!");
+            console.log(game);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 }
 

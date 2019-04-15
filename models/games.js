@@ -1,7 +1,10 @@
-const MongoClient = require('mongoose');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const moveSchema = new Schema({
+/**
+ * Schema for each played step
+ */
+const stepSchema = new Schema({
     playerId: {
         type: String,
         required: true
@@ -9,23 +12,69 @@ const moveSchema = new Schema({
     score: {
         type: Number,
         required: true
+    },
+    numOfRotations: {
+        type: Number,
+        required: true
     }
+}, {
+    timestamps: true
 });
 
-const gameSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    description: {
+/**
+ * Schema for each player's info
+ */
+const playerSchema = new Schema({
+    playerId: {
         type: String,
         required: true
     },
-    moves: [moveSchema]
+    individualScore: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    stepsPlayed: {
+        type: Number,
+        default: 0,
+        required: true
+    }
+})
+
+/**
+ * Schema for each game played
+ */
+const gameSchema = new Schema({
+    roomId: {
+        type: String,
+        required: true
+    },
+    player1: playerSchema,
+    player2: playerSchema,
+    totalScore: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    totalTime: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    totalSteps: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    linesPerMin: [{
+        type: Number,
+        default: 0,
+        required: true
+    }],
+    steps: [stepSchema]
 },{
     timestamps: true
 });
 
-var Games = mongoose.model('Game', dishSchema);
+var Games = mongoose.model('Game', gameSchema);
 module.exports = Games;

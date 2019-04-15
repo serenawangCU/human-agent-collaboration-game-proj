@@ -39,7 +39,7 @@ class Game {
         // Field matrix
         this.gameField = [];
         // All the data related of this game
-        this.gameData = new GameData(socketId1, socketId2);
+        this.gameData = new GameData(socketId1, socketId2, roomId);
 
         // The speed of the falling
         this.speed = 500;
@@ -537,6 +537,7 @@ class Game {
 
     exportRecords() {
         this.gameData.printInfo();
+        this.gameData.uploadToDB();
     }
 }
 
