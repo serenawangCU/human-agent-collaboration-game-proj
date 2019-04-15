@@ -19,6 +19,24 @@
     width: 100%;
 }
 
+.grayfield{
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    background:#c2c8d3;
+    width: 100%;
+}
+
+.gray{
+    position: absolute;
+    margin-top: 0;
+    padding-right: 0;
+    width:200px;
+    height:300px;
+    background: gray;
+    border:1px solid #000;
+}
+
 .status {
     border: 1px solid #4c576b;
     color: red;
@@ -61,6 +79,7 @@
 }
 
 .wrapper{
+    position: absolute;
     margin-top: 100px;
     margin-left: -400px;
     font-size: 0;

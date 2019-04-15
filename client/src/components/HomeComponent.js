@@ -69,7 +69,7 @@ class Home extends Component {
         if (currentStatus === status.READY) {
             return (
                 <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="ungaming">Ready! Waiting for your opponent...</Alert>
+                    <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
                 </Col>
             );
         }

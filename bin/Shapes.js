@@ -144,6 +144,12 @@ const Shapes = [
 ]
 
 class Shape {
+
+    /**
+     * Construct a new shape from an existing shape
+     * @param shape: the shape to construct from
+     */
+
     constructor(shape) {
         this.id = shape.id;
         this.type = shape.type;
@@ -155,27 +161,25 @@ class Shape {
             }
         }
     }
+
+    /*
+    *   Return a Random Shape
+    */
+
+    static generateRandomShape() {
+        let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
+        return new Shape(shape);
+    }
+
+    /**
+     * Return a Shape by index
+     * @param index: index in constant shapes
+     */
+
+    static generateShapeByIndex(index) {
+        let shape = Shapes[index];
+        return new Shape(shape);
+    }
 }
 
-/*
-*   Return a Random Shape
-*/
-
-const generateRandomShape = () => {
-    let shape = Shapes[Math.floor(Math.random() * Shapes.length)];
-    return new Shape(shape);
-}
-
-/**
- * Return a Shape by index
- * @param index: index in constant shapes
- */
-
-const generateShapeByIndex = (index) => {
-    let shape = Shapes[index];
-    return new Shape(shape);
-}
-
-exports.generateRandomShape = generateRandomShape;
-exports.generateShapeByIndex = generateShapeByIndex;
-exports.Shape = Shape;
+module.exports = Shape;

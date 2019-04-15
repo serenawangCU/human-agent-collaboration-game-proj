@@ -4,23 +4,23 @@
 2. yarn@1.13.0
 
 ## Install node packages on server side
-1. change directory to 'server' <br>
+1. Change directory to the out most folder <br>
 2. In a bash ternimal, type `npm install` that will install required packages
 
 ## Install node packages on client side
-1. change directory to 'client' ('client' folder is in the 'server' folder) <br>
+1. Change directory to 'client' ('client' folder is in the 'server' folder) <br>
 2. In a bash ternimal, type `yarn install` that will install required packages
 
 # You need start both server and client application
 # Server Part
-Go to 'server' folder<br>
+Go to the out most folder
 In a bash ternimal, type `npm start` that will install required packages<br>
-It will run on http:\\localhost:8000.
+It will run on http:\\\\localhost:5000.
 
 # Client Part
-Go to 'server/client' folder<br>
+Go to 'client' folder<br>
 In a bash ternimal, type `yarn start` that will install required packages<br>
-It will run on http:\\localhost:3000. You may copy paste this address to a browser to test our application.
+It will run on http:\\\\localhost:3000. You may copy paste this address to a browser to test our application.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

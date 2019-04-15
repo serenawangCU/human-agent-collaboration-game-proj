@@ -1,12 +1,20 @@
-const Shapes = require("./Shapes.js");
-const Shape = Shapes.Shape;
+const Shape = require("./Shapes.js");
 const Directions = require("./Directions.js");
 const GameStatus = require("./GameStatus.js");
 const FileSystem = require('fs');
-const Distributor = require("./Distributor.js");
-const decideNextPlayer = Distributor.decideNextPlayer;
+const decideNextPlayer = require("./Distributor.js");
+const GameData = require("./GameData.js")
 
 class Game {
+
+    /**
+     * Constructor
+     * @param socketId1: the first player's id
+     * @param socketId2: the second player's id
+     * @param roomId: the room id of this game
+     * @param io: the io id
+     */
+
     constructor(socketId1, socketId2, roomId, io) {
         
         // The two sockets of players
@@ -30,10 +38,9 @@ class Game {
 
         // Field matrix
         this.gameField = [];
-        // Scores of two people
-        this.score = [];
-        // Total score of the game
-        this.totalScore = 0;
+        // All the data related of this game
+        this.gameData = new GameData(socketId1, socketId2);
+
         // The speed of the falling
         this.speed = 500;
         // The level of the game
@@ -41,9 +48,6 @@ class Game {
         this.level = 1;
         // The interval function to loop infinitely
         this.interval = null;
-
-        // The records of each step
-        this.records = [];
 
         // The game status
         this.gameStatus = GameStatus.PENDING;
@@ -57,12 +61,8 @@ class Game {
 
     initGame() {
 
-        // Generate the next block
+        // Generate the next block and the next player
         this.nextBlock = this.generateBlock();
-
-        this.score[this.socketId1] = 0;
-        this.score[this.socektId2] = 0;
-
         this.nextPlayer = decideNextPlayer(this.socketId1, this.socketId2, null);
 
         // Create an empty game pane
@@ -75,18 +75,18 @@ class Game {
 
         // Send the intial score
         this.io.in(this.roomId).emit('score', {
-            score : 0
+            score : this.gameData.getTotalScore()
         });
 
-        // Create the dataset folder
-        // TODO: might be moved to another place
-        FileSystem.exists('collected_data', function(exists) {
-            if (!exists) {
-                FileSystem.mkdir('collected_data', function(error) {
-                    console.error(error);
-                });
-            }
-        });
+        // // Create the dataset folder
+        // // TODO: might be moved to another place
+        // FileSystem.exists('collected_data', function(exists) {
+        //     if (!exists) {
+        //         FileSystem.mkdir('collected_data', function(error) {
+        //             console.error(error);
+        //         });
+        //     }
+        // });
     }
 
     /**
@@ -110,7 +110,7 @@ class Game {
 
     generateBlock() {
         // Rondom a block
-        let newBlock = Shapes.generateRandomShape();
+        let newBlock = Shape.generateRandomShape();
         return newBlock;
     }
 
@@ -120,7 +120,7 @@ class Game {
     */
 
     generateBlockByIndex(index) {
-        let newBlock = Shapes.generateShapeByIndex(index);
+        let newBlock = Shape.generateShapeByIndex(index);
         return newBlock;
     }
 
@@ -204,7 +204,7 @@ class Game {
             // Add the block to field if it reaches the bottom
             this.addBlockToField(this.currentBlock);
             this.eliminateRows();
-            // Reset the current block as we would need a new block ins the next turn
+            // Reset the current block as we would need a new block in the next turn
             this.currentBlock = null;
             return;
         }
@@ -224,8 +224,10 @@ class Game {
         
         // change the game status
         this.gameStatus = GameStatus.OVER;
-        
-        // Write out the records as a CSV file
+        // upate the game data
+        this.gameData.finishGame();
+
+        // Write out the records
         this.exportRecords();
 
         // Send game is over to players
@@ -259,20 +261,15 @@ class Game {
                     field[0][i] = 0;
                 }
             })
-
-            // Update the total score
-            // Multiply the score by 10
-            this.totalScore += fullRows.length * fullRows.length * 10;
-
-            // Send information to update the score
-            this.io.in(this.roomId).emit('score', {
-                score : this.totalScore
-            });
         }
 
-        // Record each step even if it's 0
-        let stepScore = fullRows.length * fullRows.length * 10;
-        this.records.push({player : this.currentPlayer, score : stepScore});
+        // Update the score
+        this.gameData.updateScore(this.currentPlayer, fullRows.length);
+
+        // Send information to update the score
+        this.io.in(this.roomId).emit('score', {
+            score : this.gameData.getTotalScore()
+        });
     }
 
     /**
@@ -344,6 +341,11 @@ class Game {
         // Check if the new block overlaps can be put in the field
         if (newBlock != null && this.ifMovable(newBlock) === true) {
             this.currentBlock = newBlock;
+
+            // Update the counter of rotation
+            if (direction === Directions.UP) {
+                this.gameData.updateRotate();
+            }
         }
     }
 
@@ -488,44 +490,53 @@ class Game {
         return true;
     }
 
+    // /**
+    //  * Method to generate a unique file name
+    //  */
+
+    // generateFileName() {
+    //     let curTime = new Date();
+    //     return 'collected_data/' + curTime.getFullYear() 
+    //                 + '_' + curTime.getMonth() 
+    //                 + '_' + curTime.getDay()
+    //                 + '_' + curTime.getHours()
+    //                 + '_' + curTime.getMinutes()
+    //                 + '_' + this.socketId1
+    //                 + '_' + this.socketId2
+    //                 + '.csv';
+    // }
+
+    // /**
+    //  * Export the game record as a CSV file
+    //  */
+
+    // exportRecords () {
+
+    //     // Table header
+    //     let tableContent = 'Player, Score\n';
+
+    //     // Append each line of records
+    //     this.records.forEach(function(singleRecord) {
+    //         tableContent += singleRecord.player + ',' + singleRecord.score + '\n';
+    //     });
+
+    //     // Get the file name
+    //     let fileName = this.generateFileName();
+    //     // Create the record file
+    //     FileSystem.writeFile(fileName, tableContent, 'utf8', function(error){
+    //         if (error) {
+    //             console.error(error);
+    //         }
+    //     });
+    // }
+
     /**
-     * Method to generate a unique file name
+     * Method to export the collected data
+     * TODO: implement it when have a server
      */
 
-    generateFileName() {
-        let curTime = new Date();
-        return 'collected_data/' + curTime.getFullYear() 
-                    + '_' + curTime.getMonth() 
-                    + '_' + curTime.getDay()
-                    + '_' + curTime.getHours()
-                    + '_' + curTime.getMinutes()
-                    + '_' + this.socketId1
-                    + '_' + this.socketId2
-                    + '.csv';
-    }
-
-    /**
-     * Export the game record as a CSV file
-     */
-
-    exportRecords () {
-
-        // Table header
-        let tableContent = 'Player, Score\n';
-
-        // Append each line of records
-        this.records.forEach(function(singleRecord) {
-            tableContent += singleRecord.player + ',' + singleRecord.score + '\n';
-        });
-
-        // Get the file name
-        let fileName = this.generateFileName();
-        // Create the record file
-        FileSystem.writeFile(fileName, tableContent, 'utf8', function(error){
-            if (error) {
-                console.error(error);
-            }
-        });
+    exportRecords() {
+        this.gameData.printInfo();
     }
 }
 
