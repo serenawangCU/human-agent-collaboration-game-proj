@@ -42,8 +42,8 @@ class GameGrid extends Component {
         }
 
         //Listen for the next block type from the server
-        this.props.socket.on('gameContents', (data) => {
-            //console.log('gameContents');
+        this.props.socket.on('game_contents', (data) => {
+            //console.log('game_contents');
             //console.log(data.gameField);
             this.setState({field : data.gameField});
         });

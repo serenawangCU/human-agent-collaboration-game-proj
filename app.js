@@ -7,6 +7,18 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const mongoose = require('mongoose');
+const Dishes = require('./models/dishes');
+
+const url = 'mongodb://localhost: 27017/tetris';
+const connect = mongoose.connect(url, {
+  useNewUrlParser: true
+});
+
+connect.then((db) => {
+  console.log("Connected correctly to server");
+}, (err) => {console.log(err);});
+
 var app = express();
 
 // view engine setup

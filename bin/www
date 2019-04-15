@@ -177,7 +177,7 @@ function startSendingGameField(socket) {
       if (curGame.gameStatus == GameStatus.OVER) {
         clearInterval(gameContentsIntervel);
       }
-      io.in(roomId).emit('gameContents', {
+      io.in(roomId).emit('game_contents', {
         gameField: curGame.wrapBlockAndField()
       });
     }, 1000/30);
