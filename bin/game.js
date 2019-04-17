@@ -345,6 +345,9 @@ class Game {
             // Update the counter of rotation
             if (direction === Directions.UP) {
                 this.gameData.updateRotate();
+            } else if (direction === Directions.DOWN) {
+                // Update the counter of pressing down
+                this.gameData.updateDownCount();
             }
         }
     }
