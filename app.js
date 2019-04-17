@@ -8,7 +8,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 const mongoose = require('mongoose');
-const Dishes = require('./models/dishes');
 
 const url = 'mongodb+srv://kw53098:wk2010gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
 const connect = mongoose.connect(url, {

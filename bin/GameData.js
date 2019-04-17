@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Games = require('../models/games');
+const Games = require('../models/games.js');
 
 /**
  * Class of all the collected data in a game
