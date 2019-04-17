@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('tetris5150:server');
 var http = require('http');
 var socketIo = require('socket.io');
-const Game = require('./Game.js');
+const Game = require('./game.js');
 const uuidv1 = require('uuid/v1');
 const GameStatus = require('./GameStatus.js');
 
