@@ -27,6 +27,7 @@ class GameData {
         this.curElimLines = 0;
         this.startTime = new Date();
         this.players = [player1, player2];
+        this.curDownCount = 0;
 
         Games.create({
             roomId: roomId
@@ -58,6 +59,14 @@ class GameData {
     }
 
     /**
+     * Increase the score by 1 as the player presses down
+     */
+
+    updateDownCount() {
+        this.curDownCount++;
+    }
+
+    /**
      * Update the score and all the related fields
      * @param player: the socket id of the current player
      * @param lines: the lines eliminated in the current step
@@ -65,8 +74,14 @@ class GameData {
 
     updateScore(player, lines) {
 
-        // Calculate the score based on the lines
-        let score = lines * lines * 10;
+        // Calculate the score based on the lines and the count of pressing down
+        // Player still gets 4 points without any eliminated lines
+        let score = 4;
+        if (lines > 0) {
+            lines * lines * 10;
+        }
+        score += this.curDownCount;
+        this.curDownCount = 0;
 
         // Update all the fields if needed
         if (player === this.players[0]) {
@@ -158,6 +173,7 @@ class GameData {
     /**
      * Upload logged data to MongoDB
      */
+
     uploadToDB() {
         //calculate the total time elapsed for this game
         let curTime = new Date();
