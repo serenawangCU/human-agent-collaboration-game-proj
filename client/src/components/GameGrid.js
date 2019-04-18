@@ -4,6 +4,7 @@ import Next from './Next'
 import Shapes from "./Shapes";
 import './GameGrid.css'
 import { Container, Row, Col } from 'reactstrap';
+import { Redirect } from 'react-router';
 import { names } from './HomeComponent';
 
 // const GameGrid = () => (
@@ -76,10 +77,19 @@ class GameGrid extends Component {
     }
 
     gameStatus() {
+        
         this.props.socket.on('game_over',() => {
             this.setState({gameOver: true});
+
+            
         });
+        if(this.state.gameOver === true) {
+            return <Redirect push to={`/survey`}/>;
+        }
     }
+    // openSurvey() {
+        
+    // }
     
     updatePlayerData() {
         let figures = this.state.figures;
