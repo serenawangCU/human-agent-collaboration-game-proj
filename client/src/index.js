@@ -9,7 +9,11 @@ import 'font-awesome/css/font-awesome.min.css';
 require('./styles/style.scss');
 
 const socket = openSocket("http://localhost:8000/"); //for local
+<<<<<<< HEAD
 // const socket = openSocket(); //for heroku
+=======
+//const socket = openSocket(); //for heroku
+>>>>>>> 0bd41dfd4afca0a2b594c5999f19c5003d86ad50
 console.log("React Client Open Socket");
 
 ReactDOM.render(<App socket={socket}/>, document.getElementById('root'));

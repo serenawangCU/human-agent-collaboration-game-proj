@@ -111,6 +111,7 @@ class Home extends Component {
     }
 
     render(){
+        document.body.style.opacity = 1.0;
         return (
             <div className="row row-content">
                 <div className="col-12">
