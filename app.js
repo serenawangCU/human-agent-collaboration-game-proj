@@ -9,7 +9,7 @@ var usersRouter = require('./routes/users');
 
 const mongoose = require('mongoose');
 
-const url = 'mongodb+srv://kw53098:wk2010gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
+const url = 'mongodb+srv://kw53098:WK2011gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
 const connect = mongoose.connect(url, {
   useNewUrlParser: true
 });
@@ -22,13 +22,14 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+
 app.set('view engine', 'jade');
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/api/getList', (req,res) => {
   var list = ["item1", "item2", "item3"];
