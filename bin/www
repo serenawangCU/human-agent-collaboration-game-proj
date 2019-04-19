@@ -200,7 +200,9 @@ function disconnect(socket) {
 
   // Notify the room of the leaving
   // TODO: add the listener in the front-end
-  io.in(socket.roomId).emit('leaving');
+  if (socket.roomId) {
+    io.in(socket.roomId).emit('leaving');
+  }
 }
 
 /**
