@@ -4,7 +4,7 @@ import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 
 const status = Constant.state;
-export const names = []; //[playerName, partnerName]
+export const names = []; // [playerName, partnerName]
 
 class Home extends Component {
 
@@ -13,6 +13,7 @@ class Home extends Component {
 
         this.state = {
             nickname: '',
+            ifRenamed: false,
             opponent: null,
             currentStatus: status.INITIAL
         };
@@ -27,6 +28,12 @@ class Home extends Component {
                 this.onOpponentPaired(data.userName);
                 names.push(data.userName)
             }
+        });
+
+        this.props.socket.on('rename', (data) => {
+            this.state.ifRenamed = true;
+            this.state.nickname = data;
+            names[0] = data;
         });
 
         this.props.socket.on('gaming', (data) => {
@@ -89,22 +96,43 @@ class Home extends Component {
         }
 
         if (currentStatus === status.PAIRED) {
-            return (
-                <Form>
-                    <FormGroup row>
-                        <Col md={{size:4, offset: 4}}>
-                            <Alert color="success" type="text" id="unpair">You've paired with {name}</Alert>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <Button type="submit" color="primary" onClick={this.handleConfirm}>
-                                Start Game
-                            </Button>
-                        </Col>
-                    </FormGroup>
-                </Form>
-            );
+            if (this.state.ifRenamed === false) {
+                return (
+                    <Form>
+                        <FormGroup row>
+                            <Col md={{size:4, offset: 4}}>
+                                <Alert color="success" type="text" id="unpair">You've been paired with {name}</Alert>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col md={{size: 6, offset: 3}}>
+                                <Button type="submit" color="primary" onClick={this.handleConfirm}>
+                                    Start Game
+                                </Button>
+                            </Col>
+                        </FormGroup>
+                    </Form>
+                );
+            } else {
+                return (
+                    <Form>
+                        <FormGroup row>
+                            <Col md={{size:4, offset: 4}}>
+                                <Alert color="success" type="text" id="unpair">
+                                You're renamed as {this.state.nickname} because of duplicate names. 
+                                You've been paired with {name}</Alert>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col md={{size: 6, offset: 3}}>
+                                <Button type="submit" color="primary" onClick={this.handleConfirm}>
+                                    Start Game
+                                </Button>
+                            </Col>
+                        </FormGroup>
+                    </Form>
+                );
+            }
         }
 
         return <div></div>;
