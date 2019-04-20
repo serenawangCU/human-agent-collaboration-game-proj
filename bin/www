@@ -42,26 +42,26 @@ let idleUser = null;
 let games = {};
 console.log("before io");
 io.on('connection', (socket) => {
-  console.log('Client connected');
-  // Listen on entering the game
-  socket.on('add_user', (userName) => {
-    addUser(socket, userName);
-  });
+	console.log('Client connected');
+	// Listen on entering the game
+	socket.on('add_user', (userName) => {
+		addUser(socket, userName);
+	});
 
-  // Listen on becoming ready to start the game
-  socket.on('ready', () => {
-    prepareGame(socket);
-  });
+	// Listen on becoming ready to start the game
+	socket.on('ready', () => {
+		prepareGame(socket);
+	});
 
-  // Deal with the move from players
-  socket.on('move', (direction) => {
-    moveBlocks(socket, direction);
-  })
+	// Deal with the move from players
+	socket.on('move', (direction) => {
+		moveBlocks(socket, direction);
+	})
 
-  // Listen on disconnecting from the server
-  socket.on('disconnect', () => {
-    disconnect(socket);
-  });
+	// Listen on disconnecting from the server
+	socket.on('disconnect', () => {
+		disconnect(socket);
+	});
 })
 
 /**
@@ -70,13 +70,13 @@ io.on('connection', (socket) => {
  * @param userName: new user's name
  */
 function moveBlocks(socket, direction) {
-  if (!socket.hasOwnProperty("roomId")) {
-    return;
-  }
+	if (!socket.hasOwnProperty("roomId")) {
+		return;
+	}
 
-  let curGame = games[socket.roomId];
-  console.log(direction);
-  curGame.move(direction);
+	let curGame = games[socket.roomId];
+	console.log(direction);
+	curGame.move(direction);
 }
 
 
@@ -87,54 +87,64 @@ function moveBlocks(socket, direction) {
  */
 
 function addUser(socket, userName) {
-  socket.userName = userName;
+	socket.userName = userName;
 
-  console.log("connected: " + userName);
-  // Use the same event for pairing no matter it's successful or not
-  if (idleUser == null) {
-    // If there's no available user
-    // Set the current user as the idle user
-    idleUser = socket;
-    socket.emit('paired', {
-      result: false,
-      userName: null
-    });
-  } else {
-    // Pairing succeed
-    
-    //Generate a random room id
-    let roomId = uuidv1();
+	console.log("connected: " + userName);
+	// Use the same event for pairing no matter it's successful or not
+	if (idleUser == null) {
+		// If there's no available user
+		// Set the current user as the idle user
+		idleUser = socket;
+		socket.emit('paired', {
+			result: false,
+			userName: null
+		});
+	} else {
+		// Pairing succeed
 
-    // Join the room
-    idleUser.join(roomId);
-    socket.join(roomId);
-    console.log("join room: " + roomId);
-    // Record game status
-    // Use room id to index
-    games[roomId] = new Game(idleUser.id, socket.id, roomId, io);
+		//Generate a random room id
+		let roomId = uuidv1();
 
-    // Set fields
-    idleUser.roomId = roomId;
-    socket.roomId = roomId;
-    idleUser.opponent = socket;
-    socket.opponent = idleUser;
-    idleUser.ifReady = false;
-    socket.ifReady = false;
+		// Join the room
+		idleUser.join(roomId);
+		socket.join(roomId);
+		console.log("join room: " + roomId);
+		// Record game status
+		// Use room id to index
+		games[roomId] = new Game(idleUser.id, socket.id, roomId, io);
 
-    // Emit the pairing result
-    idleUser.emit('paired', {
-      result: true,
-      userName: socket.userName
-    })
+		// Set fields
+		idleUser.roomId = roomId;
+		socket.roomId = roomId;
+		idleUser.opponent = socket;
+		socket.opponent = idleUser;
+		idleUser.ifReady = false;
+		socket.ifReady = false;
 
-    socket.emit('paired', {
-      result: true,
-      userName: idleUser.userName
-    })
+		// Rename the usernames if they are the same
+		if (socket.userName === idleUser.userName) {
+			socket.userName = socket.userName + '2';
+			idleUser.userName = idleUser.userName + '1';
 
-    // Reset the idle user
-    idleUser = null;
-  }
+			// Send the changed names back
+			socket.emit('rename', socket.userName);
+			idleUser.emit('rename', idleUser.userName);
+		}
+
+		// Emit the pairing result
+		idleUser.emit('paired', {
+			result: true,
+			userName: socket.userName
+		})
+
+		socket.emit('paired', {
+			result: true,
+			userName: idleUser.userName
+		})
+
+		// Reset the idle user
+		idleUser = null;
+	}
 }
 
 /**
@@ -143,15 +153,15 @@ function addUser(socket, userName) {
  */
 
 function prepareGame(socket) {
-  socket.ifReady = true;
+	socket.ifReady = true;
 
-  io.in(socket.roomId).emit('gaming', {
-    result: socket.opponent.ifReady
-  });
+	io.in(socket.roomId).emit('gaming', {
+		result: socket.opponent.ifReady
+	});
 
-  if (socket.opponent.ifReady == true) {
-    startSendingGameField(socket);
-  }
+	if (socket.opponent.ifReady == true) {
+		startSendingGameField(socket);
+	}
 }
 
 /**
@@ -161,29 +171,29 @@ function prepareGame(socket) {
 
 function startSendingGameField(socket) {
 
-  // Checking
-  if(socket.hasOwnProperty("roomId") && games.hasOwnProperty(socket.roomId)) {
+	// Checking
+	if(socket.hasOwnProperty("roomId") && games.hasOwnProperty(socket.roomId)) {
 
-    let curGame = games[socket.roomId];
-    let roomId = socket.roomId;
+		let curGame = games[socket.roomId];
+		let roomId = socket.roomId;
 
-    // Start the game
-    // Game moving and message sending have different speeds
-    // TODO: find an appropriate speed
-    curGame.loop();
+		// Start the game
+		// Game moving and message sending have different speeds
+		// TODO: find an appropriate speed
+		curGame.loop();
 
-    var gameContentsIntervel = setInterval(() => {
-      //if game over, clear the current interval
-      if (curGame.gameStatus == GameStatus.OVER) {
-        clearInterval(gameContentsIntervel);
-      }
-      io.in(roomId).emit('game_contents', {
-        gameField: curGame.wrapBlockAndField()
-      });
-    }, 1000/30);
-  } else {
-    console.log("Invalid start game triggered by " + socket.id);
-  }
+		var gameContentsIntervel = setInterval(() => {
+			//if game over, clear the current interval
+			if (curGame.gameStatus == GameStatus.OVER) {
+				clearInterval(gameContentsIntervel);
+			}
+			io.in(roomId).emit('game_contents', {
+				gameField: curGame.wrapBlockAndField()
+			});
+		}, 1000/30);
+	} else {
+		console.log("Invalid start game triggered by " + socket.id);
+	}
 }
 
 /**
@@ -192,15 +202,17 @@ function startSendingGameField(socket) {
  */
 
 function disconnect(socket) {
-  // If the idle user leaves the lobby
-  // Reset the global idle user id
-  if (idleUser === socket) {
-    idleUser = null;
-  }
+	// If the idle user leaves the lobby
+	// Reset the global idle user id
+	if (idleUser === socket) {
+		idleUser = null;
+	}
 
-  // Notify the room of the leaving
-  // TODO: add the listener in the front-end
-  io.in(socket.roomId).emit('leaving');
+	// Notify the room of the leaving
+	// TODO: add the listener in the front-end
+	if (socket.roomId) {
+		io.in(socket.roomId).emit('leaving');
+	}
 }
 
 /**
@@ -208,19 +220,19 @@ function disconnect(socket) {
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+	if (isNaN(port)) {
+		// named pipe
+		return val;
+	}
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+	if (port >= 0) {
+		// port number
+		return port;
+	}
 
-  return false;
+	return false;
 }
 
 /**
@@ -228,27 +240,29 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+	var bind = typeof port === 'string'
+			? 'Pipe ' + port
+			: 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case 'EACCES':
+			onsole.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+
+		default:
+			throw error;
+	}
 }
 
 /**
@@ -256,9 +270,9 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+			? 'pipe ' + addr
+			: 'port ' + addr.port;
+	debug('Listening on ' + bind);
 }

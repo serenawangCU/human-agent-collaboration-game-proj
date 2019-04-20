@@ -32,7 +32,7 @@ class GameGrid extends Component {
             direction: "",
             currentPlayer : '',
             nextPlayer : '',
-            playerId: this.props.socket.id
+            playerId: this.props.socket.id,
         }
 
         this.gameMove = {
@@ -80,16 +80,9 @@ class GameGrid extends Component {
         
         this.props.socket.on('game_over',() => {
             this.setState({gameOver: true});
-
-            
         });
-        if(this.state.gameOver === true) {
-            return <Redirect push to={`/survey`}/>;
-        }
-    }
-    // openSurvey() {
         
-    // }
+    }
     
     updatePlayerData() {
         let figures = this.state.figures;
@@ -136,12 +129,11 @@ class GameGrid extends Component {
     // reactstrap, adjust the place of grid
     render() {
         if (this.state.currentPlayer === this.state.playerId) {
-            //document.body.style.background = 'white';
             document.body.style.opacity = 1.0;
         } else {
-            //document.body.style.background = '#cacdd1';
             document.body.style.opacity = 0.5;
         }
+
     
         return (
             <Container>
@@ -184,7 +176,7 @@ class GameGrid extends Component {
             </Container>
         )
     }
-}
 
+}
 
 export default GameGrid;

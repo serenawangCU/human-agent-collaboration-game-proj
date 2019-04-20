@@ -231,7 +231,11 @@ class Game {
         this.exportRecords();
 
         // Send game is over to players
-        this.io.in(this.roomId).emit('game_over');
+        this.io.in(this.roomId).emit('game_over', {
+            totalScore : this.gameData.getTotalScore(),
+            players : this.gameData.getPlayers(),
+            indivScore : this.gameData.getIndivScores()
+        });
     }
 
     /**

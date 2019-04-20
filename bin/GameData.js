@@ -42,11 +42,27 @@ class GameData {
     }
 
     /**
-     * Returnt the overall score
+     * Return the overall score
      */
 
     getTotalScore() {
         return this.totalScore;
+    }
+
+    /**
+     * Return the two players
+     */
+
+    getPlayers() {
+        return this.players;
+    }
+
+    /**
+     * Return the scores of the individuals
+     */
+
+    getIndivScores() {
+        return this.indivScore;
     }
 
     /**
