@@ -34,7 +34,6 @@ class GameData {
         })
         .then((game) => {
             console.log("Create a new game entry!")
-            console.log(game);
             this.gameId = game._id;
         })
         .catch((err) => {
@@ -168,6 +167,50 @@ class GameData {
             console.log("   Number of Rotation: " + this.steps[i][2] + "\n");
         }
         console.log("-------------End-------------");
+    }
+
+    /**
+     * Reset the object and 
+     */
+
+    reset() {
+        this.indivScore[0] = 0;
+        this.indivScore[1] = 0;
+        this.indivSteps[0] = 0;
+        this.indivSteps[1] = 0;
+        this.totalScore = 0;
+        this.linesPerMin = [];
+        this.steps = [];
+        this.stepCounter = 0;
+
+        this.curNumRotate = 0;
+        this.curElimLines = 0;
+        this.startTime = new Date();
+        this.players = [player1, player2];
+        this.curDownCount = 0;
+
+        Games.create({
+            roomId: roomId
+        })
+        .then((game) => {
+            console.log("Create a new game entry!")
+            this.gameId = game._id;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
+    /**
+     * Remove the recorded document from database
+     */
+
+    removeFromDB() {
+        Games.findByIdAndDelete(this.gameId)
+        .then((resp) => {
+            console.log("The new game document deleted.");
+        })
+        .catch((err) => {console.log(err);});
     }
 
     /**
