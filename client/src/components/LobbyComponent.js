@@ -149,6 +149,7 @@ class Lobby extends Component {
     }
 
     render(){
+        console.log('lobby here');
         document.body.style.opacity = 1.0;
         return (
             <div className="row row-content">

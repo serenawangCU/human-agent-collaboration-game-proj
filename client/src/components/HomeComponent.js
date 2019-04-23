@@ -7,35 +7,38 @@ class Home extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            buttonPressed: false
+        }
         
-        this.buttonPressed = false;
+        //this.buttonPressed = false;
 
         this.buttonPress = this.buttonPress.bind(this);
         this.goToLobby = this.goToLobby.bind(this);
     }
 
-    goToLobby(){
-        if (this.buttonPressed) {
-            console.log("Called");
-            this.push(`/lobby`); //Doesn't work
-        }
-        
+    //buttonPressed = false;
+    buttonPress(){
+        this.setState({buttonPressed: true});
     }
-
-    buttonPress() {
-        this.buttonPressed = true;
-        console.log(this.buttonPressed);
-        this.goToLobby()
-    }
-
     
+    goToLobby(buttonPressed){
+        
+        console.log("gotoLobby function");
+        if (buttonPressed == true){
+            return <Redirect push to={`/lobby`} />; //Doesn't work
+        }
+        else {
+            console.log("button not pressed");
+        }
+    }
 
     render() {
         console.log(this.buttonPressed);
         return(
             <Container>
                 <iframe width="560" height="315" 
-                src="https://www.youtube.com/embed/_fQtxKmgJC8" allow="accelerometer; encrypted-media; gyroscope" allowFullScreen>
+                src="https://www.youtube.com/embed/_fQtxKmgJC8" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
                 </iframe>
                 
                 <div className="info">
@@ -44,22 +47,24 @@ class Home extends Component {
                         while an AI will choose who will go next on every turn. 
                     </p>
                 </div>
+          
+
                 <Form>
                     <FormGroup row>
                         <Col md={{size: 6, offset: 3}}>
-                            <Button color="primary" onClick={this.buttonPress}>
+                            <Button type="submit" color="primary" onClick={this.buttonPress}>
                                 Enter Lobby
                             </Button>
                         </Col>
+                        <Col>
+                            {this.goToLobby(this.state.buttonPressed)}
+                        </Col>
                     </FormGroup>
                 </Form>
-                {/* <Nav pills>
-                    <NavItem>
-                        <NavLink to="/lobby">Enter Lobby</NavLink>
-                    </NavItem>
-                </Nav> */}
+                
             </Container>
             
+              
         )
     }
  }
