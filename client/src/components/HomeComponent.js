@@ -12,6 +12,7 @@ class Home extends Component {
     }
 
     goToLobby(){
+        console.log('to_lobby');
         return <Redirect push to={`/lobby`} />; //Doesn't work
     }
 

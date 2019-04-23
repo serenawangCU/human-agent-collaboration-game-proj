@@ -37,14 +37,12 @@ class Main extends Component {
     const TetrisPage = () => {
       return (
         <Tetris socket={this.props.socket}/>
-        // <NewTetris/>
       );
     }
 
     const SurveyPage = () => {
       return (
         <Survey socket={this.props.socket}/>
-        // <NewTetris/>
       );
     }
 
