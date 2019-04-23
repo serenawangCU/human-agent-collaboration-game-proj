@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
+import Popup from './Popup';
 
 const status = Constant.state;
 export const names = []; // [playerName, partnerName]
@@ -15,7 +16,9 @@ class Lobby extends Component {
             nickname: '',
             ifRenamed: false,
             opponent: null,
-            currentStatus: status.INITIAL
+            currentStatus: status.INITIAL,
+            showPopup: false, 
+            popupType: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -42,6 +45,10 @@ class Lobby extends Component {
             if (data.result === true) {
                 this.setState({currentStatus: status.GAMING});
             }
+        });
+
+        this.props.socket.on('leaving',() => {
+            this.setState({ showPopup: true, popupType: 'offline'});
         });
     }
 
@@ -90,7 +97,7 @@ class Lobby extends Component {
         if (currentStatus === status.PAIRING) {
             return (
                 <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="unpair">Waiting for your match...</Alert>
+                    <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
                 </Col>
             );
         }
@@ -111,6 +118,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
+                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             } else {
@@ -130,6 +138,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
+                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             }
@@ -158,7 +167,7 @@ class Lobby extends Component {
                         <FormGroup row>
                             <Col md={{size: 6, offset: 3}}>
                                 <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
-                                    Match with Player
+                                    Try Pair
                                 </Button>
                             </Col>
                         </FormGroup>
