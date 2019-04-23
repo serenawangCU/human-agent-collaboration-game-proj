@@ -15,12 +15,7 @@ margin-left: 30%;
 padding-top: 10px;
 `;
 
-// const Right = styled.div`
-// display: inline-block;
-// vertical-align: top;
-// margin-right: 20%;
-// padding-top: 20px;
-// `;
+
 
 class Tetris extends Component {
     constructor(props) {
@@ -61,11 +56,10 @@ class Tetris extends Component {
     }
 
     render() {
-
         return (
             <div>
                 <Left>
-                    <GamePanel socket={this.props.socket} partnerOnline = {this.state.partnerOnline}/>
+                    <GamePanel socket={this.props.socket}/>
                 </Left>
                 {this.state.showPopup ? 
                         <Popup
