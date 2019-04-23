@@ -158,7 +158,7 @@ class Lobby extends Component {
                     <Form onSubmit={this.handlePair}>
                         <FormGroup row>
                             <Col md={{size: 6, offset: 3}}>
-                                <Input type="text" id="nickname" name="nickname"
+                                <Input type="text" id="nickname" name="nickname" required
                                     placeholder="Nickname"
                                     value={this.state.nickname}
                                     onChange={this.handleInputChange} />
