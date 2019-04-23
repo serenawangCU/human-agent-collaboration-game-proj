@@ -16,6 +16,7 @@ class Home extends Component {
         this.goToLobby = this.goToLobby.bind(this);
         this.buttonPress = this.buttonPress.bind(this);
     }
+<<<<<<< HEAD
     //buttonPressed = false;
     buttonPress(){
         this.setState({buttonPressed: true});
@@ -29,6 +30,12 @@ class Home extends Component {
         else {
             console.log("button not pressed");
         }
+=======
+
+    goToLobby(){
+        console.log('to_lobby');
+        return <Redirect push to={`/lobby`} />; //Doesn't work
+>>>>>>> c15102c87932fba0e0c2e5a709773afc877fd4c2
     }
 
     render() {

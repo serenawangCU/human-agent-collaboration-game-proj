@@ -49,7 +49,7 @@ class Game {
     initGame() {
 
         // All the data related of this game
-        this.gameData = new GameData(socketId1, socketId2, roomId);
+        this.gameData = new GameData(this.socketId1, this.socketId2, this.roomId);
 
         // The speed of the falling
         this.speed = 500;
