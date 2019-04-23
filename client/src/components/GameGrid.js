@@ -48,28 +48,28 @@ class GameGrid extends Component {
             //console.log(data.gameField);
             this.setState({field : data.gameField});
         });
+
     }
 
     componentDidMount() {    
         //this.initFigures();
-        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
-        this.updateScore();
-        this.updatePlayerData();
-        this.gameStatus();
+        if (this.props.partnerOnline) {
+            document.addEventListener('keydown', this.keydownHandler.bind(this), false);
+            this.updateScore();
+            this.updatePlayerData();
+            this.gameStatus();
+        } else {
+            this.props.socket.off('score');
+            this.props.socket.off('game_over');
+            this.props.socket.off('player_block_data');
+        }
+        
     }
 
     componentWillUnmount() {
         document.addEventListener('keydown', this.keydownHandler.bind(this), false);
-        //this.updatePlayerData();
+       
     }
-
-
-    // initFigures() {
-    //     //Shape is a const jso
-    //     this.setState({figures: Shapes}) 
-        
-    // }
-
     updateScore() {
         this.props.socket.on('score', (data) => {
             this.setState({score: data.score});
@@ -128,7 +128,7 @@ class GameGrid extends Component {
 
     // reactstrap, adjust the place of grid
     render() {
-        if (this.state.currentPlayer === this.state.playerId) {
+        if (this.state.currentPlayer === this.state.playerId || !this.props.partnerOnline) {
             document.body.style.opacity = 1.0;
         } else {
             document.body.style.opacity = 0.5;

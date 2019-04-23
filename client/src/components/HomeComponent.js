@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
+import Popup from './Popup';
 
 const status = Constant.state;
 export const names = []; // [playerName, partnerName]
@@ -15,7 +16,9 @@ class Home extends Component {
             nickname: '',
             ifRenamed: false,
             opponent: null,
-            currentStatus: status.INITIAL
+            currentStatus: status.INITIAL,
+            showPopup: false, 
+            popupType: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -42,6 +45,10 @@ class Home extends Component {
             if (data.result === true) {
                 this.setState({currentStatus: status.GAMING});
             }
+        });
+
+        this.props.socket.on('leaving',() => {
+            this.setState({ showPopup: true, popupType: 'offline'});
         });
     }
 
@@ -111,6 +118,7 @@ class Home extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
+                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             } else {
@@ -130,6 +138,7 @@ class Home extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
+                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             }
