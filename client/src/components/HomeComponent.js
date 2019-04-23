@@ -7,19 +7,35 @@ class Home extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            buttonPressed: false
+        }
+        
+        //this.buttonPressed = false;
 
         this.goToLobby = this.goToLobby.bind(this);
+        this.buttonPress = this.buttonPress.bind(this);
     }
-
-    goToLobby(){
-        return <Redirect push to={`/lobby`} />; //Doesn't work
+    //buttonPressed = false;
+    buttonPress(){
+        this.setState({buttonPressed: true});
+    }
+    goToLobby(buttonPressed){
+        
+        console.log("gotoLobby function");
+        if (buttonPressed == true){
+            return <Redirect push to={`/lobby`} />; //Doesn't work
+        }
+        else {
+            console.log("button not pressed");
+        }
     }
 
     render() {
         return(
             <Container>
                 <iframe width="560" height="315" 
-                src="https://www.youtube.com/embed/_fQtxKmgJC8" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                src="https://www.youtube.com/embed/_fQtxKmgJC8" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
                 </iframe>
                 
                 <div className="info">
@@ -28,16 +44,24 @@ class Home extends Component {
                         while an AI will choose who will go next on every turn. 
                     </p>
                 </div>
+          
+
                 <Form>
                     <FormGroup row>
                         <Col md={{size: 6, offset: 3}}>
-                            <Button type="submit" color="primary" onClick={this.goToLobby}>
+                            <Button type="submit" color="primary" onClick={this.buttonPress}>
                                 Enter Lobby
                             </Button>
                         </Col>
+                        <Col>
+                            {this.goToLobby(this.state.buttonPressed)}
+                        </Col>
                     </FormGroup>
                 </Form>
+                
             </Container>
+            
+              
         )
     }
  }
