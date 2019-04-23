@@ -3,6 +3,7 @@ import GamePanel from './GamePanel';
 import Popup from './Popup';
 import './Tetris.css'
 import styled from 'styled-components';
+import { Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 
 
@@ -15,12 +16,12 @@ margin-left: 30%;
 padding-top: 10px;
 `;
 
-// const Right = styled.div`
-// display: inline-block;
-// vertical-align: top;
-// margin-right: 20%;
-// padding-top: 10px;
-// `;
+const Right = styled.div`
+display: inline-block;
+vertical-align: top;
+margin-right: 20%;
+padding-top: 10px;
+`;
 
 
 
@@ -65,13 +66,26 @@ class Tetris extends Component {
     render() {
         return (
             <div>
-                {/* <Right>
-                    Instuctions
-                    picture
-                </Right> */}
-                <Left>
-                    <GamePanel socket={this.props.socket}/>
-                </Left>
+                <Row>
+                    <Col>
+                        <Right>
+                    
+                            <p>
+                            During the game, you and your partner will be assigned who's next by an AI. 
+                            When it is not your turn, your screen will turn grey and you will not be able to
+                            move the tetromino.
+                            <br></br>
+                            <br></br>
+                            You will be able to control your tetromino by using the arrow keys. 
+                            </p>
+                        </Right>
+                    </Col>
+                    <Col>
+                        <Left>
+                            <GamePanel socket={this.props.socket}/>
+                        </Left>
+                    </Col>
+                </Row>
                 {this.state.showPopup ? 
                         <Popup
                             popupType = {this.state.popupType}
@@ -80,7 +94,7 @@ class Tetris extends Component {
                         />
                     : null
                 }
-
+                    
                 
             </div>
         )
