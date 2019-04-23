@@ -3,6 +3,7 @@ import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 import Popup from './Popup';
+import './Lobby.css';
 
 const status = Constant.state;
 export const names = []; // [playerName, partnerName]
@@ -97,7 +98,7 @@ class Lobby extends Component {
         if (currentStatus === status.PAIRING) {
             return (
                 <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
+                    <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
                 </Col>
             );
         }
@@ -167,13 +168,24 @@ class Lobby extends Component {
                         <FormGroup row>
                             <Col md={{size: 6, offset: 3}}>
                                 <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
-                                    Try Pair
+                                    Pair
                                 </Button>
                             </Col>
                         </FormGroup>
                     </Form>
                     {this.renderPair(this.state.opponent, this.state.currentStatus)}
                     {this.renderStart(this.state.currentStatus)}
+                </div>
+
+                <div class="info">
+                    <p>
+                        During the game, you and your partner will be assigned who's next by an AI. 
+                        When it is not your turn, your screen will turn grey and you will not be able to
+                        move the tetromino.
+                        <br></br>
+                        <br></br>
+                        You will be able to control your tetromino by using the arrow keys. 
+                    </p>
                 </div>
             </div>
         );
