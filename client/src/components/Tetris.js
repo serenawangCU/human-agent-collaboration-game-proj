@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import GamePanel from './GamePanel';
+import Popup from './Popup';
 import './Tetris.css'
 import styled from 'styled-components';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { NavLink } from 'react-router-dom'
 
 
 
@@ -15,12 +15,7 @@ margin-left: 30%;
 padding-top: 10px;
 `;
 
-// const Right = styled.div`
-// display: inline-block;
-// vertical-align: top;
-// margin-right: 20%;
-// padding-top: 20px;
-// `;
+
 
 class Tetris extends Component {
     constructor(props) {
@@ -30,19 +25,27 @@ class Tetris extends Component {
             showPopup: false,
             score : 0,
             redirectSurvey: false,
-            redirectHome: false
+            redirectHome: false,
+            partnerOnline: true,
+            popupType: ''
         }
-
-    }
-
-    componentDidMount() {    
         this.gameStatus();
         this.updateScore();
     }
 
+
     gameStatus() {
         this.props.socket.on('game_over',() => {
-            this.setState({gameOver: true, showPopup: true});
+            document.body.style.opacity = 1.0;
+            this.setState({gameOver: true, showPopup: true, popupType: 'survey'});
+        });
+        //add listner for the connection state of user's partner
+        this.props.socket.on('leaving',() => {
+            document.body.style.opacity = 1.0;
+            this.setState({partnerOnline: false, showPopup: true, popupType: 'offline'});
+            this.props.socket.off('game_over');
+            this.props.socket.off('score');
+            //console.log("leeeeeft!");
         });
     }
 
@@ -53,7 +56,6 @@ class Tetris extends Component {
     }
 
     render() {
-
         return (
             <div>
                 <Left>
@@ -61,12 +63,14 @@ class Tetris extends Component {
                 </Left>
                 {this.state.showPopup ? 
                         <Popup
+                            popupType = {this.state.popupType}
                             finalscore = {this.state.score}
-                            text='Take a survey?'
                             closePopup={this.togglePopup.bind(this)}
                         />
                     : null
                 }
+
+                
             </div>
         )
     }
@@ -78,29 +82,7 @@ class Tetris extends Component {
     
 }
 
-class Popup extends React.Component {
-    // toSurvey = () => {
-    //     this.props.history.push(`/survey`)
-    // };
-    // toHome = () => {
-    //     this.props.history.push(`/home`)
-    // };
 
-    render() {
-      return (
-        <div className='popup'>
-            <div className='popup_inner'>
-                <h1>Score:<br /> {this.props.finalscore}<br />{this.props.text}</h1>
-                <div className='button'>
-                <NavLink to="/survey">Yes</NavLink>
-                <NavLink to="/home">No</NavLink>
-                </div>
-            </div>
-        </div>
-        
-      );
-    }
-  }
 
 
 export default Tetris;

@@ -12,6 +12,7 @@ class Survey extends Component {
     
 
         render() {
+            document.body.style.opacity = 1.0;
             return(
             <Form>
             <FormGroup>
