@@ -5,7 +5,7 @@ import Shapes from "./Shapes";
 import './GameGrid.css'
 import { Container, Row, Col } from 'reactstrap';
 import { Redirect } from 'react-router';
-import { names } from './HomeComponent';
+import { names } from './LobbyComponent';
 
 // const GameGrid = () => (
 //     <h1>This is a game grid</h1>

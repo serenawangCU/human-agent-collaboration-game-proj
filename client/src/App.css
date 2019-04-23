@@ -12,10 +12,13 @@
   background-color: #282c34;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: left;
+  justify-content: left;
   font-size: calc(10px + 2vmin);
   color: white;
+  text-align: left;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 .App-link {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Home from './HomeComponent';
+import Lobby from './LobbyComponent';
 // import NewTetris from '../newSrc/containers'
 import Tetris from './Tetris';
 import Header from './HeaderComponent';
@@ -24,6 +25,12 @@ class Main extends Component {
     const HomePage = () => {
       return (
         <Home socket={this.props.socket}/>
+      );
+    }
+
+    const LobbyPage = () => {
+      return (
+        <Lobby socket={this.props.socket}/>
       );
     }
 
@@ -53,6 +60,7 @@ class Main extends Component {
         <Header />
         <Switch>
           <Route path="/home" component={HomePage} />
+          <Route exact path="/lobby" component={LobbyPage} />
           <Route exact path="/tetris" component={TetrisPage} />
           <Route exact path="/survey" component={SurveyPage}/>
           <Redirect to="/home" />
