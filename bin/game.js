@@ -38,6 +38,16 @@ class Game {
 
         // Field matrix
         this.gameField = [];
+
+        this.initGame();
+    }
+
+    /**
+     * Initialize the game
+     */
+
+    initGame() {
+
         // All the data related of this game
         this.gameData = new GameData(socketId1, socketId2, roomId);
 
@@ -51,16 +61,7 @@ class Game {
 
         // The game status
         this.gameStatus = GameStatus.PENDING;
-
-        this.initGame();
-    }
-
-    /**
-     * Initialize the game
-     */
-
-    initGame() {
-
+        
         // Generate the next block and the next player
         this.nextBlock = this.generateBlock();
         this.nextPlayer = decideNextPlayer(this.socketId1, this.socketId2, null);
@@ -87,6 +88,10 @@ class Game {
         //         });
         //     }
         // });
+    }
+
+    resetGame() {
+
     }
 
     /**
@@ -496,46 +501,6 @@ class Game {
 
         return true;
     }
-
-    // /**
-    //  * Method to generate a unique file name
-    //  */
-
-    // generateFileName() {
-    //     let curTime = new Date();
-    //     return 'collected_data/' + curTime.getFullYear() 
-    //                 + '_' + curTime.getMonth() 
-    //                 + '_' + curTime.getDay()
-    //                 + '_' + curTime.getHours()
-    //                 + '_' + curTime.getMinutes()
-    //                 + '_' + this.socketId1
-    //                 + '_' + this.socketId2
-    //                 + '.csv';
-    // }
-
-    // /**
-    //  * Export the game record as a CSV file
-    //  */
-
-    // exportRecords () {
-
-    //     // Table header
-    //     let tableContent = 'Player, Score\n';
-
-    //     // Append each line of records
-    //     this.records.forEach(function(singleRecord) {
-    //         tableContent += singleRecord.player + ',' + singleRecord.score + '\n';
-    //     });
-
-    //     // Get the file name
-    //     let fileName = this.generateFileName();
-    //     // Create the record file
-    //     FileSystem.writeFile(fileName, tableContent, 'utf8', function(error){
-    //         if (error) {
-    //             console.error(error);
-    //         }
-    //     });
-    // }
 
     /**
      * Method to export the collected data

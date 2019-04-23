@@ -48,6 +48,7 @@ class GameGrid extends Component {
             //console.log(data.gameField);
             this.setState({field : data.gameField});
         });
+
     }
 
     componentDidMount() {    
