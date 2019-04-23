@@ -15,6 +15,13 @@ margin-left: 30%;
 padding-top: 10px;
 `;
 
+// const Right = styled.div`
+// display: inline-block;
+// vertical-align: top;
+// margin-right: 20%;
+// padding-top: 10px;
+// `;
+
 
 
 class Tetris extends Component {
@@ -58,6 +65,10 @@ class Tetris extends Component {
     render() {
         return (
             <div>
+                {/* <Right>
+                    Instuctions
+                    picture
+                </Right> */}
                 <Left>
                     <GamePanel socket={this.props.socket}/>
                 </Left>

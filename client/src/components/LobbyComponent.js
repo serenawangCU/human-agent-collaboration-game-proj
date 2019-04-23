@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Row, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 import Popup from './Popup';
 import './Lobby.css';
+import instructions from './Instructions.png';
 
 const status = Constant.state;
 export const names = []; // [playerName, partnerName]
@@ -177,17 +178,22 @@ class Lobby extends Component {
                     {this.renderPair(this.state.opponent, this.state.currentStatus)}
                     {this.renderStart(this.state.currentStatus)}
                 </div>
-
-                <div class="info">
-                    <p>
-                        During the game, you and your partner will be assigned who's next by an AI. 
-                        When it is not your turn, your screen will turn grey and you will not be able to
-                        move the tetromino.
-                        <br></br>
-                        <br></br>
-                        You will be able to control your tetromino by using the arrow keys. 
-                    </p>
-                </div>
+                
+                <Row id="info">
+                    <Col id="instructions">
+                        <p>
+                            During the game, you and your partner will be assigned who's next by an AI. 
+                            When it is not your turn, your screen will turn grey and you will not be able to
+                            move the tetromino.
+                            <br></br>
+                            <br></br>
+                            You will be able to control your tetromino by using the arrow keys. 
+                        </p>
+                    </Col>
+                    <Col id="image">
+                        <img src={instructions} alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
+                    </Col>
+                </Row>
             </div>
         );
     }
