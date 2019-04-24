@@ -75,7 +75,6 @@ class Tetris extends Component {
                     <Row>
                         <Col xs="3">
                             <Right>
-                        
                                 <p>
                                 During the game, you and your partner will be assigned who's next by an AI. 
                                 When it is not your turn, your screen will turn grey and you will not be able to

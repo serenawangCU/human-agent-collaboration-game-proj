@@ -1,0 +1,13 @@
+Form{
+    text-align: left;
+    padding-top: 40px;
+}
+
+p{
+    text-align: left;
+}
+
+#buttons {
+    text-align: center;
+    padding-top: 10px;
+}
