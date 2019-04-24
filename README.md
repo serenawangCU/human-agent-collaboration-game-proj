@@ -8,7 +8,7 @@
 2. In a bash ternimal, type `npm install` that will install required packages
 
 ## Install node packages on client side
-1. Change directory to 'client' ('client' folder is in the 'server' folder) <br>
+1. Change directory to 'client'  <br>
 2. In a bash ternimal, type `yarn install` that will install required packages
 
 # You need start both server and client application
