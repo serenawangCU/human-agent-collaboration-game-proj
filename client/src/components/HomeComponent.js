@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
 import './Home.css';
-import { Button, Form, FormGroup,Col, Container, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Form, FormGroup,Col, Container } from 'reactstrap';
 
 class Home extends Component {
 
