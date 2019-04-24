@@ -33,6 +33,12 @@ class Tetris extends Component {
         this.updateScore();
     }
 
+    componentWillUnmount() {
+        this.props.socket.off('score');
+        this.props.socket.off('game_over');
+        this.props.socket.off('leaving');
+    }
+
 
     gameStatus() {
         this.props.socket.on('game_over',() => {

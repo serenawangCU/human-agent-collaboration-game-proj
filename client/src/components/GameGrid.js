@@ -54,16 +54,22 @@ class GameGrid extends Component {
 
     componentDidMount() {    
         //this.initFigures();
-        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
+        this.keydownHandler = this.keydownHandler.bind(this);
+        document.addEventListener('keydown', this.keydownHandler, false);
         this.updateScore();
         this.updatePlayerData();
         this.gameStatus();
     }
 
     componentWillUnmount() {
-        document.addEventListener('keydown', this.keydownHandler.bind(this), false);
-       
+        document.removeEventListener('keydown', this.keydownHandler, false);
+        this.props.socket.off('score');
+        this.props.socket.off('game_over');
+        this.props.socket.off('player_block_data');
+        this.props.socket.off('game_contents');
+        this.props.socket.off('leaving');
     }
+
     updateScore() {
         this.props.socket.on('score', (data) => {
             this.setState({score: data.score});
@@ -104,18 +110,22 @@ class GameGrid extends Component {
             switch(e.keyCode){
                 //left
                 case 37: this.setState({direction: "left"});
+                console.log('handle key left');
                 break;
                 
                 //right
                 case 39: this.setState({direction: "right"});
+                console.log('handle key right');
                 break;
                 
                 //up
                 case 38: this.setState({direction: "up"});
+                console.log('handle key up');
                 break;
 
                 //down
                 case 40: this.setState({direction: "down"});
+                console.log('handle key down');
                 break;
 
                 default: break;

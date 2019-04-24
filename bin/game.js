@@ -319,29 +319,33 @@ class Game {
 
         switch(direction) {
             case Directions.UP:
-            newBlock = this.rotate();
-            break;
+                console.log('rotate');
+                newBlock = this.rotate();
+                break;
 
             case Directions.DOWN:
-            newBlock = new Shape(this.currentBlock);
-            for (let i = 0; i < 4; i++) {
-                newBlock.path[i][0]++;
-            }
-            break;
+                console.log('down');
+                newBlock = new Shape(this.currentBlock);
+                for (let i = 0; i < 4; i++) {
+                    newBlock.path[i][0]++;
+                }
+                break;
 
             case Directions.LEFT:
-            newBlock = new Shape(this.currentBlock);
-            for (let i = 0; i < 4; i++) {
-                newBlock.path[i][1]--;
-            }
-            break;
+                console.log('left');
+                newBlock = new Shape(this.currentBlock);
+                for (let i = 0; i < 4; i++) {
+                    newBlock.path[i][1]--;
+                }
+                break;
 
             case Directions.RIGHT:
-            newBlock = new Shape(this.currentBlock);
-            for (let i = 0; i < 4; i++) {
-                newBlock.path[i][1]++;
-            }
-            break;
+                console.log('right');
+                newBlock = new Shape(this.currentBlock);
+                for (let i = 0; i < 4; i++) {
+                    newBlock.path[i][1]++;
+                }
+                break;
 
             default:
                 console.log("Invalid direction input");
@@ -368,7 +372,6 @@ class Game {
      */
 
     rotate() {
-        console.log('rotate');
         let curBlockIndex = -1;
         let nextBlockIndex = -1;
 
@@ -508,8 +511,8 @@ class Game {
      */
 
     exportRecords() {
-        this.gameData.printInfo();
-        this.gameData.uploadToDB();
+        // this.gameData.printInfo();
+        // this.gameData.uploadToDB();
     }
 }
 

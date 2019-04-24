@@ -53,6 +53,13 @@ class Lobby extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.props.socket.off('paired');
+        this.props.socket.off('leaving');
+        this.props.socket.off('gaming');
+        this.props.socket.off('rename');
+    }
+
     onOpponentPaired(name) {
         this.setState({opponent: name});
         this.setState({currentStatus: status.PAIRED});
@@ -178,7 +185,7 @@ class Lobby extends Component {
                     {this.renderStart(this.state.currentStatus)}
                 </div>
 
-                <div class="info">
+                <div className="info">
                     <p>
                         During the game, you and your partner will be assigned who's next by an AI. 
                         When it is not your turn, your screen will turn grey and you will not be able to

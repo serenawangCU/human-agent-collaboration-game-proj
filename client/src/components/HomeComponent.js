@@ -26,7 +26,7 @@ class Home extends Component {
         
         console.log("gotoLobby function");
         if (buttonPressed == true){
-            return <Redirect push to={`/lobby`} />; //Doesn't work
+            return <Redirect push to={`/lobby`} />; 
         }
         else {
             console.log("button not pressed");
