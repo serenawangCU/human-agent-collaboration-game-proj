@@ -14,6 +14,11 @@ class Survey extends Component {
     handleSubmit(event) {
       alert("Submitted!");
       event.preventDefault();
+      var data = {
+        q1: document.getElementById('exampleSelect').value,
+        q2: document.getElementById('exampleText').value
+      }
+      this.props.socket.emit('survey', data);
     }
 
     render() {
