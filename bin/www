@@ -215,7 +215,10 @@ function disconnect(socket) {
 	// TODO: add the listener in the front-end
 	if (socket.roomId) {
 		io.in(socket.roomId).emit('leaving');
-		delete games[socket.roomId];
+		if (games[socket.roomId] != null) {
+			games[socket.roomId].finishGame();
+			delete games[socket.roomId];
+		}
 	}
 }
 

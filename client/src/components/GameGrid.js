@@ -4,7 +4,6 @@ import Next from './Next'
 import Shapes from "./Shapes";
 import './GameGrid.css'
 import { Container, Row, Col } from 'reactstrap';
-import { Redirect } from 'react-router';
 import { names } from './LobbyComponent';
 
 // const GameGrid = () => (
