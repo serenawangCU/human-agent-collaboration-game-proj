@@ -3,6 +3,12 @@ import React, {Component} from 'react';
 class CanvasComponent extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            //this.index;
+            //number of things
+        }
+
+        //percentile = math
     }
 
     componentDidMount() {
@@ -19,7 +25,7 @@ class CanvasComponent extends Component {
         
         ctx.fillStyle = "blue";
         ctx.font = "18px Verdanda";
-        ctx.fillText("X",190,30);
+        ctx.fillText("X",190,30); //(380*percentile)
     }
     render() {
         return (
