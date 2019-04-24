@@ -4,6 +4,7 @@ import Lobby from './LobbyComponent';
 // import NewTetris from '../newSrc/containers'
 import Tetris from './Tetris';
 import Header from './HeaderComponent';
+import Gameover from './Gameover';
 
 // add survey
 import Survey from './Survey'
@@ -45,6 +46,11 @@ class Main extends Component {
         <Survey socket={this.props.socket}/>
       );
     }
+    const GameOverPage = () => {
+      return (
+        <Gameover socket={this.props.socket}/>
+      );
+    }
 
     // const DishWithId = ({match}) => {
     //   return(
@@ -60,6 +66,7 @@ class Main extends Component {
           <Route path="/home" component={HomePage} />
           <Route exact path="/lobby" component={LobbyPage} />
           <Route exact path="/tetris" component={TetrisPage} />
+          <Route exact path="/gameover" component={GameOverPage} />
           <Route exact path="/survey" component={SurveyPage}/>
           <Redirect to="/home" />
         </Switch>

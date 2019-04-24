@@ -5,6 +5,7 @@ import './Tetris.css'
 import styled from 'styled-components';
 import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 
 
@@ -50,7 +51,7 @@ class Tetris extends Component {
     gameStatus() {
         this.props.socket.on('game_over',() => {
             document.body.style.opacity = 1.0;
-            this.setState({gameOver: true, showPopup: true, popupType: 'survey'});
+            this.setState({gameOver: true});
         });
         //add listner for the connection state of user's partner
         this.props.socket.on('leaving',() => {
@@ -98,6 +99,10 @@ class Tetris extends Component {
                             finalscore = {this.state.score}
                             closePopup={this.togglePopup.bind(this)}
                         />
+                    : null
+                }
+                {this.state.gameOver ?
+                    <Redirect push to={`/gameover`} />
                     : null
                 }
                     
