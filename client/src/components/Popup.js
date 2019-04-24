@@ -12,7 +12,7 @@ class Popup extends Component {
                         <div>
                             <h1>Score:<br /> {this.props.finalscore}<br />Would you like to take a Survey?</h1>
                             <NavLink to="/survey">Yes</NavLink>
-                            <NavLink to="/home">No</NavLink>
+                            <NavLink to="/lobby">No</NavLink>
                         </div>
                         : null
                     }

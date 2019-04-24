@@ -253,7 +253,6 @@ class GameData {
         .exec()
         .then((game) => {
             console.log("Successfully upload data to MongoDB!");
-            console.log(game);
         })
         .catch((err) => {
             console.log(err);

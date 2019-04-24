@@ -512,7 +512,7 @@ class Game {
 
     exportRecords() {
         // this.gameData.printInfo();
-        // this.gameData.uploadToDB();
+        this.gameData.uploadToDB();
     }
 }
 

@@ -105,27 +105,28 @@ class GameGrid extends Component {
 
     keydownHandler(e) {
         //check if player is current player
+        e.preventDefault();
         if (this.state.playerId === this.state.currentPlayer) {
 
             switch(e.keyCode){
                 //left
                 case 37: this.setState({direction: "left"});
-                console.log('handle key left');
+                // console.log('handle key left');
                 break;
                 
                 //right
                 case 39: this.setState({direction: "right"});
-                console.log('handle key right');
+                // console.log('handle key right');
                 break;
                 
                 //up
                 case 38: this.setState({direction: "up"});
-                console.log('handle key up');
+                // console.log('handle key up');
                 break;
 
                 //down
                 case 40: this.setState({direction: "down"});
-                console.log('handle key down');
+                // console.log('handle key down');
                 break;
 
                 default: break;

@@ -1,36 +1,15 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 import './Home.css';
-import { Button, Form, FormGroup,Col, Container } from 'reactstrap';
+import { Button, Col, Container, Row } from 'reactstrap';
 
 class Home extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            buttonPressed: false
-        }
         
         //this.buttonPressed = false;
-
-        this.buttonPress = this.buttonPress.bind(this);
-        this.goToLobby = this.goToLobby.bind(this);
-    }
-
-    //buttonPressed = false;
-    buttonPress(){
-        this.setState({buttonPressed: true});
-    }
-    
-    goToLobby(buttonPressed){
-        
-        console.log("gotoLobby function");
-        if (buttonPressed == true){
-            return <Redirect push to={`/lobby`} />; 
-        }
-        else {
-            console.log("button not pressed");
-        }
     }
 
     render() {
@@ -49,18 +28,15 @@ class Home extends Component {
                 </div>
           
 
-                <Form>
-                    <FormGroup row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <Button type="submit" color="primary" onClick={this.buttonPress}>
+                <Row>
+                    <Col md={{size: 6, offset: 3}}>
+                        <Link to={`/lobby`}>
+                            <Button type="submit" color="primary">
                                 Enter Lobby
                             </Button>
-                        </Col>
-                        <Col>
-                            {this.goToLobby(this.state.buttonPressed)}
-                        </Col>
-                    </FormGroup>
-                </Form>
+                        </Link>
+                    </Col>
+                </Row>
                 
             </Container>
             
