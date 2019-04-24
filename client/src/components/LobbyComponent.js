@@ -54,6 +54,12 @@ class Lobby extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.props.socket.off('paired');
+        this.props.socket.off('gaming');
+        this.props.socket.off('rename');
+    }
+
     onOpponentPaired(name) {
         this.setState({opponent: name});
         this.setState({currentStatus: status.PAIRED});

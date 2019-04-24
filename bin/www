@@ -40,7 +40,6 @@ var io = socketIo.listen(server);
 let idleUser = null;
 // Global variable to record the status of each room
 let games = {};
-console.log("before io");
 io.on('connection', (socket) => {
 	console.log('Client connected');
 	// Listen on entering the game
@@ -75,8 +74,9 @@ function moveBlocks(socket, direction) {
 	}
 
 	let curGame = games[socket.roomId];
-	console.log(direction);
-	curGame.move(direction);
+	if (curGame != null) {
+		curGame.move(direction);
+	}
 }
 
 
@@ -116,6 +116,8 @@ function addUser(socket, userName) {
 		// Set fields
 		idleUser.roomId = roomId;
 		socket.roomId = roomId;
+		console.log('set room idleUser:' + idleUser);
+		console.log('set room socket:' + socket);
 		idleUser.opponent = socket;
 		socket.opponent = idleUser;
 		idleUser.ifReady = false;
@@ -185,6 +187,7 @@ function startSendingGameField(socket) {
 		var gameContentsIntervel = setInterval(() => {
 			//if game over, clear the current interval
 			if (curGame.gameStatus == GameStatus.OVER) {
+				delete games[roomId];
 				clearInterval(gameContentsIntervel);
 			}
 			io.in(roomId).emit('game_contents', {
@@ -211,7 +214,11 @@ function disconnect(socket) {
 	// Notify the room of the leaving
 	// TODO: add the listener in the front-end
 	if (socket.roomId) {
-    io.in(socket.roomId).emit('leaving');
+		io.in(socket.roomId).emit('leaving');
+		if (games[socket.roomId] != null) {
+			games[socket.roomId].finishGame();
+			delete games[socket.roomId];
+		}
 	}
 }
 
