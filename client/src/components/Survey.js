@@ -49,7 +49,7 @@ class Survey extends Component {
                 <Col md={{size: 3}}>
                   <Link to={`/lobby`}>
                     <Button color="primary">
-                      Return To Lobby
+                      Return Lobby
                     </Button>
                   </Link>
                 </Col>
