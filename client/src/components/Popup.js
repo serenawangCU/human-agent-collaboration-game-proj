@@ -8,14 +8,6 @@ class Popup extends Component {
         return (
             <div className='popup'>
                 <div className='popup_inner'>
-                    { this.props.popupType === 'survey'?
-                        <div>
-                            <h1>Score:<br /> {this.props.finalscore}<br />Would you like to take a Survey?</h1>
-                            <NavLink to="/survey">Yes</NavLink>
-                            <NavLink to="/lobby">No</NavLink>
-                        </div>
-                        : null
-                    }
                     {this.props.popupType === 'offline'?
                         <div>
                             <h1>Your partner's offline</h1>

@@ -1,75 +1,91 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
-//import './Home.css';
-import { Button, Form, FormGroup,Col, Container, Nav, NavItem, NavLink } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import './Gameover.css';
+import { Button, Form, FormGroup,Col, Container, Row} from 'reactstrap';
+import CanvasComponent from './CanvasComponent';
 
 class Gameover extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            buttonPressed: false
+            play_again: false
         }
-        
-        //this.goToHome = false;
 
-        this.goToHome = this.goToHome.bind(this);
-        this.goToSurvey = this.goToSurvey.bind(this);
+        
+        
+        // //this.goToHome = false;
+
+        this.playAgain = this.playAgain.bind(this);
+        // this.goToSurvey = this.goToSurvey.bind(this);
     }
 
-    //buttonPressed_home = false;
-    goTohome(){
-        this.setState({buttonPressed: true});
+
+    playAgain(){
+        this.setState({play_again: true});
     }
-    
-    buttonPress_survey(){
-        this.setState({buttonPressed: true});
-    }
-    
-    goToSurvey_Home(buttonPressed){
-        
-        console.log("gotoLobby function");
-        if (buttonPressed == true){
-            return <Redirect push to={`/lobby`} />; //Doesn't work
-        }
-        else {
-            console.log("button not pressed");
+
+    renderPlay(play_again){
+        if (play_again) {
+            document.getElementById("playAgain").remove()
+            return (
+                <Form id="playAgain">
+                    <h4>Do you want to play with the same person?</h4>
+                    <FormGroup row>
+                        <Col id="yes">
+                            <Link to={`/lobby`}>
+                                <Button color="primary">
+                                    Yes
+                                </Button>
+                            </Link>
+                        </Col>
+                        <Col id="no">
+                            <Link to={`/lobby`}>
+                                <Button color="primary">
+                                    No
+                                </Button>
+                            </Link>
+                        </Col>
+                    </FormGroup>
+                </Form>
+            )
         }
     }
 
     render() {
-        console.log(this.buttonPressed);
+        document.body.style.opacity = 1.0;
         return(
             <Container>
-                <iframe width="560" height="315" 
-                src="https://www.youtube.com/embed/_fQtxKmgJC8" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
-                </iframe>
-                
-                <div className="info">
-                    <p>
-                        Welcome to collaborative Tetris! You will play a game of Tetris with a randomly chosen partner
-                        while an AI will choose who will go next on every turn. 
-                    </p>
-                </div>
+                <h3>Game Over</h3>
+                <Row>
+                    <Col>
+                        Scores
+                    </Col>
+                    <Col>
+                        <CanvasComponent socket={this.props.socket}/>
+                    </Col>
+                </Row>
           
 
-                <Form>
+                <Form id="playAgain">
+                    <h4>Play Again?</h4>
                     <FormGroup row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <Button type="submit" color="primary" onClick={this.goToHome}>
-                                Go to Homepage
-                            </Button>
-                            <Button type="submit" color="primary" onClick={this.goToSurvey}>
-                                Go to Take Survey
+                        <Col id="yes">
+                            <Button type="submit" color="primary" onClick={this.playAgain}>
+                                Yes
                             </Button>
                         </Col>
-                        <Col>
-                            {this.goToHome(this.state.goToHome)}
-                            {this.goToSurvey(this.state.goToSurvey)}
+                        <Col id="no">
+                            <Link to={`/survey`}>
+                                <Button color="primary">
+                                    No
+                                </Button>
+                            </Link>
                         </Col>
                     </FormGroup>
                 </Form>
-                
+                {this.renderPlay(this.state.play_again)}
             </Container>
             
               
@@ -77,4 +93,4 @@ class Gameover extends Component {
     }
  }
 
- export default Home;
+ export default Gameover;

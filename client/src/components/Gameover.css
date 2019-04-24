@@ -1,8 +1,8 @@
-.next {
-    margin: 2px;
+#yes {
+    text-align: right;
 }
 
-.row{
-    margin-right: 20px !important;
-    margin-left: 20px !important;
+#no {
+    text-align: left;
 }
+

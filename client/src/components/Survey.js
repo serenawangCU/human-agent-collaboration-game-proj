@@ -14,6 +14,11 @@ class Survey extends Component {
     handleSubmit(event) {
       alert("Submitted!");
       event.preventDefault();
+      var data = {
+        q1: document.getElementById('exampleSelect').value,
+        q2: document.getElementById('exampleText').value
+      }
+      this.props.socket.emit('survey', data);
     }
 
     render() {
@@ -28,7 +33,7 @@ class Survey extends Component {
             </p>
 
             {/* https://reactstrap.github.io/components/form/ */}
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit} id="survey">
               <FormGroup>
                   <Label for="exampleSelect">Would you want to play with the same person again?</Label>
                   <Input type="select" name="select" id="exampleSelect">
