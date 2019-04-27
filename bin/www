@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
 		TotalScores.find({"totalScore": {"$lte": totalScore}})
 		.count()
 		.then((index) => {
-			TotalScores.count()
+			TotalScores.count({})
 			.then((totalCounts) => {
 				socket.emit('totalScoreDistributionReturn', {
 					index: index,
