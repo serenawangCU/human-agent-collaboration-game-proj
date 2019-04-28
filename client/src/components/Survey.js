@@ -8,11 +8,16 @@ class Survey extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+          if_submit : false
+        }
+
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(event) {
       alert("Submitted!");
+      this.setState({if_submit : true});
       event.preventDefault();
       var data = {
         'q1' : document.getElementById('exampleSelect').value,
@@ -51,6 +56,7 @@ class Survey extends Component {
                   <Button type="submit" color="primary">
                     Submit
                   </Button>
+                  {this.state.if_submit ? <Redirect push to={`/lobby`} /> : null}
                 </Col>
                 <Col md={{size: 3}}>
                   <Link to={`/lobby`}>

@@ -10,12 +10,14 @@ class Gameover extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            play_again : false
+            play_again : false,
+            same_player : false
         }
 
         // //this.goToHome = false;
 
         this.playAgain = this.playAgain.bind(this);
+        this.playWithSamePlayer = this.playWithSamePlayer.bind(this);
         // this.goToSurvey = this.goToSurvey.bind(this);
 
         this.props.socket.on('totalScoreDistributionReturn', (result) => {
@@ -33,7 +35,8 @@ class Gameover extends Component {
     }
 
     playWithSamePlayer() {
-        // TODO: this message cannot be fired
+        console.log("Click same player");
+        this.setState({same_player : true});
         this.props.socket.emit('same_player', true);
     }
 
@@ -45,11 +48,9 @@ class Gameover extends Component {
                     <h4>Do you want to play with the same person?</h4>
                     <FormGroup row>
                         <Col id="yes">
-                            <Link to={`/lobby`}>
-                                <Button color="primary" onClick={this.playWithSamePlayer}>
-                                    Yes
-                                </Button>
-                            </Link>
+                            <Button color="primary" onClick={this.playWithSamePlayer}>
+                                Yes
+                            </Button>
                         </Col>
                         <Col id="no">
                             <Link to={`/lobby`}>
@@ -59,6 +60,7 @@ class Gameover extends Component {
                             </Link>
                         </Col>
                     </FormGroup>
+                    {this.state.same_player ? <Redirect push to={`/lobby`} /> : null}
                 </Form>
             )
         }
