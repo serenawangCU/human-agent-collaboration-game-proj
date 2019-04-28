@@ -120,21 +120,6 @@ io.on('connection', (socket) => {
 		
 	});
 
-	// Query Total Score Distribution
-	socket.on('totalScoreDistribution', (totalScore) => {
-		TotalScores.find({"totalScore": {"$lte": totalScore}})
-		.count()
-		.then((index) => {
-			TotalScores.count({})
-			.then((totalCounts) => {
-				socket.emit('totalScoreDistributionReturn', {
-					index: index,
-					counts: totalCounts 
-				})
-			})
-		})
-	});
-
 	// Listen on disconnecting from the server
 	socket.on('disconnect', () => {
 		disconnect(socket);

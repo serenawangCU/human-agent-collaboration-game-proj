@@ -17,13 +17,6 @@ class Gameover extends Component {
 
         this.playAgain = this.playAgain.bind(this);
         // this.goToSurvey = this.goToSurvey.bind(this);
-
-        this.props.socket.on('totalScoreDistributionReturn', (result) => {
-            console.log('totalIndex: ' + result.index);
-            console.log('totalCounts: ' + result.counts);
-        })
-
-        this.props.socket.emit('totalScoreDistribution', 15);
     }
 
 

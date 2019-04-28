@@ -224,7 +224,9 @@ class Game {
         this.io.in(this.roomId).emit('game_over', {
             totalScore : this.gameData.getTotalScore(),
             players : this.gameData.getPlayers(),
-            indivScore : this.gameData.getIndivScores()
+            indivScore : this.gameData.getIndivScores(),
+            totalScoreRanking: this.gameData.getTotalScoreRanking(),
+            numberOfGamesInDB: this.gameData.getNumberOfGamesInDB()
         });
     }
 

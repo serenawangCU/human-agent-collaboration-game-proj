@@ -21,10 +21,6 @@ const stepSchema = new Schema({
     timestamps: true
 });
 
-const surveySchema = new Schema({
-    answers: [String]
-})
-
 /**
  * Schema for each player's info
  */
@@ -50,6 +46,10 @@ const playerSchema = new Schema({
     playWithSameAgain: {
         type: Boolean,
         default: false
+    },
+    survey: {
+        type: Array,
+        'default': []
     }
 })
 
@@ -83,9 +83,7 @@ const gameSchema = new Schema({
         default: 0,
         required: true
     }],
-    steps: [stepSchema],
-    survey1: surveySchema,
-    survey2: surveySchema
+    steps: [stepSchema]
 },{
     timestamps: true
 });
