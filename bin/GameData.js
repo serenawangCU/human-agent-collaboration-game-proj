@@ -22,12 +22,6 @@ class GameData {
         this.linesPerMin = [];
         this.steps = [];
         this.stepCounter = 0;
-
-        // The following flags record if players want to continue the game
-        // After the game is over
-        // By default they are set as false
-        this.ifPlayAgain = [false, false];
-        this.ifSamePlayer = [false, false];
         
         // The following fields are some helper variables
         this.curNumRotate = 0;
