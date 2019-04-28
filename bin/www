@@ -64,24 +64,7 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play again");
 
-			// udpate the database to indicate that the player would like to play again
-			if (socket.roomId !== null) {
-				Games.findById(socket.roomId)
-				.then((game) => {
-					if (game.player1.playerId === socket.id) {
-						game.player1.playAgain = true;
-					} else if (game.player2.playerId === socket.id) {
-						game.player2.playAgain = true;
-					}
-					return game.save();
-				})
-				.then(() => {
-					console.log("Successfully update Player play again data to MongoDB!");
-				})
-				.catch((err) => {
-					console.log(err);
-				})
-			}
+			outputSingleKeyToDb('playAgain', socket);
 		}
 	});
 	
@@ -90,34 +73,37 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play with the same person");
 
-			// udpate the database to indicate that the player would like to play again
-			if (socket.roomId !== null) {
-				Games.findById(socket.roomId)
-				.then((game) => {
-					if (game.player1.playerId === socket.id) {
-						game.player1.playWithSameAgain = true;
-					} else if (game.player2.playerId === socket.id) {
-						game.player2.playWithSameAgain = true;
-					}
-
-					return game.save();
-				})
-				.then(() => {
-					console.log("Successfully update Player play with same again data to MongoDB!");
-				})
-				.catch((err) => {
-					console.log(err);
-				})
-			}
+			outputSingleKeyToDb('playWithSameAgain', socket);
 		}
 	});
 
 	// Listen on the collected survey answers
-	// TODO: put this into the database
 	socket.on('survey', (data) => {
 		console.log('survey answer: ' + data);
 
-		
+		// udpate the database to indicate that the player would like to play again
+		if (socket.roomId !== null) {
+			Games.findById(socket.roomId)
+			.then((game) => {
+				if (game.player1.playerId === socket.id) {
+					for (let ques in data) {
+						game.survey1.push(data[ques]);
+					}
+				} else if (game.player2.playerId === socket.id) {
+					for (let ques in data) {
+						game.survey2.push(data[ques]);
+					}
+				}
+
+				return game.save();
+			})
+			.then(() => {
+				console.log("Successfully update player " + socket.id +"'s survey to MongoDB!");
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+		}
 	});
 
 	// Listen on disconnecting from the server
@@ -125,6 +111,36 @@ io.on('connection', (socket) => {
 		disconnect(socket);
 	});
 })
+
+/**
+ * Function to store the collected information to DB
+ * Support single attribute under player information ONLY
+ * @param key the key to set true
+ * @param socket the socket of the current player
+ */
+
+function outputSingleKeyToDb(key, socket) {
+	// udpate the database to indicate that the player would like to play again
+	if (socket.roomId !== null) {
+		Games.findById(socket.roomId)
+		.then((game) => {
+			if (game.player1.playerId === socket.id) {
+				game.player1[key] = true;
+			} else if (game.player2.playerId === socket.id) {
+				game.player2[key] = true;
+			}
+
+			return game.save();
+		})
+		.then(() => {
+			console.log("Successfully update player " + socket.id + "'s info of " 
+						+ key + " to MongoDB!");
+		})
+		.catch((err) => {
+			console.log(err);
+		})
+	}
+}
 
 /**
  * Handle when a new user enters the waiting lobby
@@ -281,6 +297,9 @@ function disconnect(socket) {
 			games[socket.roomId].finishGame();
 			delete games[socket.roomId];
 		}
+
+		// Output the quit information to DB
+		outputSingleKeyToDb('ifQuit', socket);
 	}
 }
 

@@ -50,6 +50,10 @@ const playerSchema = new Schema({
     survey: {
         type: Array,
         'default': []
+    },
+    ifQuit: {
+        type: Boolean,
+        default: false
     }
 })
 
