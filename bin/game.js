@@ -514,6 +514,14 @@ class Game {
         // this.gameData.printInfo();
         this.gameData.uploadToDB();
     }
+
+    updateGameAgainWillingness(socketId) {
+        this.gameData.updateGameAgainWillingness(socketId);
+    }
+
+    updateSamePlayerWillingness(socketId) {
+        this.gameData.updateSamePlayerWillingness(socketId);
+    }
 }
 
 module.exports = Game;

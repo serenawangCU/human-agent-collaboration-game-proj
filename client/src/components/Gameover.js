@@ -10,11 +10,9 @@ class Gameover extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            play_again: false
+            play_again : false
         }
 
-        
-        
         // //this.goToHome = false;
 
         this.playAgain = this.playAgain.bind(this);
@@ -23,7 +21,13 @@ class Gameover extends Component {
 
 
     playAgain(){
-        this.setState({play_again: true});
+        this.setState({play_again : true});
+        this.props.socket.emit('game_again', true);
+    }
+
+    playWithSamePlayer() {
+        // TODO: this message cannot be fired
+        this.props.socket.emit('same_player', true);
     }
 
     renderPlay(play_again){
@@ -35,7 +39,7 @@ class Gameover extends Component {
                     <FormGroup row>
                         <Col id="yes">
                             <Link to={`/lobby`}>
-                                <Button color="primary">
+                                <Button color="primary" onClick={this.playWithSamePlayer}>
                                     Yes
                                 </Button>
                             </Link>
@@ -87,8 +91,6 @@ class Gameover extends Component {
                 </Form>
                 {this.renderPlay(this.state.play_again)}
             </Container>
-            
-              
         )
     }
  }

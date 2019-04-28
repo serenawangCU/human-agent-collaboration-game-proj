@@ -21,6 +21,12 @@ class GameData {
         this.linesPerMin = [];
         this.steps = [];
         this.stepCounter = 0;
+
+        // The following flags record if players want to continue the game
+        // After the game is over
+        // By default they are set as false
+        this.ifPlayAgain = [false, false];
+        this.ifSamePlayer = [false, false];
         
         // The following fields are some helper variables
         this.curNumRotate = 0;
@@ -152,6 +158,22 @@ class GameData {
         this.curNumRotate = 0;
     }
 
+    updateGameAgainWillingness(socketId) {
+        if (socketId === this.players[0]) {
+            this.ifPlayAgain[0] = true;
+        } else if (socketId === this.players[1]) {
+            this.ifPlayAgain[1] = true;
+        }
+    }
+
+    updateSamePlayerWillingness(socketId) {
+        if (socketId === this.players[0]) {
+            this.ifSamePlayer[0] = true;
+        } else if (socketId === this.players[1]) {
+            this.ifSamePlayer[1] = true;
+        }
+    }
+
     /**
      * Add the eliminated lines of last minute into the array
      */
@@ -187,6 +209,7 @@ class GameData {
 
     /**
      * Reset the object and 
+     * // TODO: implement the half-done comments
      */
 
     reset() {

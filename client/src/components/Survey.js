@@ -15,10 +15,11 @@ class Survey extends Component {
       alert("Submitted!");
       event.preventDefault();
       var data = {
-        q1: document.getElementById('exampleSelect').value,
-        q2: document.getElementById('exampleText').value
+        'q1' : document.getElementById('exampleSelect').value,
+        'q2' : document.getElementById('exampleText').value
       }
-      this.props.socket.emit('survey', data);
+      // Have to convert the raw data to JSON format explicitly
+      this.props.socket.emit('survey', JSON.stringify(data));
     }
 
     render() {

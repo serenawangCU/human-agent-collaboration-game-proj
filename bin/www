@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('tetris5150:server');
 var http = require('http');
 var socketIo = require('socket.io');
-const Game = require('./game.js');
+const Game = require('./Game.js');
 const uuidv1 = require('uuid/v1');
 const GameStatus = require('./GameStatus.js');
 
@@ -55,7 +55,33 @@ io.on('connection', (socket) => {
 	// Deal with the move from players
 	socket.on('move', (direction) => {
 		moveBlocks(socket, direction);
-	})
+	});
+
+	// Record the player's willingness to play again
+	socket.on('game_again', (willingness) => {
+		if (willingness === true) {
+			console.log("Player " + socket.id + " is willing to play again");
+
+			let curGame = games[socket.roomId];
+			curGame.updateGameAgainWillingness(socket);
+		}
+	});
+	
+	// Record the player's willingness to play again with the same player
+	socket.on('same_player', (willingness) =>{
+		if (willingness === true) {
+			console.log("Player " + socket.id + " is willing to play with the same person");
+
+			let curGame = games[socket.roomId];
+			curGame.updateSamePlayerWillingness(socket);
+		}
+	});
+
+	// Listen on the collected survey answers
+	// TODO: put this into the database
+	socket.on('survey', (data) => {
+		console.log('survey answer: ' + data);
+	});
 
 	// Listen on disconnecting from the server
 	socket.on('disconnect', () => {
@@ -187,7 +213,7 @@ function startSendingGameField(socket) {
 		var gameContentsIntervel = setInterval(() => {
 			//if game over, clear the current interval
 			if (curGame.gameStatus == GameStatus.OVER) {
-				delete games[roomId];
+				// delete games[roomId];
 				clearInterval(gameContentsIntervel);
 			}
 			io.in(roomId).emit('game_contents', {
