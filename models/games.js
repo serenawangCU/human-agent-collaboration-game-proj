@@ -50,6 +50,10 @@ const playerSchema = new Schema({
     playWithSameAgain: {
         type: Boolean,
         default: false
+    },
+    ifQuit: {
+        type: Boolean,
+        default: false
     }
 })
 
