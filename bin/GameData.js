@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Games = require('../models/games.js');
+const TotalScores = require('../models/totalScores.js');
 
 /**
  * Class of all the collected data in a game
@@ -34,6 +35,7 @@ class GameData {
         this.startTime = new Date();
         this.players = [player1, player2];
         this.curDownCount = 0;
+        this.roomId = roomId;
 
         Games.create({
             roomId: roomId
@@ -229,7 +231,7 @@ class GameData {
         this.curDownCount = 0;
 
         Games.create({
-            roomId: roomId
+            roomId: this.roomId
         })
         .then((game) => {
             console.log("Create a new game entry!")
@@ -280,6 +282,17 @@ class GameData {
         .catch((err) => {
             console.log(err);
         });
+
+        TotalScores.create({
+            totalScore : this.totalScore
+        })
+        .then((score) => {
+            console.log("Create a total score entry!");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        
     }
 }
 
