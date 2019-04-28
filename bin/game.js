@@ -78,20 +78,6 @@ class Game {
         this.io.in(this.roomId).emit('score', {
             score : this.gameData.getTotalScore()
         });
-
-        // // Create the dataset folder
-        // // TODO: might be moved to another place
-        // FileSystem.exists('collected_data', function(exists) {
-        //     if (!exists) {
-        //         FileSystem.mkdir('collected_data', function(error) {
-        //             console.error(error);
-        //         });
-        //     }
-        // });
-    }
-
-    resetGame() {
-
     }
 
     /**
@@ -196,7 +182,6 @@ class Game {
             //console.log("current: " + this.currentPlayer + " next: " + this.nextPlayer)
             // Check if the game is over because of the new block
             if (this.checkIfGameOver(this.currentBlock) === true) {
-                console.log(this.currentBlock);
                 this.addBlockToField(this.currentBlock);
                 this.finishGame();
             }

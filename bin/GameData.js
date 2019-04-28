@@ -35,14 +35,13 @@ class GameData {
         this.startTime = new Date();
         this.players = [player1, player2];
         this.curDownCount = 0;
-        this.roomId = roomId;
+        this.gameId = roomId; //we use roomId as gameId in Mongo DB
 
         Games.create({
-            roomId: roomId
+            _id: this.gameId
         })
         .then((game) => {
             console.log("Create a new game entry!")
-            this.gameId = game._id;
         })
         .catch((err) => {
             console.log(err);
@@ -215,11 +214,10 @@ class GameData {
         this.curDownCount = 0;
 
         Games.create({
-            roomId: this.roomId
+            _id: this.gameId
         })
         .then((game) => {
             console.log("Create a new game entry!")
-            this.gameId = game._id;
         })
         .catch((err) => {
             console.log(err);
@@ -276,7 +274,7 @@ class GameData {
         .catch((err) => {
             console.log(err);
         });
-        
+
     }
 }
 

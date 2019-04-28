@@ -38,6 +38,14 @@ const playerSchema = new Schema({
         type: Number,
         default: 0,
         required: true
+    },
+    playAgain: {
+        type: Boolean,
+        default: false
+    },
+    playWithSameAgain: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -45,7 +53,7 @@ const playerSchema = new Schema({
  * Schema for each game played
  */
 const gameSchema = new Schema({
-    roomId: {
+    _id: {
         type: String,
         required: true
     },

@@ -12,6 +12,7 @@ const Game = require('./Game.js');
 const uuidv1 = require('uuid/v1');
 const GameStatus = require('./GameStatus.js');
 const TotalScores = require('../models/totalScores.js');
+const Games = require('../models/games.js');
 
 /**
  * Get port from environment and store in Express.
@@ -63,7 +64,24 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play again");
 
-			// TODO: udpate the database
+			// udpate the database to indicate that the player would like to play again
+			if (socket.roomId !== null) {
+				Games.findById(socket.roomId)
+				.then((game) => {
+					if (game.player1.playerId === socket.id) {
+						game.player1.playAgain = true;
+					} else if (game.player2.playerId === socket.id) {
+						game.player2.playAgain = true;
+					}
+					return game.save();
+				})
+				.then(() => {
+					console.log("Successfully update Player play again data to MongoDB!");
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+			}
 		}
 	});
 	
@@ -72,7 +90,25 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play with the same person");
 
-			// TODO: update the database
+			// udpate the database to indicate that the player would like to play again
+			if (socket.roomId !== null) {
+				Games.findById(socket.roomId)
+				.then((game) => {
+					if (game.player1.playerId === socket.id) {
+						game.player1.playWithSameAgain = true;
+					} else if (game.player2.playerId === socket.id) {
+						game.player2.playWithSameAgain = true;
+					}
+
+					return game.save();
+				})
+				.then(() => {
+					console.log("Successfully update Player play with same again data to MongoDB!");
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+			}
 		}
 	});
 
