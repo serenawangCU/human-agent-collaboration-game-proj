@@ -21,6 +21,10 @@ const stepSchema = new Schema({
     timestamps: true
 });
 
+const surveySchema = new Schema({
+    answers: [String]
+})
+
 /**
  * Schema for each player's info
  */
@@ -79,7 +83,9 @@ const gameSchema = new Schema({
         default: 0,
         required: true
     }],
-    steps: [stepSchema]
+    steps: [stepSchema],
+    survey1: surveySchema,
+    survey2: surveySchema
 },{
     timestamps: true
 });
