@@ -63,8 +63,7 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play again");
 
-			let curGame = games[socket.roomId];
-			curGame.updateGameAgainWillingness(socket);
+			// TODO: udpate the database
 		}
 	});
 	
@@ -73,8 +72,7 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play with the same person");
 
-			let curGame = games[socket.roomId];
-			curGame.updateSamePlayerWillingness(socket);
+			// TODO: update the database
 		}
 	});
 
@@ -229,7 +227,7 @@ function startSendingGameField(socket) {
 		var gameContentsIntervel = setInterval(() => {
 			//if game over, clear the current interval
 			if (curGame.gameStatus == GameStatus.OVER) {
-				// delete games[roomId];
+				delete games[roomId];
 				clearInterval(gameContentsIntervel);
 			}
 			io.in(roomId).emit('game_contents', {
