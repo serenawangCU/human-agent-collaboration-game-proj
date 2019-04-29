@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, Label, Row, Input, Col, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Row, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
-import Popup from './Popup';
-import './Lobby.css';
+import OfflinePopup from './OfflinePopupComponent';
+import '../styles/Lobby.css';
 import instructions from './Instructions.png';
 
 const status = Constant.state;
@@ -54,6 +54,12 @@ class Lobby extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.props.socket.off('paired');
+        this.props.socket.off('gaming');
+        this.props.socket.off('rename');
+    }
+
     onOpponentPaired(name) {
         this.setState({opponent: name});
         this.setState({currentStatus: status.PAIRED});
@@ -84,23 +90,35 @@ class Lobby extends Component {
     renderStart(currentStatus) {
         if (currentStatus === status.READY) {
             return (
-                <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
-                </Col>
+                <div>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
+                    </Col>
+                    <Instruct />
+                </div>
             );
         }
 
         if (currentStatus === status.GAMING) {
             return <Redirect push to={`/tetris`} />;
+        } 
+
+        if (currentStatus === status.INITIAL) {
+            return (
+                <Instruct />
+            );
         }
     }
 
     renderPair(name, currentStatus) {
         if (currentStatus === status.PAIRING) {
             return (
-                <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
-                </Col>
+                <div>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
+                    </Col>
+                    <Instruct />
+                </div>
             );
         }
 
@@ -120,7 +138,8 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
+                        <Instruct />
+                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             } else {
@@ -140,7 +159,8 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
+                        <Instruct />
+                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             }
@@ -175,10 +195,18 @@ class Lobby extends Component {
                             </Col>
                         </FormGroup>
                     </Form>
-                    {this.renderPair(this.state.opponent, this.state.currentStatus)}
-                    {this.renderStart(this.state.currentStatus)}
                 </div>
-                
+                {this.renderPair(this.state.opponent, this.state.currentStatus)}
+                {this.renderStart(this.state.currentStatus)}
+            </div>
+        );
+    }
+}
+
+class Instruct extends Component {
+    render() {
+        return (
+            <div>
                 <Row id="info">
                     <Col id="instructions">
                         <p>

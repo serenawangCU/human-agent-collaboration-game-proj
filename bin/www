@@ -8,16 +8,17 @@ var app = require('../app');
 var debug = require('debug')('tetris5150:server');
 var http = require('http');
 var socketIo = require('socket.io');
-const Game = require('./game.js');
+const Game = require('./Game.js');
 const uuidv1 = require('uuid/v1');
 const GameStatus = require('./GameStatus.js');
+const TotalScores = require('../models/totalScores.js');
+const Games = require('../models/games.js');
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '8000');
-// var port = normalizePort('5000');
 console.log(port);
 app.set('port', port);
 
@@ -40,7 +41,6 @@ var io = socketIo.listen(server);
 let idleUser = null;
 // Global variable to record the status of each room
 let games = {};
-console.log("before io");
 io.on('connection', (socket) => {
 	console.log('Client connected');
 	// Listen on entering the game
@@ -56,13 +56,97 @@ io.on('connection', (socket) => {
 	// Deal with the move from players
 	socket.on('move', (direction) => {
 		moveBlocks(socket, direction);
-	})
+	});
+
+	// Record the player's willingness to play again
+	socket.on('game_again', (willingness) => {
+		if (willingness === true) {
+			console.log("Player " + socket.id + " is willing to play again");
+
+			outputSingleKeyToDb('playAgain', true, socket);
+		}
+	});
+	
+	// Record the player's willingness to play again with the same player
+	socket.on('same_player', (willingness) =>{
+		if (willingness === true) {
+			console.log("Player " + socket.id + " is willing to play with the same person");
+
+			outputSingleKeyToDb('playWithSameAgain', true, socket);
+		}
+	});
+
+	// Listen on the collected survey answers
+	socket.on('survey', (data) => {
+		console.log('survey answer: ' + data);
+
+		let answers = [];
+		for (let ques in data) {
+			answers.push(ques);
+		}
+
+		// udpate the database to indicate that the player would like to play again
+		if (socket.roomId !== null) {
+			Games.findById(socket.roomId)
+			.then((game) => {
+				if (game.player1.playerId === socket.id) {
+					for (let ques in data) {
+						game.player1.survey.push(ques);
+					}
+				} else if (game.player2.playerId === socket.id) {
+					for (let ques in data) {
+						game.player2.survey.push(ques);
+					}
+				}
+
+				return game.save();
+			})
+			.then(() => {
+				console.log("Successfully update player " + socket.id + "'s info of " 
+							+ key + " to MongoDB!");
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+		}
+	});
 
 	// Listen on disconnecting from the server
 	socket.on('disconnect', () => {
 		disconnect(socket);
 	});
 })
+
+/**
+ * Function to store the collected information to DB
+ * Support single attribute under player information ONLY
+ * @param key the key to set
+ * @param value to value to set
+ * @param socket the socket of the current player
+ */
+
+function outputSingleKeyToDb(key, value, socket) {
+	// udpate the database to indicate that the player would like to play again
+	if (socket !== undefined && socket.roomId !== null) {
+		Games.findById(socket.roomId)
+		.then((game) => {
+			if (game.player1.playerId === socket.id) {
+				game.player1[key] = value;
+			} else if (game.player2.playerId === socket.id) {
+				game.player2[key] = value;
+			}
+
+			return game.save();
+		})
+		.then(() => {
+			console.log("Successfully update player " + socket.id + "'s info of " 
+						+ key + " to MongoDB!");
+		})
+		.catch((err) => {
+			console.log(err);
+		})
+	}
+}
 
 /**
  * Handle when a new user enters the waiting lobby
@@ -75,8 +159,9 @@ function moveBlocks(socket, direction) {
 	}
 
 	let curGame = games[socket.roomId];
-	console.log(direction);
-	curGame.move(direction);
+	if (curGame != null) {
+		curGame.move(direction);
+	}
 }
 
 
@@ -116,6 +201,8 @@ function addUser(socket, userName) {
 		// Set fields
 		idleUser.roomId = roomId;
 		socket.roomId = roomId;
+		console.log('set room idleUser:' + idleUser);
+		console.log('set room socket:' + socket);
 		idleUser.opponent = socket;
 		socket.opponent = idleUser;
 		idleUser.ifReady = false;
@@ -185,6 +272,7 @@ function startSendingGameField(socket) {
 		var gameContentsIntervel = setInterval(() => {
 			//if game over, clear the current interval
 			if (curGame.gameStatus == GameStatus.OVER) {
+				delete games[roomId];
 				clearInterval(gameContentsIntervel);
 			}
 			io.in(roomId).emit('game_contents', {
@@ -209,9 +297,15 @@ function disconnect(socket) {
 	}
 
 	// Notify the room of the leaving
-	// TODO: add the listener in the front-end
 	if (socket.roomId) {
-    io.in(socket.roomId).emit('leaving');
+		io.in(socket.roomId).emit('leaving');
+		if (games[socket.roomId] != null) {
+			games[socket.roomId].finishGame();
+			// Output the quit-during-the-game information to DB
+			outputSingleKeyToDb('ifQuit', true, socket);
+			// delete the corresponding game to indicate the end of the game
+			delete games[socket.roomId];
+		}
 	}
 }
 

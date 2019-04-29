@@ -1,6 +1,6 @@
 import React from 'react'
 import Cell from './Cell'
-import './Next.css'
+import '../styles/Next.css'
 
 function Next(props) {
     return (<div className="next">
