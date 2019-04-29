@@ -301,11 +301,11 @@ function disconnect(socket) {
 		io.in(socket.roomId).emit('leaving');
 		if (games[socket.roomId] != null) {
 			games[socket.roomId].finishGame();
+			// Output the quit-during-the-game information to DB
+			outputSingleKeyToDb('ifQuit', true, socket);
+			// delete the corresponding game to indicate the end of the game
 			delete games[socket.roomId];
 		}
-
-		// Output the quit information to DB
-		outputSingleKeyToDb('ifQuit', true, socket);
 	}
 }
 
