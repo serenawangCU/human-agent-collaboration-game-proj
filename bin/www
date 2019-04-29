@@ -19,7 +19,6 @@ const Games = require('../models/games.js');
  */
 
 var port = normalizePort(process.env.PORT || '8000');
-// var port = normalizePort('5000');
 console.log(port);
 app.set('port', port);
 
@@ -64,7 +63,7 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play again");
 
-			outputSingleKeyToDb('playAgain', socket);
+			outputSingleKeyToDb('playAgain', true, socket);
 		}
 	});
 	
@@ -73,7 +72,7 @@ io.on('connection', (socket) => {
 		if (willingness === true) {
 			console.log("Player " + socket.id + " is willing to play with the same person");
 
-			outputSingleKeyToDb('playWithSameAgain', socket);
+			outputSingleKeyToDb('playWithSameAgain', true, socket);
 		}
 	});
 
@@ -83,12 +82,32 @@ io.on('connection', (socket) => {
 
 		let answers = [];
 		for (let ques in data) {
-			game.survey1.push(answers[ques]);
+			answers.push(ques);
 		}
 
 		// udpate the database to indicate that the player would like to play again
 		if (socket.roomId !== null) {
-			outputSingleKeyToDb('survey', answers, socket);
+			Games.findById(socket.roomId)
+			.then((game) => {
+				if (game.player1.playerId === socket.id) {
+					for (let ques in data) {
+						game.player1.survey.push(ques);
+					}
+				} else if (game.player2.playerId === socket.id) {
+					for (let ques in data) {
+						game.player2.survey.push(ques);
+					}
+				}
+
+				return game.save();
+			})
+			.then(() => {
+				console.log("Successfully update player " + socket.id + "'s info of " 
+							+ key + " to MongoDB!");
+			})
+			.catch((err) => {
+				console.log(err);
+			})
 		}
 	});
 

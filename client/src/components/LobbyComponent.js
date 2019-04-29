@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, Label, Row, Input, Col, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Row, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
-import Popup from './Popup';
-import './Lobby.css';
+import OfflinePopup from './OfflinePopupComponent';
+import '../styles/Lobby.css';
 import instructions from './Instructions.png';
 
 const status = Constant.state;
@@ -126,7 +126,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
+                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             } else {
@@ -146,7 +146,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
+                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             }

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
+import '../styles/Popup.css';
+import { Container, Button, Form, FormGroup, Row, Col } from 'reactstrap';
 import { Redirect } from 'react-router';
+import CanvasComponent from './CanvasComponent.js';
 import { Link } from 'react-router-dom';
-import '../styles/Gameover.css';
-import { Button, Form, FormGroup,Col, Container, Row} from 'reactstrap';
-import CanvasComponent from './CanvasComponent';
 
-class Gameover extends Component {
+class GameOverPopup extends Component {
 
     constructor(props) {
         super(props);
@@ -58,43 +58,49 @@ class Gameover extends Component {
             )
         }
     }
-
+        
     render() {
         document.body.style.opacity = 1.0;
-        return(
-            <Container>
-                <h3>Game Over</h3>
-                <Row>
-                    <Col>
-                        Scores
-                    </Col>
-                    <Col>
-                        <CanvasComponent socket={this.props.socket}/>
-                    </Col>
-                </Row>
-          
+        return (
+            <div className='popup'>
+                <div className='popup_inner'>
+                    <Container>
+                        <h3>Game Over</h3>
+                        <Row>
+                            <Col>
+                                Scores
+                            </Col>
+                            <Col>
+                                <CanvasComponent socket={this.props.socket}/>
+                            </Col>
+                        </Row>
+                    
 
-                <Form id="playAgain">
-                    <h4>Play Again?</h4>
-                    <FormGroup row>
-                        <Col id="yes">
-                            <Button type="submit" color="primary" onClick={this.playAgain}>
-                                Yes
-                            </Button>
-                        </Col>
-                        <Col id="no">
-                            <Link to={`/survey`}>
-                                <Button color="primary">
-                                    No
-                                </Button>
-                            </Link>
-                        </Col>
-                    </FormGroup>
-                </Form>
-                {this.renderPlay(this.state.play_again)}
-            </Container>
-        )
+                        <Form id="playAgain">
+                            <h4>Play Again?</h4>
+                            <FormGroup row>
+                                <Col id="yes">
+                                    <Button type="submit" color="primary" onClick={this.playAgain}>
+                                        Yes
+                                    </Button>
+                                </Col>
+                                <Col id="no">
+                                    <Link to={`/survey`}>
+                                        <Button color="primary">
+                                            No
+                                        </Button>
+                                    </Link>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                        {this.renderPlay(this.state.play_again)}
+                    </Container>
+                </div>
+            </div>
+        
+      );
     }
- }
 
- export default Gameover;
+  }
+
+  export default GameOverPopup;

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import './Home.css';
+import '../styles/Home.css';
 import { Button, Col, Container, Row } from 'reactstrap';
 
 class Home extends Component {

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import GamePanel from './GamePanel';
-import Popup from './Popup';
-import './Tetris.css'
+import OfflinePopup from './OfflinePopupComponent';
+import GameOverPopup from './GameOverPopupComponent';
+import '../styles/Tetris.css'
 import styled from 'styled-components';
 import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
@@ -30,7 +31,6 @@ class Tetris extends Component {
         super(props);
         this.state = {
             gameOver: false,
-            showPopup: false,
             score : 0,
             redirectSurvey: false,
             redirectHome: false,
@@ -56,7 +56,7 @@ class Tetris extends Component {
         //add listner for the connection state of user's partner
         this.props.socket.on('leaving',() => {
             document.body.style.opacity = 1.0;
-            this.setState({partnerOnline: false, showPopup: true, popupType: 'offline'});
+            this.setState({partnerOnline: false});
             this.props.socket.off('game_over');
             this.props.socket.off('score');
             //console.log("leeeeeft!");
@@ -93,16 +93,18 @@ class Tetris extends Component {
                         </Col>
                     </Row>
                 </Container>
-                {this.state.showPopup ? 
-                        <Popup
-                            popupType = {this.state.popupType}
-                            finalscore = {this.state.score}
+                {this.state.partnerOnline ? 
+                        null
+                    : 
+                        <OfflinePopup
                             closePopup={this.togglePopup.bind(this)}
                         />
-                    : null
                 }
                 {this.state.gameOver ?
-                    <Redirect push to={`/gameover`} />
+                    // <Redirect push to={`/gameover`} />
+                    <GameOverPopup
+                            closePopup={this.togglePopup.bind(this)}
+                    />
                     : null
                 }
                     
