@@ -10,8 +10,6 @@ import { Redirect } from 'react-router';
 import './Tetris.css'
 
 
-
-
 const Left = styled.div`
 display: inline-block;
 vertical-align: top;
@@ -83,8 +81,9 @@ class Tetris extends Component {
 
     render() {
         return (
-            <div className = "wrap">
+            <div>
                 <Container>
+                <div className="wrap">
                     <Row>
                         <Col xs="3">
                             <Right>
@@ -104,6 +103,7 @@ class Tetris extends Component {
                             </Left>
                         </Col>
                     </Row>
+                    </div>
                 </Container>
                 {this.state.partnerOnline ? 
                         null
