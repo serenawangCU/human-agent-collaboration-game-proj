@@ -4,8 +4,7 @@ class CanvasComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //this.index;
-            //number of things
+            percentile : this.props.totalScoreRanking / this.props.numberOfGamesInDB
         }
 
         //percentile = math
@@ -25,7 +24,10 @@ class CanvasComponent extends Component {
         
         ctx.fillStyle = "blue";
         ctx.font = "18px Verdanda";
-        ctx.fillText("X",190,30); //(380*percentile)
+        console.log(this.state.percentile);
+        console.log('scoreranking: ' + this.props.totalScoreRanking);
+        console.log('numberOfGamesInDB: ' + this.props.numberOfGamesInDB);
+        ctx.fillText("X",380 * this.state.percentile, 30); //(380*percentile)
     }
     render() {
         return (

@@ -32,6 +32,8 @@ class Tetris extends Component {
         this.state = {
             gameOver: false,
             score : 0,
+            totalScoreRanking : 1,
+            numberOfGamesInDB : 2,
             redirectSurvey: false,
             redirectHome: false,
             partnerOnline: true,
@@ -49,8 +51,17 @@ class Tetris extends Component {
 
 
     gameStatus() {
-        this.props.socket.on('game_over',() => {
+        this.props.socket.on('game_over',(data) => {
+            // data.totalScore
+            // data.players
+            // data.indivScore
+            console.log('game over');
+            console.log(data.totalScoreRanking);
+            console.log(data.numberOfGamesInDB);
             document.body.style.opacity = 1.0;
+            this.setState({totalScoreRanking: data.totalScoreRanking});
+            this.setState({numberOfGamesInDB: data.numberOfGamesInDB});
+            this.setState({score: data.totalScore});
             this.setState({gameOver: true});
         });
         //add listner for the connection state of user's partner
@@ -103,6 +114,10 @@ class Tetris extends Component {
                 {this.state.gameOver ?
                     // <Redirect push to={`/gameover`} />
                     <GameOverPopup
+                            totalScoreRanking={this.state.totalScoreRanking}
+                            numberOfGamesInDB={this.state.numberOfGamesInDB}
+                            totalScore={this.state.score}
+                            socket={this.props.socket}
                             closePopup={this.togglePopup.bind(this)}
                     />
                     : null

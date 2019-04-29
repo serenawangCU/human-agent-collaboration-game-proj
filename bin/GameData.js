@@ -30,13 +30,11 @@ class GameData {
         this.players = [player1, player2];
         this.curDownCount = 0;
         this.gameId = roomId; //we use roomId as gameId in Mongo DB
-        this.totalScoreRanking = 0;
-        this.numberOfGamesInDB = 0;
 
         Games.create({
             _id: this.gameId,
-            player1 : {playerId: this.players[0]},
-            player2 : {playerId: this.players[1]}
+            player1 : {playerId: player1},
+            player2 : {playerId: player2}
         })
         .then((game) => {
             console.log("Create a new game entry!")
@@ -68,20 +66,6 @@ class GameData {
 
     getIndivScores() {
         return this.indivScore;
-    }
-
-    /**
-     * Return the rank of the achieved total score in DB
-     */
-    getTotalScoreRanking() {
-        return this.totalScoreRanking;
-    }
-
-    /**
-     * Return the number of games in DB
-     */
-    getNumberOfGamesInDB() {
-        return this.numberOfGamesInDB;
     }
 
     /**
@@ -175,17 +159,7 @@ class GameData {
      * Add the eliminated lines of last minute into the array
      */
 
-    finishGame() {
-        Games.find({"totalScore": {"$lte": this.totalScore}})
-		.count()
-		.then((index) => {
-			TotalScores.count({})
-			.then((totalCounts) => {
-                this.totalScoreRanking = index;
-                this.numberOfGamesInDB = totalCounts;
-			})
-        });
-        
+    finishGame() {        
         this.linesPerMin.push(this.curElimLines);
     }
 
@@ -270,8 +244,10 @@ class GameData {
         //update the stored game document
         Games.findByIdAndUpdate(this.gameId, {
             $set: {
-                    "player1" : {individualScore: this.indivScore[0], stepsPlayed: this.indivSteps[0]},
-                    "player2" : {individualScore: this.indivScore[1], stepsPlayed: this.indivSteps[1]},
+                    "player1.individualScore" : this.indivScore[0],
+                    "player1.stepsPlayed" : this.indivSteps[0],
+                    "player2.individualScore" : this.indivScore[1], 
+                    "player2.stepsPlayed" : this.indivSteps[1],
                     "totalScore" : this.totalScore,
                     "totalTime" : passedSecs,
                     "totalSteps" : this.stepCounter

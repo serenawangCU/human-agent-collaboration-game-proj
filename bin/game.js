@@ -4,6 +4,7 @@ const GameStatus = require("./GameStatus.js");
 // const FileSystem = require('fs');
 const decideNextPlayer = require("./Distributor.js");
 const GameData = require("./GameData.js")
+const Games = require("../models/games.js")
 
 class Game {
 
@@ -220,13 +221,22 @@ class Game {
         // Write out the records
         this.exportRecords();
 
-        // Send game is over to players
-        this.io.in(this.roomId).emit('game_over', {
-            totalScore : this.gameData.getTotalScore(),
-            players : this.gameData.getPlayers(),
-            indivScore : this.gameData.getIndivScores(),
-            totalScoreRanking: this.gameData.getTotalScoreRanking(),
-            numberOfGamesInDB: this.gameData.getNumberOfGamesInDB()
+        // Find the rank of this game and Send game is over to players
+        Games.find({"totalScore": {"$lte": this.gameData.getTotalScore()}})
+        .count()
+        .then((index) => {
+            Games.count({})
+            .then((totalCounts) => {
+                console.log("totalScoreRanking: " + index);
+                console.log("numberOfGamesInDB: " + totalCounts);
+                this.io.in(this.roomId).emit('game_over', {
+                    totalScore : this.gameData.getTotalScore(),
+                    players : this.gameData.getPlayers(),
+                    indivScore : this.gameData.getIndivScores(),
+                    totalScoreRanking: index,
+                    numberOfGamesInDB: totalCounts
+                });
+            })
         });
     }
 

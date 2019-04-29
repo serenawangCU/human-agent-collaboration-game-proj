@@ -47,13 +47,13 @@ const playerSchema = new Schema({
         type: Boolean,
         default: false
     },
-    survey: {
-        type: Array,
-        'default': []
-    },
     ifQuit: {
         type: Boolean,
         default: false
+    },
+    survey: {
+        type: Array,
+        'default': []
     }
 })
 

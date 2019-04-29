@@ -68,10 +68,14 @@ class GameOverPopup extends Component {
                         <h3>Game Over</h3>
                         <Row>
                             <Col>
-                                Scores
+                                Scores {this.props.totalScore}
                             </Col>
                             <Col>
-                                <CanvasComponent socket={this.props.socket}/>
+                                <CanvasComponent 
+                                    socket={this.props.socket}
+                                    totalScoreRanking={this.props.totalScoreRanking}
+                                    numberOfGamesInDB={this.props.numberOfGamesInDB}
+                                />
                             </Col>
                         </Row>
                     
