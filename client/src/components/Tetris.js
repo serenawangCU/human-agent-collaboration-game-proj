@@ -12,14 +12,14 @@ import { BrowserRouter, Route } from 'react-router-dom';
 const Left = styled.div`
 display: inline-block;
 vertical-align: top;
-margin-left: 30%;
+margin-left: 10%;
 padding-top: 10px;
 `;
 
 const Right = styled.div`
 display: inline-block;
 vertical-align: top;
-margin-right: 20%;
+margin-right: 40%;
 padding-top: 10px;
 `;
 
