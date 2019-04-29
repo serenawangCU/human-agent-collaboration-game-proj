@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import './Tetris.css'
 
 
 
@@ -82,7 +83,7 @@ class Tetris extends Component {
 
     render() {
         return (
-            <div>
+            <div className = "wrap">
                 <Container>
                     <Row>
                         <Col xs="3">
