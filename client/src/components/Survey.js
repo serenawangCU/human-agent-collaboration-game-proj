@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input, FormText, Col, Row, Container} from 'reactstrap';
+import { Redirect } from 'react-router';
 import './Survey.css'
 
 class Survey extends Component {

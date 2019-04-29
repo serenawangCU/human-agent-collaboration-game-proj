@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
 
 function outputSingleKeyToDb(key, value, socket) {
 	// udpate the database to indicate that the player would like to play again
-	if (socket.roomId !== null) {
+	if (socket !== undefined && socket.roomId !== null) {
 		Games.findById(socket.roomId)
 		.then((game) => {
 			if (game.player1.playerId === socket.id) {

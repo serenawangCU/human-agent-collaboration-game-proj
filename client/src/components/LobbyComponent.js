@@ -90,23 +90,35 @@ class Lobby extends Component {
     renderStart(currentStatus) {
         if (currentStatus === status.READY) {
             return (
-                <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
-                </Col>
+                <div>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
+                    </Col>
+                    <Instruct />
+                </div>
             );
         }
 
         if (currentStatus === status.GAMING) {
             return <Redirect push to={`/tetris`} />;
+        } 
+
+        if (currentStatus === status.INITIAL) {
+            return (
+                <Instruct />
+            );
         }
     }
 
     renderPair(name, currentStatus) {
         if (currentStatus === status.PAIRING) {
             return (
-                <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
-                </Col>
+                <div>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
+                    </Col>
+                    <Instruct />
+                </div>
             );
         }
 
@@ -126,6 +138,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
+                        <Instruct />
                         {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
@@ -146,6 +159,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
+                        <Instruct />
                         {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
@@ -181,10 +195,18 @@ class Lobby extends Component {
                             </Col>
                         </FormGroup>
                     </Form>
-                    {this.renderPair(this.state.opponent, this.state.currentStatus)}
-                    {this.renderStart(this.state.currentStatus)}
                 </div>
-                
+                {this.renderPair(this.state.opponent, this.state.currentStatus)}
+                {this.renderStart(this.state.currentStatus)}
+            </div>
+        );
+    }
+}
+
+class Instruct extends Component {
+    render() {
+        return (
+            <div>
                 <Row id="info">
                     <Col id="instructions">
                         <p>
