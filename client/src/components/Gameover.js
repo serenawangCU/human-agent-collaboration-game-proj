@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import './Gameover.css';
+import '../styles/Gameover.css';
 import { Button, Form, FormGroup,Col, Container, Row, Label, Input} from 'reactstrap';
 import CanvasComponent from './CanvasComponent';
 

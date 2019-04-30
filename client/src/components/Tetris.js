@@ -83,26 +83,26 @@ class Tetris extends Component {
         return (
             <div>
                 <Container>
-                <div className="wrap">
-                    <Row>
-                        <Col md={3} xs={12}>
-                            <Right>
-                                <p>
-                                During the game, you and your partner will be assigned who's next by an AI. 
-                                When it is not your turn, your screen will turn grey and you will not be able to
-                                move the tetromino.
-                                <br></br>
-                                <br></br>
-                                You will be able to control your tetromino by using the arrow keys. 
-                                </p>
-                            </Right>
-                        </Col>
-                        <Col md={9} xs={12}>
-                            <Left>
-                                <GamePanel socket={this.props.socket}/>
-                            </Left>
-                        </Col>
-                    </Row>
+                    <div className="wrap">
+                        <Row>
+                            <Col md={3} xs={12}>
+                                <Right>
+                                    <p>
+                                    During the game, you and your partner will be assigned who's next by an AI. 
+                                    When it is not your turn, your screen will turn grey and you will not be able to
+                                    move the tetromino.
+                                    <br></br>
+                                    <br></br>
+                                    You will be able to control your tetromino by using the arrow keys. 
+                                    </p>
+                                </Right>
+                            </Col>
+                            <Col md={9} xs={12}>
+                                <Left>
+                                    <GamePanel socket={this.props.socket}/>
+                                </Left>
+                            </Col>
+                        </Row>
                     </div>
                 </Container>
                 {this.state.partnerOnline ? 
@@ -125,7 +125,7 @@ class Tetris extends Component {
                 }
                     
                 
-            </div>
+        </div>
         )
     }
     togglePopup() {

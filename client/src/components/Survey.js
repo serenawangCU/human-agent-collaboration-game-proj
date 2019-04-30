@@ -17,9 +17,8 @@ class Survey extends Component {
     }
 
     handleSubmit(event) {
-      alert("Submitted!");
-      this.setState({if_submit : true});
       event.preventDefault();
+      this.setState({if_submit : true});
       var data = {
         'q1' : document.getElementById('exampleSelect').value,
         'q2' : document.getElementById('exampleText').value
@@ -40,7 +39,7 @@ class Survey extends Component {
             </p>
 
             {/* https://reactstrap.github.io/components/form/ */}
-            <Form onSubmit={this.handleSubmit} id="survey">
+            <Form id="survey">
               <FormGroup>
                   <Label for="exampleSelect">Would you want to play with the same person again?</Label>
                   <Input type="select" name="select" id="exampleSelect">
@@ -54,10 +53,9 @@ class Survey extends Component {
               </FormGroup>
               <FormGroup row id="buttons">
                 <Col md={{size: 3, offset: 3}}>
-                  <Button type="submit" color="primary">
+                  <Button color="primary" onClick={this.handleSubmit}>
                     Submit
                   </Button>
-                  {this.state.if_submit ? <Redirect push to={`/lobby`} /> : null}
                 </Col>
                 <Col md={{size: 3}}>
                   <Link to={`/lobby`}>
@@ -68,6 +66,7 @@ class Survey extends Component {
                 </Col>
               </FormGroup>
             </Form>
+            {this.state.if_submit ? <Redirect push to={`/lobby`} /> : null}
           </Container>
         )
 

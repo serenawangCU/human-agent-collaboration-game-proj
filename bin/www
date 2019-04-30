@@ -102,8 +102,7 @@ io.on('connection', (socket) => {
 				return game.save();
 			})
 			.then(() => {
-				console.log("Successfully update player " + socket.id + "'s info of " 
-							+ key + " to MongoDB!");
+				console.log("Successfully update player " + socket.id + "'s info of survey to MongoDB!");
 			})
 			.catch((err) => {
 				console.log(err);
