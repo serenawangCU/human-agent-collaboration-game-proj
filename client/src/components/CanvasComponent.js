@@ -8,7 +8,7 @@ class CanvasComponent extends Component {
             //number of things
         }
 
-        this.percentile = this.props.totalScoreRanking / this.props.numberOfGamesInDB;
+        this.percentile = (this.props.totalScoreRanking-0.5) / this.props.numberOfGamesInDB;
     }
 
     componentDidMount() {
@@ -37,7 +37,7 @@ class CanvasComponent extends Component {
     render() {
         return (
             <div>
-                <canvas ref="canvas" width={400} height={100}/>
+                <canvas ref="canvas" width={400} height={50}/>
             </div>
         );
     }
