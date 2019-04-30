@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../styles/Popup.css';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
 
 class OfflinePopup extends Component {
     
@@ -8,10 +9,17 @@ class OfflinePopup extends Component {
         return (
             <div className='popup'>
                 <div className='popup_inner'>
-                    <div>
-                        <h1>Your partner's offline</h1>
-                        <NavLink to="/home">Return Home</NavLink>
+                    <header className="header">
+				        <div>Sorry!</div>
+			        </header>
+                    <div className="error">
+                        <h4>Your partner disconnected.</h4>
                     </div>
+                    <Link to={`/home`}>
+                        <Button id="home" color="primary">
+                           Return Home
+                        </Button>
+                    </Link>
                 </div>
             </div>
         
