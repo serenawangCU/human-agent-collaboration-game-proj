@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import { Redirect } from 'react-dom';
+import { Redirect } from 'react-router';
 import { Button, Form, FormGroup, Label, Input, FormText, Col, Row, Container} from 'reactstrap';
 import '../styles/Survey.css'
 
