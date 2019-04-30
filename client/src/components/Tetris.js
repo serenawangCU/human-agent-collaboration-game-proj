@@ -38,7 +38,8 @@ class Tetris extends Component {
             redirectSurvey: false,
             redirectHome: false,
             partnerOnline: true,
-            popupType: ''
+            popupType: '',
+            playerId: this.props.socket.id
         }
         this.gameStatus();
         this.updateScore();
@@ -127,7 +128,7 @@ class Tetris extends Component {
                             totalScore={this.state.score}
                             socket={this.props.socket}
                             closePopup={this.togglePopup.bind(this)}
-                            indivScore={this.state.indivScore}
+                            indivScore={this.state.indivScore[this.state.playerId]}
                     />
                     : null
                 }
