@@ -70,15 +70,21 @@ class GameOverPopup extends Component {
 			        </header>
                     <Container id="content">
                         <Row>
-                            <Col xs="3">
+                            <Col xs="2">
+                                Individual Score
+                            </Col>
+                            <Col xs="2">
                                 Total Score
                             </Col>
                             <Col xs="9">
-                                Percentile
+                                Total Score Percentile
                             </Col>
                         </Row>
                         <Row>
-                            <Col xs="3">
+                            <Col xs="2">
+                                {this.props.individualScore}
+                            </Col>
+                            <Col xs="2">
                                 {this.props.totalScore}
                             </Col>
                             <Col xs="9">
