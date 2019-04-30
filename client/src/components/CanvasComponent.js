@@ -4,7 +4,8 @@ class CanvasComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            percentile : this.props.totalScoreRanking / this.props.numberOfGamesInDB
+            //this.index;
+            //number of things
         }
 
         //percentile = math
@@ -15,7 +16,7 @@ class CanvasComponent extends Component {
     }
     updateCanvas() {
         const ctx = this.refs.canvas.getContext('2d');
-        const grd = ctx.createLinearGradient(0,0,500,30);
+        const grd = ctx.createLinearGradient(0,0,500,50);
         grd.addColorStop(0,"white");
         grd.addColorStop(1,"black");
 
@@ -24,14 +25,19 @@ class CanvasComponent extends Component {
         
         ctx.fillStyle = "blue";
         ctx.font = "18px Verdanda";
-        console.log(this.state.percentile);
-        console.log('scoreranking: ' + this.props.totalScoreRanking);
-        console.log('numberOfGamesInDB: ' + this.props.numberOfGamesInDB);
-        ctx.fillText("X",380 * this.state.percentile, 30); //(380*percentile)
+        ctx.fillText("X",190,30); //(380*percentile)
+        ctx.textAlign = "center";
+        ctx.fillStyle = "red";
+        ctx.font = "14px Verdanda";
+        ctx.fillText("0%", 17, 10);
+        ctx.fillText("50%",200, 10);
+        ctx.fillText("100%", 380, 10);
     }
     render() {
         return (
-            <canvas ref="canvas" width={400} height={100}/>
+            <div>
+                <canvas ref="canvas" width={400} height={100}/>
+            </div>
         );
     }
 }

@@ -2,36 +2,39 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import '../styles/Gameover.css';
-import { Button, Form, FormGroup,Col, Container, Row} from 'reactstrap';
+import './Gameover.css';
+import { Button, Form, FormGroup,Col, Container, Row, Label, Input} from 'reactstrap';
 import CanvasComponent from './CanvasComponent';
+
+//var CanvasJS = CanvasJSReact.CanvasJS;
+//var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 class Gameover extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            play_again : false,
-            same_player : false
+            play_again: false
         }
 
+        
+        
         // //this.goToHome = false;
 
         this.playAgain = this.playAgain.bind(this);
-        this.playWithSamePlayer = this.playWithSamePlayer.bind(this);
         // this.goToSurvey = this.goToSurvey.bind(this);
+
+        this.props.socket.on('totalScoreDistributionReturn', (result) => {
+            console.log('totalIndex: ' + result.index);
+            console.log('totalCounts: ' + result.counts);
+        })
+
+        this.props.socket.emit('totalScoreDistribution', 15);
     }
 
 
     playAgain(){
-        this.setState({play_again : true});
-        this.props.socket.emit('game_again', true);
-    }
-
-    playWithSamePlayer() {
-        console.log("Click same player");
-        this.setState({same_player : true});
-        this.props.socket.emit('same_player', true);
+        this.setState({play_again: true});
     }
 
     renderPlay(play_again){
@@ -42,9 +45,11 @@ class Gameover extends Component {
                     <h4>Do you want to play with the same person?</h4>
                     <FormGroup row>
                         <Col id="yes">
-                            <Button color="primary" onClick={this.playWithSamePlayer}>
-                                Yes
-                            </Button>
+                            <Link to={`/lobby`}>
+                                <Button color="primary">
+                                    Yes
+                                </Button>
+                            </Link>
                         </Col>
                         <Col id="no">
                             <Link to={`/lobby`}>
@@ -54,7 +59,6 @@ class Gameover extends Component {
                             </Link>
                         </Col>
                     </FormGroup>
-                    {this.state.same_player ? <Redirect push to={`/lobby`} /> : null}
                 </Form>
             )
         }
@@ -67,16 +71,46 @@ class Gameover extends Component {
                 <h3>Game Over</h3>
                 <Row>
                     <Col>
-                        Scores
+                        Individual Scores
                     </Col>
                     <Col>
                         <CanvasComponent socket={this.props.socket}/>
                     </Col>
                 </Row>
-          
 
+                <Row>
+                    <Col>
+                        Team Scores
+                    </Col>
+                    <Col>
+                        <CanvasComponent socket={this.props.socket}/>
+                    </Col>
+                </Row>
+                <Form>
+                    <FormGroup className = "row">
+                        <Col md={12}>
+                            <Label for="rating">Rate  (1 is least favorite, 5 is most favorite)</Label>
+                        </Col>
+                        
+                        {/* <div class = "form-group position-centered">
+                            <div class = "col-xs-3 "> */}
+                            <Col md={{size:2, offset:5}}>
+                                <Col md={{size:7, offset:3}}>
+                                    <Input md={{size:4, offset:4}} type="select" name="rating" id="rating" >
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Input>
+                                </Col>
+                            </Col>
+                            {/* </div>
+                        </div> */}
+                    </FormGroup>
+                </Form>
                 <Form id="playAgain">
-                    <h4>Play Again?</h4>
+                    <h5>Play Again?</h5>
                     <FormGroup row>
                         <Col id="yes">
                             <Button type="submit" color="primary" onClick={this.playAgain}>
@@ -94,6 +128,8 @@ class Gameover extends Component {
                 </Form>
                 {this.renderPlay(this.state.play_again)}
             </Container>
+            
+              
         )
     }
  }

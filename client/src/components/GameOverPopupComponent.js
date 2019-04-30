@@ -4,6 +4,7 @@ import { Container, Button, Form, FormGroup, Row, Col } from 'reactstrap';
 import { Redirect } from 'react-router';
 import CanvasComponent from './CanvasComponent.js';
 import { Link } from 'react-router-dom';
+import './GameOverPopupComponent.css'
 
 class GameOverPopup extends Component {
 
@@ -62,6 +63,7 @@ class GameOverPopup extends Component {
     render() {
         document.body.style.opacity = 1.0;
         return (
+            <div  className = "wrap">
             <div className='popup'>
                 <div className='popup_inner'>
                     <Container>
@@ -98,8 +100,10 @@ class GameOverPopup extends Component {
                             </FormGroup>
                         </Form>
                         {this.renderPlay(this.state.play_again)}
+                        
                     </Container>
                 </div>
+            </div>
             </div>
         
       );

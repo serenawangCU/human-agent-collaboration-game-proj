@@ -7,14 +7,13 @@ import styled from 'styled-components';
 import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
-
-
+import './Tetris.css'
 
 
 const Left = styled.div`
 display: inline-block;
 vertical-align: top;
-margin-left: 30%;
+margin-left: 10%;
 padding-top: 10px;
 `;
 
@@ -84,6 +83,7 @@ class Tetris extends Component {
         return (
             <div>
                 <Container>
+                <div className="wrap">
                     <Row>
                         <Col md={3} xs={12}>
                             <Right>
@@ -103,6 +103,7 @@ class Tetris extends Component {
                             </Left>
                         </Col>
                     </Row>
+                    </div>
                 </Container>
                 {this.state.partnerOnline ? 
                         null

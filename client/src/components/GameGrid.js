@@ -148,7 +148,7 @@ class GameGrid extends Component {
     
         return (
             <Container>
-                <div className="wrapper">
+                <div className="wrapper">                
                     <Row>
                         <Col xs="auto">.col-auto
                             <div className= "field">  
