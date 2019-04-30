@@ -7,7 +7,6 @@ class CanvasComponent extends Component {
             //this.index;
             //number of things
         }
-
         this.percentile = (this.props.totalScoreRanking-0.5) / this.props.numberOfGamesInDB;
     }
 
@@ -23,12 +22,12 @@ class CanvasComponent extends Component {
         ctx.fillStyle = grd;
         ctx.fillRect(10,10,380,30);
         
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "red";
         ctx.font = "18px Verdanda";
         ctx.fillText("X", 380 * this.percentile, 30); //(380*percentile)
         console.log(this.percentile);
         ctx.textAlign = "center";
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "black";
         ctx.font = "14px Verdanda";
         ctx.fillText("0%", 17, 10);
         ctx.fillText("50%",200, 10);
