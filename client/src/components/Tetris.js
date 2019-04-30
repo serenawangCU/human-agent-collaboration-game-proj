@@ -8,6 +8,7 @@ import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import './Tetris.css'
+import instructions from './Instructions.png';
 
 
 const Left = styled.div`
@@ -95,6 +96,9 @@ class Tetris extends Component {
                                     <br></br>
                                     You will be able to control your tetromino by using the arrow keys. 
                                     </p>
+                                    <Col md={{size: 6}}>
+                                        <img src={instructions} width = "200%" length = "200%" alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
+                                    </Col>
                                 </Right>
                             </Col>
                             <Col md={9} xs={12}>
