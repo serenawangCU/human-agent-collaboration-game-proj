@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, Row, Input, Col, Alert } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Row, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 import OfflinePopup from './OfflinePopupComponent';
@@ -94,7 +94,6 @@ class Lobby extends Component {
                     <Col md={{size:4, offset: 4}}>
                         <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
                     </Col>
-                    <Instruct />
                 </div>
             );
         }
@@ -104,9 +103,6 @@ class Lobby extends Component {
         } 
 
         if (currentStatus === status.INITIAL) {
-            return (
-                <Instruct />
-            );
         }
     }
 
@@ -117,7 +113,6 @@ class Lobby extends Component {
                     <Col md={{size:4, offset: 4}}>
                         <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
                     </Col>
-                    <Instruct />
                 </div>
             );
         }
@@ -138,7 +133,6 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        <Instruct />
                         {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
@@ -159,7 +153,6 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        <Instruct />
                         {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
@@ -173,32 +166,33 @@ class Lobby extends Component {
         console.log('lobby here');
         document.body.style.opacity = 1.0;
         return (
-            <div className="row row-content">
-                <div className="col-12">
-                    <h3>What's your nickname?</h3>
-                </div>
-                <div className="col-12">
-                    <Form onSubmit={this.handlePair}>
-                        <FormGroup row>
-                            <Col md={{size: 6, offset: 3}}>
-                                <Input type="text" id="nickname" name="nickname" required
-                                    placeholder="Nickname"
-                                    value={this.state.nickname}
-                                    onChange={this.handleInputChange} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md={{size: 6, offset: 3}}>
-                                <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
-                                    Pair
-                                </Button>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                </div>
+            <Container>
+                <Row>
+                    <Col>
+                        <h3>What's your nickname?</h3>
+                    </Col>
+                </Row>
+                <Form onSubmit={this.handlePair}>
+                    <FormGroup row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <Input type="text" id="nickname" name="nickname" required
+                                placeholder="Nickname"
+                                value={this.state.nickname}
+                                onChange={this.handleInputChange} />
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
+                                Pair
+                            </Button>
+                        </Col>
+                    </FormGroup>
+                </Form>
                 {this.renderPair(this.state.opponent, this.state.currentStatus)}
                 {this.renderStart(this.state.currentStatus)}
-            </div>
+                <Instruct />
+            </Container>
         );
     }
 }
@@ -206,23 +200,21 @@ class Lobby extends Component {
 class Instruct extends Component {
     render() {
         return (
-            <div>
-                <Row id="info">
-                    <Col id="instructions">
-                        <p>
-                            During the game, you and your partner will be assigned who's next by an AI. 
-                            When it is not your turn, your screen will turn grey and you will not be able to
-                            move the tetromino.
-                            <br></br>
-                            <br></br>
-                            You will be able to control your tetromino by using the arrow keys. 
-                        </p>
-                    </Col>
-                    <Col id="image">
-                        <img src={instructions} alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
-                    </Col>
-                </Row>
-            </div>
+            <Row>
+                <Col md={{size: 6}}>
+                    <p>
+                        During the game, you and your partner will be assigned who's next by an AI. 
+                        When it is not your turn, your screen will turn grey and you will not be able to
+                        move the tetromino.
+                        <br></br>
+                        <br></br>
+                        You will be able to control your tetromino by using the arrow keys. 
+                    </p>
+                </Col>
+                <Col md={{size: 6}}>
+                    <img src={instructions} alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
+                </Col>
+            </Row>
         );
     }
 }

@@ -20,12 +20,12 @@ class Home extends Component {
                 src="https://www.youtube.com/embed/_fQtxKmgJC8" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
                 </iframe>
                 
-                <div className="info">
+                <Row>
                     <p>
                         Welcome to collaborative Tetris! You will play a game of Tetris with a randomly chosen partner
                         while an AI will choose who will go next on every turn. 
                     </p>
-                </div>
+                </Row>
           
 
                 <Row>

@@ -85,7 +85,7 @@ class Tetris extends Component {
             <div>
                 <Container>
                     <Row>
-                        <Col xs="3">
+                        <Col md={3} xs={12}>
                             <Right>
                                 <p>
                                 During the game, you and your partner will be assigned who's next by an AI. 
@@ -97,7 +97,7 @@ class Tetris extends Component {
                                 </p>
                             </Right>
                         </Col>
-                        <Col xs="9">
+                        <Col md={9} xs={12}>
                             <Left>
                                 <GamePanel socket={this.props.socket}/>
                             </Left>
