@@ -54,10 +54,11 @@ class Tetris extends Component {
         this.props.socket.on('game_over',(data) => {
             // data.totalScore
             // data.players
-            // data.indivScore
+            // data.indivScores
             console.log('game over');
             console.log(data.totalScoreRanking);
             console.log(data.numberOfGamesInDB);
+            console.log(data.indivScores);
             document.body.style.opacity = 1.0;
             this.setState({totalScoreRanking: data.totalScoreRanking});
             this.setState({numberOfGamesInDB: data.numberOfGamesInDB});
