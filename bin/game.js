@@ -229,10 +229,13 @@ class Game {
             .then((totalCounts) => {
                 console.log("totalScoreRanking: " + index);
                 console.log("numberOfGamesInDB: " + totalCounts);
+                var indivScoresObj = {};
+                indivScoresObj[this.gameData.getPlayers()[0]] = this.this.gameData.getPlayers()[0];
+                indivScoresObj[this.gameData.getPlayers()[1]] = this.this.gameData.getPlayers()[1];
                 this.io.in(this.roomId).emit('game_over', {
                     totalScore : this.gameData.getTotalScore(),
                     players : this.gameData.getPlayers(),
-                    indivScore : this.gameData.getIndivScores(),
+                    indivScores : indivScoresObj,
                     totalScoreRanking: index,
                     numberOfGamesInDB: totalCounts
                 });
