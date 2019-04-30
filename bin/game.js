@@ -4,6 +4,7 @@ const GameStatus = require("./GameStatus.js");
 // const FileSystem = require('fs');
 const decideNextPlayer = require("./Distributor.js");
 const GameData = require("./GameData.js")
+const Games = require("../models/games.js")
 
 class Game {
 
@@ -78,20 +79,6 @@ class Game {
         this.io.in(this.roomId).emit('score', {
             score : this.gameData.getTotalScore()
         });
-
-        // // Create the dataset folder
-        // // TODO: might be moved to another place
-        // FileSystem.exists('collected_data', function(exists) {
-        //     if (!exists) {
-        //         FileSystem.mkdir('collected_data', function(error) {
-        //             console.error(error);
-        //         });
-        //     }
-        // });
-    }
-
-    resetGame() {
-
     }
 
     /**
@@ -196,7 +183,6 @@ class Game {
             //console.log("current: " + this.currentPlayer + " next: " + this.nextPlayer)
             // Check if the game is over because of the new block
             if (this.checkIfGameOver(this.currentBlock) === true) {
-                console.log(this.currentBlock);
                 this.addBlockToField(this.currentBlock);
                 this.finishGame();
             }
@@ -235,11 +221,22 @@ class Game {
         // Write out the records
         this.exportRecords();
 
-        // Send game is over to players
-        this.io.in(this.roomId).emit('game_over', {
-            totalScore : this.gameData.getTotalScore(),
-            players : this.gameData.getPlayers(),
-            indivScore : this.gameData.getIndivScores()
+        // Find the rank of this game and Send game is over to players
+        Games.find({"totalScore": {"$lte": this.gameData.getTotalScore()}})
+        .count()
+        .then((index) => {
+            Games.count({})
+            .then((totalCounts) => {
+                console.log("totalScoreRanking: " + index);
+                console.log("numberOfGamesInDB: " + totalCounts);
+                this.io.in(this.roomId).emit('game_over', {
+                    totalScore : this.gameData.getTotalScore(),
+                    players : this.gameData.getPlayers(),
+                    indivScore : this.gameData.getIndivScores(),
+                    totalScoreRanking: index,
+                    numberOfGamesInDB: totalCounts
+                });
+            })
         });
     }
 
@@ -319,29 +316,33 @@ class Game {
 
         switch(direction) {
             case Directions.UP:
-            newBlock = this.rotate();
-            break;
+                console.log('rotate');
+                newBlock = this.rotate();
+                break;
 
             case Directions.DOWN:
-            newBlock = new Shape(this.currentBlock);
-            for (let i = 0; i < 4; i++) {
-                newBlock.path[i][0]++;
-            }
-            break;
+                console.log('down');
+                newBlock = new Shape(this.currentBlock);
+                for (let i = 0; i < 4; i++) {
+                    newBlock.path[i][0]++;
+                }
+                break;
 
             case Directions.LEFT:
-            newBlock = new Shape(this.currentBlock);
-            for (let i = 0; i < 4; i++) {
-                newBlock.path[i][1]--;
-            }
-            break;
+                console.log('left');
+                newBlock = new Shape(this.currentBlock);
+                for (let i = 0; i < 4; i++) {
+                    newBlock.path[i][1]--;
+                }
+                break;
 
             case Directions.RIGHT:
-            newBlock = new Shape(this.currentBlock);
-            for (let i = 0; i < 4; i++) {
-                newBlock.path[i][1]++;
-            }
-            break;
+                console.log('right');
+                newBlock = new Shape(this.currentBlock);
+                for (let i = 0; i < 4; i++) {
+                    newBlock.path[i][1]++;
+                }
+                break;
 
             default:
                 console.log("Invalid direction input");
@@ -368,7 +369,6 @@ class Game {
      */
 
     rotate() {
-        console.log('rotate');
         let curBlockIndex = -1;
         let nextBlockIndex = -1;
 
@@ -508,7 +508,7 @@ class Game {
      */
 
     exportRecords() {
-        this.gameData.printInfo();
+        // this.gameData.printInfo();
         this.gameData.uploadToDB();
     }
 }

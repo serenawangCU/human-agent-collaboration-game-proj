@@ -1,0 +1,14 @@
+.popup{
+    min-width:1000px;
+    min-height:250px;
+    }
+
+.popup_inner{
+    min-width:500px;
+    min-height:350px;
+    }
+
+.wrap{
+    min-width:1000px;
+    min-height:250px;
+    }

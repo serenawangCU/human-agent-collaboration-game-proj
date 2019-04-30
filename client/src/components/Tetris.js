@@ -1,17 +1,25 @@
 import React, {Component} from 'react';
 import GamePanel from './GamePanel';
-import Popup from './Popup';
-import './Tetris.css'
+import OfflinePopup from './OfflinePopupComponent';
+import GameOverPopup from './GameOverPopupComponent';
+import '../styles/Tetris.css'
 import styled from 'styled-components';
+import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
-
-
+import { Redirect } from 'react-router';
+import './Tetris.css'
 
 
 const Left = styled.div`
 display: inline-block;
 vertical-align: top;
-margin-left: 30%;
+margin-left: 10%;
+padding-top: 10px;
+`;
+
+const Right = styled.div`
+display: inline-block;
+vertical-align: top;
 padding-top: 10px;
 `;
 
@@ -22,8 +30,9 @@ class Tetris extends Component {
         super(props);
         this.state = {
             gameOver: false,
-            showPopup: false,
             score : 0,
+            totalScoreRanking : 1,
+            numberOfGamesInDB : 2,
             redirectSurvey: false,
             redirectHome: false,
             partnerOnline: true,
@@ -33,16 +42,31 @@ class Tetris extends Component {
         this.updateScore();
     }
 
+    componentWillUnmount() {
+        this.props.socket.off('score');
+        this.props.socket.off('game_over');
+        this.props.socket.off('leaving');
+    }
+
 
     gameStatus() {
-        this.props.socket.on('game_over',() => {
+        this.props.socket.on('game_over',(data) => {
+            // data.totalScore
+            // data.players
+            // data.indivScore
+            console.log('game over');
+            console.log(data.totalScoreRanking);
+            console.log(data.numberOfGamesInDB);
             document.body.style.opacity = 1.0;
-            this.setState({gameOver: true, showPopup: true, popupType: 'survey'});
+            this.setState({totalScoreRanking: data.totalScoreRanking});
+            this.setState({numberOfGamesInDB: data.numberOfGamesInDB});
+            this.setState({score: data.totalScore});
+            this.setState({gameOver: true});
         });
         //add listner for the connection state of user's partner
         this.props.socket.on('leaving',() => {
             document.body.style.opacity = 1.0;
-            this.setState({partnerOnline: false, showPopup: true, popupType: 'offline'});
+            this.setState({partnerOnline: false});
             this.props.socket.off('game_over');
             this.props.socket.off('score');
             //console.log("leeeeeft!");
@@ -58,20 +82,50 @@ class Tetris extends Component {
     render() {
         return (
             <div>
-                <Left>
-                    <GamePanel socket={this.props.socket}/>
-                </Left>
-                {this.state.showPopup ? 
-                        <Popup
-                            popupType = {this.state.popupType}
-                            finalscore = {this.state.score}
+                <Container>
+                    <div className="wrap">
+                        <Row>
+                            <Col md={3} xs={12}>
+                                <Right>
+                                    <p>
+                                    During the game, you and your partner will be assigned who's next by an AI. 
+                                    When it is not your turn, your screen will turn grey and you will not be able to
+                                    move the tetromino.
+                                    <br></br>
+                                    <br></br>
+                                    You will be able to control your tetromino by using the arrow keys. 
+                                    </p>
+                                </Right>
+                            </Col>
+                            <Col md={9} xs={12}>
+                                <Left>
+                                    <GamePanel socket={this.props.socket}/>
+                                </Left>
+                            </Col>
+                        </Row>
+                    </div>
+                </Container>
+                {this.state.partnerOnline ? 
+                        null
+                    : 
+                        <OfflinePopup
                             closePopup={this.togglePopup.bind(this)}
                         />
+                }
+                {this.state.gameOver ?
+                    // <Redirect push to={`/gameover`} />
+                    <GameOverPopup
+                            totalScoreRanking={this.state.totalScoreRanking}
+                            numberOfGamesInDB={this.state.numberOfGamesInDB}
+                            totalScore={this.state.score}
+                            socket={this.props.socket}
+                            closePopup={this.togglePopup.bind(this)}
+                    />
                     : null
                 }
-
+                    
                 
-            </div>
+        </div>
         )
     }
     togglePopup() {

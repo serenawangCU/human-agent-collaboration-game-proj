@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Games = require('../models/games.js');
+const TotalScores = require('../models/totalScores.js');
 
 /**
  * Class of all the collected data in a game
@@ -28,13 +29,15 @@ class GameData {
         this.startTime = new Date();
         this.players = [player1, player2];
         this.curDownCount = 0;
+        this.gameId = roomId; //we use roomId as gameId in Mongo DB
 
         Games.create({
-            roomId: roomId
+            _id: this.gameId,
+            player1 : {playerId: player1},
+            player2 : {playerId: player2}
         })
         .then((game) => {
             console.log("Create a new game entry!")
-            this.gameId = game._id;
         })
         .catch((err) => {
             console.log(err);
@@ -156,7 +159,7 @@ class GameData {
      * Add the eliminated lines of last minute into the array
      */
 
-    finishGame() {
+    finishGame() {        
         this.linesPerMin.push(this.curElimLines);
     }
 
@@ -187,6 +190,7 @@ class GameData {
 
     /**
      * Reset the object and 
+     * // TODO: implement the half-done comments
      */
 
     reset() {
@@ -206,11 +210,10 @@ class GameData {
         this.curDownCount = 0;
 
         Games.create({
-            roomId: roomId
+            _id: this.gameId
         })
         .then((game) => {
             console.log("Create a new game entry!")
-            this.gameId = game._id;
         })
         .catch((err) => {
             console.log(err);
@@ -241,8 +244,10 @@ class GameData {
         //update the stored game document
         Games.findByIdAndUpdate(this.gameId, {
             $set: {
-                    "player1" : {playerId: this.players[0], individualScore: this.indivScore[0], stepsPlayed: this.indivSteps[0]},
-                    "player2" : {playerId: this.players[1], individualScore: this.indivScore[1], stepsPlayed: this.indivSteps[1]},
+                    "player1.individualScore" : this.indivScore[0],
+                    "player1.stepsPlayed" : this.indivSteps[0],
+                    "player2.individualScore" : this.indivScore[1], 
+                    "player2.stepsPlayed" : this.indivSteps[1],
                     "totalScore" : this.totalScore,
                     "totalTime" : passedSecs,
                     "totalSteps" : this.stepCounter
@@ -253,11 +258,21 @@ class GameData {
         .exec()
         .then((game) => {
             console.log("Successfully upload data to MongoDB!");
-            console.log(game);
         })
         .catch((err) => {
             console.log(err);
         });
+
+        TotalScores.create({
+            totalScore : this.totalScore,
+        })
+        .then((score) => {
+            console.log("Create a total score entry!");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
     }
 }
 

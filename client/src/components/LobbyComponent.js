@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Alert } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Row, Input, Col, Alert } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
-import Popup from './Popup';
+import OfflinePopup from './OfflinePopupComponent';
+import '../styles/Lobby.css';
+import instructions from './Instructions.png';
 
 const status = Constant.state;
 export const names = []; // [playerName, partnerName]
@@ -52,6 +54,12 @@ class Lobby extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.props.socket.off('paired');
+        this.props.socket.off('gaming');
+        this.props.socket.off('rename');
+    }
+
     onOpponentPaired(name) {
         this.setState({opponent: name});
         this.setState({currentStatus: status.PAIRED});
@@ -82,23 +90,30 @@ class Lobby extends Component {
     renderStart(currentStatus) {
         if (currentStatus === status.READY) {
             return (
-                <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
-                </Col>
+                <div>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="info" type="text" id="ungaming">Ready! Waiting for your partner...</Alert>
+                    </Col>
+                </div>
             );
         }
 
         if (currentStatus === status.GAMING) {
             return <Redirect push to={`/tetris`} />;
+        } 
+
+        if (currentStatus === status.INITIAL) {
         }
     }
 
     renderPair(name, currentStatus) {
         if (currentStatus === status.PAIRING) {
             return (
-                <Col md={{size:4, offset: 4}}>
-                    <Alert color="info" type="text" id="unpair">Waiting for pairing...</Alert>
-                </Col>
+                <div>
+                    <Col md={{size:4, offset: 4}}>
+                        <Alert color="info" type="text" id="unpair">Waiting for match...</Alert>
+                    </Col>
+                </div>
             );
         }
 
@@ -118,7 +133,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
+                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             } else {
@@ -138,7 +153,7 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <Popup popupType = {this.state.popupType} /> : null }
+                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             }
@@ -151,32 +166,55 @@ class Lobby extends Component {
         console.log('lobby here');
         document.body.style.opacity = 1.0;
         return (
-            <div className="row row-content">
-                <div className="col-12">
-                    <h3>What's your nickname?</h3>
-                </div>
-                <div className="col-12">
-                    <Form onSubmit={this.handlePair}>
-                        <FormGroup row>
-                            <Col md={{size: 6, offset: 3}}>
-                                <Input type="text" id="nickname" name="nickname" required
-                                    placeholder="Nickname"
-                                    value={this.state.nickname}
-                                    onChange={this.handleInputChange} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md={{size: 6, offset: 3}}>
-                                <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
-                                    Try Pair
-                                </Button>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                    {this.renderPair(this.state.opponent, this.state.currentStatus)}
-                    {this.renderStart(this.state.currentStatus)}
-                </div>
-            </div>
+            <Container>
+                <Row>
+                    <Col>
+                        <h3>What's your nickname?</h3>
+                    </Col>
+                </Row>
+                <Form onSubmit={this.handlePair}>
+                    <FormGroup row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <Input type="text" id="nickname" name="nickname" required
+                                placeholder="Nickname"
+                                value={this.state.nickname}
+                                onChange={this.handleInputChange} />
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
+                                Pair
+                            </Button>
+                        </Col>
+                    </FormGroup>
+                </Form>
+                {this.renderPair(this.state.opponent, this.state.currentStatus)}
+                {this.renderStart(this.state.currentStatus)}
+                <Instruct />
+            </Container>
+        );
+    }
+}
+
+class Instruct extends Component {
+    render() {
+        return (
+            <Row>
+                <Col md={{size: 6}}>
+                    <p>
+                        During the game, you and your partner will be assigned who's next by an AI. 
+                        When it is not your turn, your screen will turn grey and you will not be able to
+                        move the tetromino.
+                        <br></br>
+                        <br></br>
+                        You will be able to control your tetromino by using the arrow keys. 
+                    </p>
+                </Col>
+                <Col md={{size: 6}}>
+                    <img src={instructions} alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
+                </Col>
+            </Row>
         );
     }
 }
