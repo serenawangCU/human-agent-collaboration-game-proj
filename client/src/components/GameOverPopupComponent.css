@@ -12,3 +12,20 @@
     min-width:1000px;
     min-height:250px;
     }
+
+.header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  font-size: calc(20px + 2vmin);
+  color: white;
+  text-align: left;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+#content {
+    margin-top: 40px;
+}

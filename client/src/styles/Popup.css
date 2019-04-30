@@ -37,9 +37,10 @@
 .error {
   margin-top: 40px;
 }
+
 #home {
   position: absolute;
-  left: 25%;
-  right: 25%;
+  left: 40%;
+  right: 40%;
   margin-top: 25%;
 }

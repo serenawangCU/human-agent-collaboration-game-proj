@@ -15,11 +15,10 @@ class GameOverPopup extends Component {
             same_player : false
         }
 
-        // //this.goToHome = false;
 
         this.playAgain = this.playAgain.bind(this);
         this.playWithSamePlayer = this.playWithSamePlayer.bind(this);
-        // this.goToSurvey = this.goToSurvey.bind(this);
+
     }
 
 
@@ -66,13 +65,23 @@ class GameOverPopup extends Component {
             <div  className = "wrap">
             <div className='popup'>
                 <div className='popup_inner'>
-                    <Container>
-                        <h3>Game Over</h3>
+                    <header className="header">
+				        <div>Game Over</div>
+			        </header>
+                    <Container id="content">
                         <Row>
-                            <Col>
-                                Scores {this.props.totalScore}
+                            <Col xs="3">
+                                Total Score
                             </Col>
-                            <Col>
+                            <Col xs="9">
+                                Percentile
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs="3">
+                                {this.props.totalScore}
+                            </Col>
+                            <Col xs="9">
                                 <CanvasComponent 
                                     socket={this.props.socket}
                                     totalScoreRanking={this.props.totalScoreRanking}
@@ -80,6 +89,13 @@ class GameOverPopup extends Component {
                                 />
                             </Col>
                         </Row>
+                        <p id="explaination">
+                            A score being in the <em>p</em>th percentile means that
+                            about <em>p</em>% of all scores are less than or equal
+                            to the original score. So, if a score of 100 is in the 50%
+                            percentile, then 50% of all scores are less than or equal to
+                            a score of 100.
+                        </p>
                     
 
                         <Form id="playAgain">

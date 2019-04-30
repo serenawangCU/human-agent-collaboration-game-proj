@@ -17,7 +17,7 @@ class OfflinePopup extends Component {
                     </div>
                     <Link to={`/home`}>
                         <Button id="home" color="primary">
-                           Return Home
+                            Return Home
                         </Button>
                     </Link>
                 </div>
