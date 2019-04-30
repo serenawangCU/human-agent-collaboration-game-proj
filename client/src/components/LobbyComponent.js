@@ -133,7 +133,6 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             } else {
@@ -153,7 +152,6 @@ class Lobby extends Component {
                                 </Button>
                             </Col>
                         </FormGroup>
-                        {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
                     </Form>
                 );
             }
@@ -192,6 +190,7 @@ class Lobby extends Component {
                 {this.renderPair(this.state.opponent, this.state.currentStatus)}
                 {this.renderStart(this.state.currentStatus)}
                 <Instruct />
+                {this.state.showPopup ? <OfflinePopup popupType = {this.state.popupType} /> : null }
             </Container>
         );
     }
@@ -200,21 +199,23 @@ class Lobby extends Component {
 class Instruct extends Component {
     render() {
         return (
-            <Row>
-                <Col md={{size: 6}}>
-                    <p>
-                        During the game, you and your partner will be assigned who's next by an AI. 
-                        When it is not your turn, your screen will turn grey and you will not be able to
-                        move the tetromino.
-                        <br></br>
-                        <br></br>
-                        You will be able to control your tetromino by using the arrow keys. 
-                    </p>
-                </Col>
-                <Col md={{size: 6}}>
-                    <img src={instructions} alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
-                </Col>
-            </Row>
+            <div>
+                <Row id="info">
+                    <Col md={{size: 6}}>
+                        <p>
+                            During the game, you and your partner will be assigned who's next by an AI. 
+                            When it is not your turn, your screen will turn grey and you will not be able to
+                            move the tetromino.
+                            <br></br>
+                            <br></br>
+                            You will be able to control your tetromino by using the arrow keys. 
+                        </p>
+                    </Col>
+                    <Col md={{size: 6}}>
+                        <img src={instructions} alt="Up: Rotate, Left: Move Left, Right: Move Right, Down: Drop"/>
+                    </Col>
+                </Row>
+            </div>
         );
     }
 }
