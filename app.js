@@ -42,7 +42,11 @@ app.get('/api/getList', (req,res) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.get('*', (req, res) => {
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
+
+app.get('/lobby', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
