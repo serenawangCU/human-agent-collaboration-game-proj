@@ -37,8 +37,13 @@ app.get('/api/getList', (req,res) => {
   console.log('Sent list of items');
 });
 
+//UNUSED CODE TO BE DELETED:
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + 'client/build/index.html'));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
