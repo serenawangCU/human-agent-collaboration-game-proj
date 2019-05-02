@@ -96,11 +96,11 @@ class GameOverPopup extends Component {
                             </Col>
                         </Row>
                         <p id="explaination">
-                            A score being in the <em>p</em>th percentile means that
+                            If your score is in the <em>p</em>th percentile, that means
                             about <em>p</em>% of all scores are less than or equal
-                            to the original score. So, if a score of 100 is in the 50%
+                            to your score. So, if a score of 100 is in the 50%
                             percentile, then 50% of all scores are less than or equal to
-                            a score of 100.
+                            100.
                         </p>
                     
 
