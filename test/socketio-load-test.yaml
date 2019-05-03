@@ -1,0 +1,32 @@
+config:
+  target: "https://immense-anchorage-61325.herokuapp.com"
+  engine: "socketio"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  # - name: "Connect and Add Users"
+  #   flow:
+  #     - emit:
+  #         channel: "add_user"
+  #         data: "jack"
+  #     - think: 1
+  - name: "Game Ready to Play"
+    flow:
+      - emit:
+        channel: "ready"
+  # - name: "Move Blocks"
+  #   flow:
+  #     - emit:
+  #       channel: "move"
+  #       data: "up"
+  # - name: "Log Play Again Request"
+  #   flow:
+  #     - emit:
+  #       channel: "game_again"
+  #       data: true
+  # - name: "Upload Survey to MongoDB"
+  #   flow:
+  #     - emit:
+  #       channel: "survey"
+  #       data: ["Yes", "Rating 5"]
