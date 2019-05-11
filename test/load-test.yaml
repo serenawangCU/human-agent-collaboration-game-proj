@@ -5,14 +5,9 @@ config:
     - duration: 60
       arrivalRate: 20
 scenarios:
-  - name: "Connect and Add Users"
-    flow:
-    - emit:
-        channel: "add_user"
-        data: "jack"
-    - think: 1
-  - name: "Game Ready to Play"
+  - name: "Upload Survey to MongoDB"
     flow:
       - emit:
-          channel: "ready"
+          channel: "survey"
+          data: ["Yes", "Rating 5"]
       - think: 1
