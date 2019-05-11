@@ -55,7 +55,7 @@ class Lobby extends Component {
         this.props.socket.on('leaving',() => {
             this.setState({ showPopup: true, popupType: 'offline'});
         });
-
+        names.length = 0;
     }
 
     componentWillUnmount() {
@@ -181,7 +181,8 @@ class Lobby extends Component {
 
     render(){
         const errors = this.validate(this.state.nickname);
-        console.log('lobby here');
+        //console.log('lobby here');
+        //console.log('names: ' + names);
         document.body.style.opacity = 1.0;
         return (
             <Container>

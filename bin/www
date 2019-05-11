@@ -80,11 +80,6 @@ io.on('connection', (socket) => {
 	socket.on('survey', (data) => {
 		console.log('survey answer: ' + data);
 
-		let answers = [];
-		for (let ques in data) {
-			answers.push(ques);
-		}
-
 		// udpate the database to indicate that the player would like to play again
 		if (socket.roomId != null) {
 			Games.findById(socket.roomId)
@@ -92,11 +87,11 @@ io.on('connection', (socket) => {
 				if (game != null) {// check if game is found
 					if (game.player1.playerId === socket.id) {
 						for (let ques in data) {
-							game.player1.survey.push(ques);
+							game.player1.survey.push(Object.values(data[ques])[0]);
 						}
 					} else if (game.player2.playerId === socket.id) {
 						for (let ques in data) {
-							game.player2.survey.push(ques);
+							game.player2.survey.push(Object.values(data[ques])[0]);
 						}
 					}
 				}
