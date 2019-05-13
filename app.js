@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 const mongoose = require('mongoose');
 
 //MongoDB Connection URL
-const url = 'mongodb+srv://kw53098:WK2011gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
+const url = 'mongodb+srv://TetrisUser:cs5150TetrisDB@cluster0-bucun.mongodb.net/test?retryWrites=true';
 const connect = mongoose.connect(url, {
   useNewUrlParser: true
 });
