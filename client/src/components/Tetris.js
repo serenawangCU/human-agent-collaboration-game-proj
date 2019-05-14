@@ -66,7 +66,7 @@ class Tetris extends Component {
             this.setState({numberOfGamesInDB: data.numberOfGamesInDB});
             this.setState({score: data.totalScore});
             this.setState({gameOver: true});
-            this.setState({indivScore: data.indivScores});
+            this.setState({indivScore: data.indivScores})
         });
         //add listner for the connection state of user's partner
         this.props.socket.on('leaving',() => {

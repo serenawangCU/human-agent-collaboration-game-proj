@@ -9,7 +9,8 @@ var usersRouter = require('./routes/users');
 
 const mongoose = require('mongoose');
 
-const url = 'mongodb+srv://kw53098:WK2011gg@tetrisdb-blek6.mongodb.net/test?retryWrites=true';
+//MongoDB Connection URL
+const url = 'mongodb+srv://TetrisUser:cs5150TetrisDB@cluster0-bucun.mongodb.net/test?retryWrites=true';
 const connect = mongoose.connect(url, {
   useNewUrlParser: true
 });
@@ -24,7 +25,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 
 app.set('view engine', 'jade');
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '/client/build')));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -37,8 +38,16 @@ app.get('/api/getList', (req,res) => {
   console.log('Sent list of items');
 });
 
+//UNUSED CODE TO BE DELETED:
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
+
+app.get('/lobby', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

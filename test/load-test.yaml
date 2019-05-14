@@ -1,0 +1,13 @@
+config:
+  target: "https://immense-anchorage-61325.herokuapp.com"
+  engine: "socketio"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - name: "Upload Survey to MongoDB"
+    flow:
+      - emit:
+          channel: "survey"
+          data: ["Yes", "Rating 5"]
+      - think: 1

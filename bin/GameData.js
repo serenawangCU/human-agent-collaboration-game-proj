@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Games = require('../models/games.js');
-const TotalScores = require('../models/totalScores.js');
 
 /**
  * Class of all the collected data in a game
@@ -258,16 +257,6 @@ class GameData {
         .exec()
         .then((game) => {
             console.log("Successfully upload data to MongoDB!");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-
-        TotalScores.create({
-            totalScore : this.totalScore,
-        })
-        .then((score) => {
-            console.log("Create a total score entry!");
         })
         .catch((err) => {
             console.log(err);

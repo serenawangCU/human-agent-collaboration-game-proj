@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Container, Button, Form, FormGroup, Row, Input, Col, Alert } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Row, Input, Col, Alert, FormFeedback } from 'reactstrap';
 import { Redirect } from 'react-router';
 import Constant from '../constants/constants';
 import OfflinePopup from './OfflinePopupComponent';
@@ -20,7 +20,10 @@ class Lobby extends Component {
             opponent: null,
             currentStatus: status.INITIAL,
             showPopup: false, 
-            popupType: ''
+            popupType: '',
+            touched: {
+                nickname: false
+            }
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -52,6 +55,7 @@ class Lobby extends Component {
         this.props.socket.on('leaving',() => {
             this.setState({ showPopup: true, popupType: 'offline'});
         });
+        names.length = 0;
     }
 
     componentWillUnmount() {
@@ -160,8 +164,25 @@ class Lobby extends Component {
         return <div></div>;
     }
 
+
+    validate(nickname) {
+
+        const errors = {
+            nickname: ''
+        };
+
+        if (nickname.length < 3)
+            errors.nickname = 'Nick Name should be >= 3 characters';
+        else if (nickname.length > 20)
+            errors.nickname = 'Nick Name should be <= 20 characters';
+
+        return errors;
+    }
+
     render(){
-        console.log('lobby here');
+        const errors = this.validate(this.state.nickname);
+        //console.log('lobby here');
+        //console.log('names: ' + names);
         document.body.style.opacity = 1.0;
         return (
             <Container>
@@ -173,15 +194,20 @@ class Lobby extends Component {
                 <Form onSubmit={this.handlePair}>
                     <FormGroup row>
                         <Col md={{size: 6, offset: 3}}>
-                            <Input type="text" id="nickname" name="nickname" required
+                            <Input type="text" id="nickname" name="nickname"
                                 placeholder="Nickname"
                                 value={this.state.nickname}
+                                valid = {errors.nickname === ''}
+                                invalid = {errors.nickname !== ''}
                                 onChange={this.handleInputChange} />
+                            <FormFeedback>
+                                {errors.nickname}
+                            </FormFeedback>
                         </Col>
                     </FormGroup>
                     <FormGroup row>
                         <Col md={{size: 6, offset: 3}}>
-                            <Button type="submit" color="primary" disabled={this.state.currentStatus !== status.INITIAL}>
+                            <Button type="submit" color="primary" disabled={errors.nickname !== '' || this.state.currentStatus !== status.INITIAL}>
                                 Pair
                             </Button>
                         </Col>
