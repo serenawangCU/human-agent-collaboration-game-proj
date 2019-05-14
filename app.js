@@ -40,7 +40,6 @@ app.get('/api/getList', (req,res) => {
 
 //UNUSED CODE TO BE DELETED:
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 app.get('/home', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
