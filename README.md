@@ -11,18 +11,19 @@
 1. Change directory to 'client'  <br>
 2. In a bash ternimal, type `yarn install` that will install required packages
 
-# You need start both server and client application
-# Server Part
+# Run the Project Locally 
+You need start both server and client application
+## Server Side
 Go to the out most folder
-In a bash ternimal, type `npm start` that will install required packages<br>
-It will run on http:\\\\localhost:5000.
+In a bash ternimal, type `npm start` that will run the back-end application<br>
+It will run on http://localhost:5000.
 
-# Client Part
+## Client Side
 Go to 'client' folder<br>
-In a bash ternimal, type `yarn start` that will install required packages<br>
-It will run on http:\\\\localhost:3000. You may copy paste this address to a browser to test our application.
+In a bash ternimal, type `yarn start` that will run the front-end React.JS application<br>
+It will run on http://localhost:3000. You may copy and paste this address to a browser to test our application.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The front-end application was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
