@@ -3,6 +3,9 @@ import '../styles/Popup.css';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
+/**
+ * OfflinePopup Component for the rendering of the popup when a player is offline
+ */
 class OfflinePopup extends Component {
     
     render() {

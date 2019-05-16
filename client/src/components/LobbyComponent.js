@@ -9,6 +9,9 @@ import instructions from './Instructions.png';
 const status = Constant.state;
 export const names = []; // [playerName, partnerName]
 
+/**
+ * Lobby Component for the rendering of the lobby page
+ */
 class Lobby extends Component {
 
     constructor(props) {

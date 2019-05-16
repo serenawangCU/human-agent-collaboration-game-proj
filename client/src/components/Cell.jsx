@@ -1,6 +1,9 @@
 import React from 'react'
 import '../styles/Cell.css'
 
+/**
+ *  React.js function component, change status based on the input properties
+ */
 function Cell (props) {
     let cellStatus = '';
     switch(props.cell) {

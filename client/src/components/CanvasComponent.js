@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 
+/**
+ * Canvas Component for the rendering of score ranking UI
+ */
 class CanvasComponent extends Component {
     constructor(props) {
         super(props);

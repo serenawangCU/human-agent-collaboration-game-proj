@@ -11,6 +11,9 @@ import Survey from './Survey'
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 const reload = () => window.location.reload();
 
+/**
+ * Main Component provides the react router to switch between different pages (components)
+ */
 class Main extends Component {
 
   constructor(props) {

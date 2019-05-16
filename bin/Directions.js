@@ -1,3 +1,6 @@
+/**
+ * Defien direction macros
+ */
 const Directions = {
     UP: 'up',
     DOWN: 'down',

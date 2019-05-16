@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import GamePanel from './GamePanel';
 import OfflinePopup from './OfflinePopupComponent';
 import GameOverPopup from './GameOverPopupComponent';
-import '../styles/Tetris.css'
 import styled from 'styled-components';
 import { Container, Row, Col } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import './Tetris.css'
 import instructions from './Instructions.png';
+import '../styles/Tetris.css'
 
 
 const Left = styled.div`
@@ -25,7 +24,9 @@ padding-top: 10px;
 `;
 
 
-
+/**
+ * Tetris Game component contains all sub components, including game panel, offline popup and gameover popup.
+ */
 class Tetris extends Component {
     constructor(props) {
         super(props);

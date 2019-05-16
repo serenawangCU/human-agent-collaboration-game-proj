@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Row1 from './Row'
 import Next from './Next'
 import Shapes from "./Shapes";
-import './GameGrid.css'
+import '../styles/GameGrid.css'
 import { Container, Row, Col } from 'reactstrap';
 import { names } from './LobbyComponent';
 
@@ -110,22 +110,18 @@ class GameGrid extends Component {
             switch(e.keyCode){
                 //left
                 case 37: this.setState({direction: "left"});
-                // console.log('handle key left');
                 break;
                 
                 //right
                 case 39: this.setState({direction: "right"});
-                // console.log('handle key right');
                 break;
                 
                 //up
                 case 38: this.setState({direction: "up"});
-                // console.log('handle key up');
                 break;
 
                 //down
                 case 40: this.setState({direction: "down"});
-                // console.log('handle key down');
                 break;
 
                 default: break;

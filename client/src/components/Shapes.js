@@ -1,3 +1,6 @@
+/**
+ * Constant array for all types of blocks in Tetris game
+ */
 const Shapes = [
     {
         id: 1,

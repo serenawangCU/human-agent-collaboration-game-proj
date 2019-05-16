@@ -31,3 +31,7 @@
     margin: auto;
 
 }
+
+.wrap{
+    min-width:1100px;
+}

@@ -4,6 +4,9 @@ import { Redirect } from 'react-router';
 import { Button, Form, FormGroup, Label, Input, FormText, Col, Row, Container} from 'reactstrap';
 import '../styles/Survey.css'
 
+/**
+ * React.js Component for survey page
+ */
 class Survey extends Component {
 
     constructor(props) {

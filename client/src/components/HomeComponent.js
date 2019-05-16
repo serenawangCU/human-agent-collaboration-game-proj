@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import '../styles/Home.css';
 import { Button, Col, Container, Row } from 'reactstrap';
 
+/**
+ * Home Component for the rendering of the home page
+ */
 class Home extends Component {
 
     constructor(props) {

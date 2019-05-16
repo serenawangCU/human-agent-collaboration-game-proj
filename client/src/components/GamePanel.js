@@ -3,7 +3,9 @@ import React from 'react';
 import GameGrid from './GameGrid';
 
 
-
+/**
+ * Function React.js component for main game panel
+ */
 function GamePanel(props) {
     return (
         <div>

@@ -4,8 +4,12 @@ import { Container, Button, Form, FormGroup, Row, Col } from 'reactstrap';
 import { Redirect } from 'react-router';
 import CanvasComponent from './CanvasComponent.js';
 import { Link } from 'react-router-dom';
-import './GameOverPopupComponent.css'
+import '../styles/GameOverPopupComponent.css'
 
+
+/**
+ * GameOverPopup Component for the rendering of the popup when the game is over
+ */
 class GameOverPopup extends Component {
 
     constructor(props) {
