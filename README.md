@@ -24,7 +24,7 @@ In a bash ternimal, type `yarn start` that will run the front-end React.JS appli
 It will run on http://localhost:3000. You may copy and paste this address to a browser to test our application.
 
 # Code Specifications
-[a relative link](Code_Specification.pdf)
+[Code Specifications](Code_Specification.pdf)
 
 The front-end application was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
